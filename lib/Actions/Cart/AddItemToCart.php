@@ -2,27 +2,53 @@
 
 namespace Magium\Actions\Cart;
 
+use Magium\AbstractTestCase;
+use Magium\Navigators\BaseMenuNavigator;
+use Magium\Themes\ThemeConfiguration;
 use Magium\WebDriver\WebDriver;
 class AddItemToCart
 {
     protected $webdriver;
+    protected $theme;
+    protected $navigator;
+    protected $testCase;
     
     public function __construct(
-        WebDriver $webdriver
+        WebDriver $webdriver,
+        ThemeConfiguration $theme,
+        BaseMenuNavigator $navigator,
+        AbstractTestCase $testCase
     ) {
         $this->webdriver = $webdriver;
+        $this->theme = $theme;
+        $this->navigator = $navigator;
+        $this->testCase = $testCase;
     }
     
     /**
-     * Adds an item to the cart from its product page
+     * Adds an item to the cart from its product page by navigating to the default
+     * test category and adding the default test product to the cart.
      * @TODO
      * 
      * @throws \Magium\NotFoundException
      */
     
-    public function addSimpleProductToCartFromPage()
+    public function addSimpleProductToCart($categoryNavigationPath = null, $addToCartXpath = null)
     {
-        
+        if ($categoryNavigationPath === null) {
+            $categoryNavigationPath = $this->theme->getNavigationPathToProductCategory();
+        }
+
+        if ($addToCartXpath === null) {
+            $addToCartXpath = $this->theme->getSimpleProductAddToCartXpath();
+        }
+
+        $this->navigator->navigateTo($categoryNavigationPath);
+        $this->testCase->assertElementExists($addToCartXpath, 'byXpath');
+        $element = $this->webdriver->byXpath($addToCartXpath);
+        $this->testCase->assertWebDriverElement($element);
+        $element->click();
+        $this->testCase->assertElementExists($this->theme->getAddToCartSuccessXpath(), 'byXpath');
     }
     
     /**

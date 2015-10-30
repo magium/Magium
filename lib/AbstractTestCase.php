@@ -38,16 +38,40 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         return $this->di->get($class);
     }
-    
+
     /**
-     * 
+     *
      * @param string $customer
      * @return \Magium\Customer\Customer
      */
-    
+
     public function getCustomer($customer = 'Magium\Customer\Customer')
     {
         return $this->get($customer);
+    }
+    /**
+     *
+     * @param string $theme
+     * @return \Magium\Themes\ThemeConfiguration
+     */
+
+    public function getTheme($theme = 'Magium\Themes\ThemeConfiguration')
+    {
+        return $this->get($theme);
+    }
+
+    public function assertElementExists($selector, $by = 'byId')
+    {
+        try {
+            self::assertWebDriverElement($this->webdriver->$by($selector));
+        } catch (\Exception $e) {
+            self::assertTrue(false, sprintf('Element "%s" cannot be found using selector "%s"', $selector, $by));
+        }
+    }
+
+    public static function assertWebDriverElement($element)
+    {
+        self::assertInstanceOf('Facebook\WebDriver\WebDriverElement', $element);
     }
     
     /**

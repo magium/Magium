@@ -83,10 +83,11 @@ class Customer
         $usernameElement = $this->webdriver->byXpath($this->theme->getLoginUsernameField());
         $passwordElement = $this->webdriver->byXpath($this->theme->getLoginPasswordField());
         $submitElement = $this->webdriver->byXpath($this->theme->getLoginSubmitButton());
-        
-        $this->testCase->assertNotNull($usernameElement);
-        $this->testCase->assertNotNull($passwordElement);
-        $this->testCase->assertNotNull($submitElement);
+
+        $this->testCase->assertInstanceOf('Facebook\Webdriver\WebDriverElement', $usernameElement);
+        $this->testCase->assertInstanceOf('Facebook\Webdriver\WebDriverElement', $passwordElement);
+        $this->testCase->assertInstanceOf('Facebook\Webdriver\WebDriverElement', $submitElement);
+
         
         $usernameElement->sendKeys($username);
         $passwordElement->sendKeys($password);

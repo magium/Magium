@@ -1,6 +1,8 @@
 <?php
 
-class AbstractCheckoutTest extends PHPUnit_Framework_TestCase
+namespace Checkout;
+
+class AbstractCheckoutTest extends \PHPUnit_Framework_TestCase
 {
     
     public function testStepAddedAndCanBeRetrieved()

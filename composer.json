@@ -1,0 +1,17 @@
+{
+  "name" : "Magium",
+  "require" : {
+    "phpunit/phpunit" : "4.8.6",
+    "zendframework/zend-di" : "2.5.1",
+    "facebook/webdriver" : "1.0.2"
+  },
+  "repositories" : [ {
+    "type" : "composer",
+    "url" : "https://packagist.org/"
+  } ],
+  "autoload" : {
+    "psr-4" : {
+      "Magium\\" : "lib/"
+    }
+  }
+}
