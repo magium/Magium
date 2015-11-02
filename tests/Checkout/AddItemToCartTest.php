@@ -11,10 +11,11 @@ class AddItemToCartTest extends AbstractTestCase
     {
         $theme = $this->getTheme();
         $this->commandOpen($theme->getBaseUrl());
+        $this->getLogger()->info('Opening page ' . $theme->getBaseUrl());
         $addToCart = $this->get('Magium\Actions\Cart\AddItemToCart');
         /* @var $addToCart \Magium\Actions\Cart\AddItemToCart */
 
-        $addToCart->addSimpleProductToCart();
+        $addToCart->addSimpleProductToCartFromCategoryPage();
     }
 
     public function testSimpleAddToCartWithSpecifiedCategoryAndProduct()
@@ -24,7 +25,32 @@ class AddItemToCartTest extends AbstractTestCase
         $addToCart = $this->get('Magium\Actions\Cart\AddItemToCart');
         /* @var $addToCart \Magium\Actions\Cart\AddItemToCart */
 
-        $addToCart->addSimpleProductToCart('Accessories/Eyewear', '//a[@title="Aviator Sunglasses"]/../descendant::button');
+        $addToCart->addSimpleProductToCartFromCategoryPage('Accessories/Eyewear', '//a[@title="Aviator Sunglasses"]/../descendant::button');
+    }
+
+    public function testAddSimpleItemToCartFromProductPageWithDefaults()
+    {
+        $theme = $this->getTheme();
+        $this->commandOpen($theme->getBaseUrl());
+        $this->getLogger()->info('Opening page ' . $theme->getBaseUrl());
+        $addToCart = $this->get('Magium\Actions\Cart\AddItemToCart');
+        /* @var $addToCart \Magium\Actions\Cart\AddItemToCart */
+
+        $addToCart->addSimpleItemToCartFromProductPage();
+
+    }
+
+
+    public function testAddSimpleItemToCartFromProductPageWithSpecifiedCategoryAndProduct()
+    {
+        $theme = $this->getTheme();
+        $this->commandOpen($theme->getBaseUrl());
+        $this->getLogger()->info('Opening page ' . $theme->getBaseUrl());
+        $addToCart = $this->get('Magium\Actions\Cart\AddItemToCart');
+        /* @var $addToCart \Magium\Actions\Cart\AddItemToCart */
+
+        $addToCart->addSimpleItemToCartFromProductPage('//a[@title="Aviator Sunglasses"]', 'Accessories/Eyewear');
+
     }
 
 }

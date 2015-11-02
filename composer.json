@@ -3,7 +3,8 @@
   "require" : {
     "phpunit/phpunit" : "4.8.6",
     "zendframework/zend-di" : "2.5.1",
-    "facebook/webdriver" : "1.0.2"
+    "facebook/webdriver" : "1.0.2",
+    "zendframework/zend-log": "2.6.0"
   },
   "repositories" : [ {
     "type" : "composer",

@@ -13,25 +13,52 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $configuration = new \Zend\Di\Config(array(
-            'definition' => array(
-                'class' => array(
-                    'Magium\WebDriver\WebDriver' => array(
+        $defaults = [
+            'definition' => [
+                'class' => [
+                    'Magium\WebDriver\WebDriver' => [
                         'instantiator' => 'Magium\WebDriver\WebDriver::create',
                         'create'       => [
                             'url' => ['default' => 'http://localhost:4444/wd/hub'],
                             'desired_capabilities' => ['default' => DesiredCapabilities::chrome()]
                         ]
-                    )
-                )
-            )
-        ));
+                    ]
+                ]
+            ],
+            'instance'  => [
+                'Zend\Log\Logger'   => [
+                    'parameters'    => [
+                        'options'   => [
+                            'writers' => [
+                                [
+                                    'name' => 'Zend\Log\Writer\Noop',
+                                    'options' => []
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $configArray = array_merge($defaults, include '../../configuration/di.php');
+
+        $configuration = new \Zend\Di\Config($configArray);
         // TODO set configurable configuration
         $this->di = new \Zend\Di\Di();
         $configuration->configure($this->di);
         $this->di->instanceManager()->addSharedInstance($this, 'Magium\AbstractTestCase');
         $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
         
+    }
+
+    /**
+     * @return \Zend\Log\Logger
+     */
+
+    public function getLogger()
+    {
+        return $this->get('Zend\Log\Logger');
     }
     
     public function get($class)

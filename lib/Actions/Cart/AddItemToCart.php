@@ -28,19 +28,18 @@ class AddItemToCart
     /**
      * Adds an item to the cart from its product page by navigating to the default
      * test category and adding the default test product to the cart.
-     * @TODO
      * 
      * @throws \Magium\NotFoundException
      */
     
-    public function addSimpleProductToCart($categoryNavigationPath = null, $addToCartXpath = null)
+    public function addSimpleProductToCartFromCategoryPage($categoryNavigationPath = null, $addToCartXpath = null)
     {
         if ($categoryNavigationPath === null) {
             $categoryNavigationPath = $this->theme->getNavigationPathToProductCategory();
         }
 
         if ($addToCartXpath === null) {
-            $addToCartXpath = $this->theme->getSimpleProductAddToCartXpath();
+            $addToCartXpath = $this->theme->getCategoryAddToCartButtonXPathSelector();
         }
 
         $this->navigator->navigateTo($categoryNavigationPath);
@@ -52,15 +51,39 @@ class AddItemToCart
     }
     
     /**
-     * Finds a product on the current, presumed, category page and attempts to add it to the cart
+     * Finds a product on a category page and attempts to add it to the cart after navigating to the product page
      * @todo
-     * 
-     * @param string $name The name of the product
+     *
+     * @param string $categoryNavigationPath The category path to go to
+     * @param string $addToCartXpath The Xpath for adding a simple product the cart from the product4 page
+     * @param string $productLinkXpath The Xpath to go to the product page
      */
     
-    public function addSimpleItemToCartFromCategoryPage($name = null)
+    public function addSimpleItemToCartFromProductPage($productLinkXpath = null, $categoryNavigationPath = null, $addToCartXpath = null)
     {
-        
+        if ($categoryNavigationPath === null) {
+            $categoryNavigationPath = $this->theme->getNavigationPathToProductCategory();
+        }
+
+        if ($addToCartXpath === null) {
+            $addToCartXpath = $this->theme->getCategoryAddToCartButtonXPathSelector();
+        }
+
+        $this->navigator->navigateTo($categoryNavigationPath);
+
+        $element = $this->webdriver->byXpath($this->theme->getProductPageForCategory());
+
+        $this->testCase->assertWebDriverElement($element);
+
+        $element->click();
+
+        $element = $this->webdriver->byXpath($this->theme->getSimpleProductAddToCartXpath());
+
+        $this->testCase->assertWebDriverElement($element);
+
+        $element->click();
+
+        $this->testCase->assertElementExists($this->theme->getAddToCartSuccessXpath(), 'byXpath');
     }
     
     /**
