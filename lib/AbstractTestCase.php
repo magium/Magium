@@ -41,7 +41,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $configArray = array_merge($defaults, include '../../configuration/di.php');
+        $diConfigPath = realpath('../../configuration/di.php');
+        $configArray = array_merge($defaults, include $diConfigPath);
 
         $configuration = new \Zend\Di\Config($configArray);
         // TODO set configurable configuration
