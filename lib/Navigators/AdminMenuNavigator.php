@@ -7,10 +7,10 @@ class AdminMenuNavigator extends BaseMenuNavigator
 {
     
     protected $themeConfiguration;
-    
-    public function __construct(AdminThemeConfiguration $theme)
+
+    public function __construct(AdminThemeConfiguration $theme, WebDriver $webdriver)
     {
-        parent::__construct($theme);
+        parent::__construct($theme, $webdriver);
     }
     
     

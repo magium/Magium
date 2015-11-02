@@ -5,21 +5,18 @@ namespace Magium\Navigators;
 use Magium\WebDriver\WebDriverAware;
 use Magium\WebDriver\WebDriver;
 use Magium\Themes\ThemeConfiguration;
-class BaseMenuNavigator implements WebDriverAware
+class BaseMenuNavigator
 {
     
     protected $webdriver;
     protected $themeConfiguration;
     
-    public function __construct(ThemeConfiguration $theme)
+    public function __construct(ThemeConfiguration $theme, WebDriver $webdriver)
     {
         $this->themeConfiguration = $theme;
-    }
-    
-    public function setWebDriver(WebDriver $webdriver)
-    {
         $this->webdriver = $webdriver;
     }
+
     
     public function navigateTo($path)
     {

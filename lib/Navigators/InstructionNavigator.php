@@ -7,7 +7,7 @@ use Magium\WebDriver\WebDriver;
 use Magium\Themes\ThemeConfiguration;
 use Magium\InvalidConfigurationException;
 use Magium\AbstractTestCase;
-class InstructionNavigator implements WebDriverAware
+class InstructionNavigator
 {
     
     protected $webdriver;
@@ -16,16 +16,14 @@ class InstructionNavigator implements WebDriverAware
     
     public function __construct(
         ThemeConfiguration $theme,
-        AbstractTestCase $testCase)
+        AbstractTestCase $testCase,
+        WebDriver $webdriver)
     {
         $this->themeConfiguration = $theme;
         $this->testCase = $testCase;
-    }
-    
-    public function setWebDriver(WebDriver $webdriver)
-    {
         $this->webdriver = $webdriver;
     }
+
     
     public function navigateTo(array $instructions)
     {
