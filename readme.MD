@@ -52,12 +52,16 @@ class TestHomePageTitle extends Magium\AbstractTestCase
     public function testTitleExists()
     {
         $this->commandOpen($this->getTheme()->getBaseUrl());
-        $this->assertElementExists($this->byXpath('//title'));
+        $this->assertElementExists('//title', self::BY_XPATH);
     }
 
 }
 
 ```
+
+Negative tests can be run too.
+
+
 
 Rules for test utility classes
 ==============================
