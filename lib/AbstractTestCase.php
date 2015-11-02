@@ -11,6 +11,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     protected $webdriver;
     protected $di;
 
+    const BY_XPATH = 'byXpath';
+    const BY_ID    = 'byId';
+    const BY_CSS_SELECTOR = 'byCssSelector';
+
     protected function setUp()
     {
         $defaults = [
@@ -41,8 +45,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $diConfigPath = realpath('../../configuration/di.php');
+        $count  = 0;
+        $diConfigPath = realpath(__DIR__ . '/../configuration/di.php');
         $configArray = array_merge($defaults, include $diConfigPath);
+
 
         $configuration = new \Zend\Di\Config($configArray);
         // TODO set configurable configuration
