@@ -38,6 +38,27 @@ Not all classes can be configured.  But if they do they need to extend AbstractC
 
 But there is more configuration that can be done.  As noted earlier, the entire implementation is dependent on dependency injection.  So if there are any customized classes that the action classes (for example) need to use instead of the base ones you can configure the DIC to prefer one implementation over another in the configuration/di.php class.  An example can be seen in example_configuration_not_used/di.php where the Stream log writer is set to be preferred over the standard Noop writer.
 
+Basic Usage
+===========
+
+Each test case class should extend Magium\AbstractTestCase.  This class contains bootstrapping to load up WebDriver, configure the DIC and do a few other setup things.  It also contains some additional helper functionality such as simplified element retrieval, Selenium level assertions (assertElementExists()) among other things.
+
+Building a test case is quite simple.
+
+```php
+
+class TestHomePageTitle extends Magium\AbstractTestCase
+{
+    public function testTitleExists()
+    {
+        $this->commandOpen($this->getTheme()->getBaseUrl());
+        $this->assertElementExists($this->byXpath('//title'));
+    }
+
+}
+
+```
+
 Rules for test utility classes
 ==============================
 
