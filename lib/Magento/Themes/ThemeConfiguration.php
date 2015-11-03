@@ -82,11 +82,26 @@ class ThemeConfiguration extends AbstractConfigurableElement
         [\Magium\WebDriver\WebDriver::INSTRUCTION_MOUSE_CLICK, '//div[@class="account-cart-wrapper"]/descendant::span[.="Account"]'],
         [\Magium\WebDriver\WebDriver::INSTRUCTION_MOUSE_CLICK, '//div[@id="header-account"]/descendant::a[@title="My Account"]']
     ];
+
+    /**
+     * @var array Instructions in an Xpath array syntax to get to the start of the checkout page
+     */
+
+    protected $checkoutNavigationInstructions         = [
+        [\Magium\WebDriver\WebDriver::INSTRUCTION_MOUSE_CLICK, '//div[@class="header-minicart"]'],
+        [\Magium\WebDriver\WebDriver::INSTRUCTION_MOUSE_CLICK, '//div[@class="minicart-actions"]/descendant::a[@title="Checkout"]']
+    ];
     
     public function getBaseUrl()
     {
         return $this->baseUrl;
     }
+
+    public function getCheckoutNavaigationInstructions()
+    {
+        return $this->checkoutNavigationInstructions;
+    }
+
     public function getProductPageForCategory()
     {
         return $this->categoryProductPageXpath;

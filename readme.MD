@@ -1,7 +1,11 @@
 # Magium
-A PHPUnit/Webdriver (Selenium (there for SEO)) based test framework for streamlining browser testing with Magento.  It basically boils down to building out reusable Web Driver commands for Magento allowing you to bypass much of the boilerplate code that browser/functional testing may require.  This is done through utility classes.  The baseline classes are built to the Magento 1.9 CE theme and sample data.
+A PHPUnit/Webdriver (Selenium (there for SEO)) based test framework for streamlining browser testing with Magento.  It basically boils down to building out reusable Web Driver commands for Magento allowing you to bypass much of the boilerplate code that browser/functional testing may require.  This is done through utility classes.
+
+The baseline classes are built to the Magento 1.9 CE theme and sample data.  _Refactoring may occur if it is necessary to make the code work with multiple themes_.  If you want to contribute (please do!!) please make sure that your contributions work with, at least, Magento 1.9 CE with sample data.
 
 The codebase as a whole uses dependency injection and a dependency injection container as part of a PHPUnit test.  Yes, that's correct. The tests use DI and a DIC.  Why would I commit such a horrible crime against the software development gods?  Well, because this is basically a glorified batch processing system.  But there are features in a DiC that allow you to make a lot of customizations. Say you want to build a test that adds to the cart, but there is some kind of popup that is non-standard.  Instead of building out all of this functionality yourself just extend the AddToCart action class, override the appropriate method and set a type preference in the di.php configuration file.  Does another site do something different?  Just extend AddToCart with a different class and re-use everything else.
+
+Is this the best, most purest way of doing this?  I don't know.  But I was tasked with building out some very complex Selenium tests a while back and this is what I wish I had.
 
 Why are you using PHPUnit?
 ==========================
@@ -79,6 +83,7 @@ class TestHomePageTitle extends Magium\AbstractTestCase
 Rules for test utility classes
 ==============================
 
-* All calls will presume positive results.  If you wish to test negative results you will need to build out that functionality in code yourself
+* All calls will presume positive results.  For example, it will presume that if you are intending to add something to the cart, you are intending to actually have it added to the cart.  If you wish to test negative results you will need to build out that functionality in code yourself
+** But that said there are some classes, such as the checkout classes, which are intended to be integrated with or have their execution modified programmatically.
 * All calls will presume a pre-existing web page that is opened.  They will expect you to "set the stage" for the functionality you intend to call. For example, if you want to navigate to a particular category page, the test is going to presume that the page it is on has that functionality on it.
 * Whenever possible (hopefully 100% of the time) the DI container in the test case itself should be used to retrieve test objects. Some commonly used functionality, such as opening a web page, will have pre-existent convenience methods defined.

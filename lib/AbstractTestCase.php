@@ -21,7 +21,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             'definition' => [
                 'class' => [
                     'Magium\WebDriver\WebDriver' => [
-                        'instantiator' => 'Magium\WebDriver\WebDriver::create',
+                        'instantiator' => 'Magium\WebDriver\WebDriverFactory::create'
+                    ],
+                    'Magium\WebDriver\WebDriverFactory' => [
                         'create'       => [
                             'url' => ['default' => 'http://localhost:4444/wd/hub'],
                             'desired_capabilities' => ['default' => DesiredCapabilities::chrome()]
@@ -60,6 +62,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
         
     }
+
 
     /**
      * @return \Zend\Log\Logger

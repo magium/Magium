@@ -7,8 +7,7 @@ use Magium\WebDriver\WebDriver;
 
 class AdminMenuNavigator extends BaseMenuNavigator
 {
-    
-    protected $themeConfiguration;
+
 
     public function __construct(AdminThemeConfiguration $theme, WebDriver $webdriver)
     {
