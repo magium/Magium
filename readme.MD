@@ -1,5 +1,5 @@
 # Magium
-A PHPUnit/Webdriver (Selenium (for SEO)) based test framework for streamlining browser testing with Magento.  It basically boils down to building out reusable Web Driver commands for Magento allowing you to bypass much of the boilerplate code that browser/functional testing may require.  This is done through utility classes.  The baseline classes are built to the Magento 1.9 CE theme and sample data.
+A PHPUnit/Webdriver (Selenium (there for SEO)) based test framework for streamlining browser testing with Magento.  It basically boils down to building out reusable Web Driver commands for Magento allowing you to bypass much of the boilerplate code that browser/functional testing may require.  This is done through utility classes.  The baseline classes are built to the Magento 1.9 CE theme and sample data.
 
 The codebase as a whole uses dependency injection and a dependency injection container as part of a PHPUnit test.  Yes, that's correct. The tests use DI and a DIC.  Why would I commit such a horrible crime against the software development gods?  Well, because this is basically a glorified batch processing system.  But there are features in a DiC that allow you to make a lot of customizations. Say you want to build a test that adds to the cart, but there is some kind of popup that is non-standard.  Instead of building out all of this functionality yourself just extend the AddToCart action class, override the appropriate method and set a type preference in the di.php configuration file.  Does another site do something different?  Just extend AddToCart with a different class and re-use everything else.
 
@@ -61,7 +61,20 @@ class TestHomePageTitle extends Magium\AbstractTestCase
 
 Negative tests can be run too.
 
+```php
 
+class TestHomePageTitle extends Magium\AbstractTestCase
+{
+
+    public function testBadTitleNotExists()
+    {
+        $this->commandOpen($this->getTheme()->getBaseUrl());
+        // You shouldn't have a title that equals "boogers".  That's just rude.
+        $this->assertElementNotExists('//title[.="boogers"]', self::BY_XPATH);
+    }
+
+}
+```
 
 Rules for test utility classes
 ==============================

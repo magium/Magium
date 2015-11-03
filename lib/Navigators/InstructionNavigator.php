@@ -2,9 +2,8 @@
 
 namespace Magium\Navigators;
 
-use Magium\WebDriver\WebDriverAware;
 use Magium\WebDriver\WebDriver;
-use Magium\Themes\ThemeConfiguration;
+use Magium\Magento\Themes\ThemeConfiguration;
 use Magium\InvalidConfigurationException;
 use Magium\AbstractTestCase;
 class InstructionNavigator
