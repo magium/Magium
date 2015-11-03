@@ -5,6 +5,28 @@ The baseline classes are built to the Magento 1.9 CE theme and sample data.  _Re
 
 The codebase as a whole uses dependency injection and a dependency injection container as part of a PHPUnit test.  Yes, that's correct. The tests use DI and a DIC.  Why would I commit such a horrible crime against the software development gods?  Well, because this is basically a glorified batch processing system.  But there are features in a DiC that allow you to make a lot of customizations. Say you want to build a test that adds to the cart, but there is some kind of popup that is non-standard.  Instead of building out all of this functionality yourself just extend the AddToCart action class, override the appropriate method and set a type preference in the di.php configuration file.  Does another site do something different?  Just extend AddToCart with a different class and re-use everything else.
 
+Another benefit of using a DIC is that it allows you to easily modify test steps prior to their being executed.  All objects are shared objects in the DIC and so if you wanted to use a generated email address, for example, you could do something like this.
+
+```php
+class TestEmailAddress extends AbstractMagentoTestCase
+{
+
+    public function testGuestCheckout()
+    {
+        // Other stuff
+
+        $customer = $this->get('Magium\Magento\Authenticators\CustomerAuthenticator');
+        $customer->setEmailAddress('myemailaddress@gmail.com');
+
+        $guestCheckout = $this->get('Magium\Magento\Actions\Checkout\GuestCheckout');
+        $guestCheckout->execute();
+    }
+
+}
+```
+
+Using this code the guest checkout will then use that generated email address instead of the default "test@example.com".  This could be used to test the email that is sent out by having it sent to your GMail account.
+
 Is this the best, most purest way of doing this?  I don't know.  But I was tasked with building out some very complex Selenium tests a while back and this is what I wish I had.
 
 Why are you using PHPUnit?
