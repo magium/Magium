@@ -2,15 +2,24 @@
 
 namespace Magium\Magento\Navigators\Checkout;
 
+use Magium\Magento\Actions\Checkout\Steps\StepInterface;
 use Magium\Navigators\InstructionNavigator;
 
-class CheckoutNavigator extends InstructionNavigator
+class CheckoutStartNavigator extends InstructionNavigator implements StepInterface
 {
 
-    public function navigateTo()
+    public function navigateTo(array $instructions = null)
     {
-        $instructions = $this->themeConfiguration->getCheckoutNavaigationInstructions();
+        if ($instructions === null) {
+            $instructions = $this->themeConfiguration->getCheckoutNavigationInstructions();
+        }
         return parent::navigateTo($instructions);
+    }
+
+    public function execute()
+    {
+        $this->navigateTo();
+        return true;
     }
 
 }

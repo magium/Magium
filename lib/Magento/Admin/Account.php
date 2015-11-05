@@ -5,7 +5,7 @@ namespace Magium\Magento\Admin;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Magium\Commands\Open;
 use Magium\Magento\Themes\AdminThemeConfiguration;
-use Magium\Magento\Authenticators\AdminAuthenticator;
+use Magium\Magento\Identities\AdminIdentity;
 use Magium\Navigators\InstructionNavigator;
 use Magium\WebDriver\WebDriver;
 use Magium\Magento\AbstractMagentoTestCase;
@@ -14,7 +14,7 @@ class Account
 {
     
     protected $theme;
-    protected $authenticator;
+    protected $adminIdentity;
     protected $webdriver;
     protected $testCase;
     protected $openCommand;
@@ -22,7 +22,7 @@ class Account
     
     public function __construct(
         AdminThemeConfiguration $theme,
-        AdminAuthenticator      $authenticator,
+        AdminIdentity      $adminIdentity,
         InstructionNavigator    $instructionsNavigator,
         WebDriver               $webdriver,
         AbstractMagentoTestCase        $testCase,
@@ -30,7 +30,7 @@ class Account
         Messages                $messages
     ) {
         $this->theme         = $theme;
-        $this->authenticator = $authenticator;
+        $this->adminIdentity = $adminIdentity;
         $this->webdriver     = $webdriver;
         $this->testCase      = $testCase;
         $this->openCommand   = $open;
@@ -40,7 +40,7 @@ class Account
     public function login($username = null, $password = null)
     {
 
-        $this->openCommand->open($this->authenticator->getUrl());
+        $this->openCommand->open($this->adminIdentity->getUrl());
 
         $usernameElement = $this->webdriver->byXpath($this->theme->getLoginUsernameField());
         $passwordElement = $this->webdriver->byXpath($this->theme->getLoginPasswordField());
@@ -51,11 +51,11 @@ class Account
         $this->testCase->assertInstanceOf('Facebook\Webdriver\WebDriverElement', $submitElement);
 
         if ($username === null) {
-            $username = $this->authenticator->getAccount();
+            $username = $this->adminIdentity->getAccount();
         }
         
         if ($password === null) {
-            $password = $this->authenticator->getPassword();
+            $password = $this->adminIdentity->getPassword();
         }
         
         $usernameElement->sendKeys($username);

@@ -3,7 +3,7 @@
 namespace Magium\Magento\Actions\Customer;
 
 use Magium\Magento\AbstractMagentoTestCase;
-use Magium\Magento\Authenticators\CustomerAuthenticator;
+use Magium\Magento\Identities\CustomerIdentity;
 use Magium\Navigators\InstructionNavigator;
 use Magium\Magento\Themes\ThemeConfiguration;
 use Magium\WebDriver\WebDriver;
@@ -14,14 +14,14 @@ class Login
     protected $theme;
     protected $testCase;
     protected $instructionsNavigator;
-    protected $customerAuthenticator;
+    protected $customerIdentity;
 
 
     public function __construct(
         WebDriver $webdriver,
         ThemeConfiguration $theme,
         InstructionNavigator $instructionsNavigator,
-        CustomerAuthenticator $customerAuthenticator,
+        CustomerIdentity $customerIdentity,
         AbstractMagentoTestCase $testCase
 
     ) {
@@ -29,7 +29,7 @@ class Login
         $this->theme        = $theme;
         $this->testCase     = $testCase;
         $this->instructionsNavigator = $instructionsNavigator;
-        $this->customerAuthenticator = $customerAuthenticator;
+        $this->customerIdentity = $customerIdentity;
     }
 
 
@@ -62,11 +62,11 @@ class Login
             }
         }
         if ($username === null) {
-            $username = $this->customerAuthenticator->getAccount();
+            $username = $this->customerIdentity->getEmailAddress();
         }
 
         if ($password === null) {
-            $password = $this->customerAuthenticator->getPassword();
+            $password = $this->customerIdentity->getPassword();
         }
 
         $usernameElement = $this->webdriver->byXpath($this->theme->getLoginUsernameField());

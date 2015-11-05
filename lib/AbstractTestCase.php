@@ -5,10 +5,15 @@ namespace Magium;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
-    /*
+    /**
      * @var \Magium\WebDriver\WebDriver
      */
     protected $webdriver;
+
+    /**
+     * @var \Zend\Di\Di
+     */
+
     protected $di;
 
     const BY_XPATH = 'byXpath';
@@ -47,7 +52,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $count  = 0;
         $diConfigPath = realpath(__DIR__ . '/../configuration/di.php');
         $configArray = array_merge($defaults, include $diConfigPath);
 
@@ -87,6 +91,34 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             self::assertTrue(false, sprintf('Element "%s" cannot be found using selector "%s"', $selector, $by));
         }
     }
+
+
+    public function assertElementDisplayed($selector, $by = 'byId')
+    {
+        try {
+            $this->assertElementExists($selector, $by);
+            self::assertTrue(
+                $this->webdriver->$by($selector)->isDisplayed(),
+                sprintf('The element: %s, is not displayed and it should have been', $selector)
+            );
+        } catch (\Exception $e) {
+            self::assertTrue(false, sprintf('Element "%s" cannot be found using selector "%s"', $selector, $by));
+        }
+    }
+
+    public function assertElementNotDisplayed($selector, $by = 'byId')
+    {
+        try {
+            $this->assertElementExists($selector, $by);
+            self::assertFalse(
+                $this->webdriver->$by($selector)->isDisplayed(),
+                sprintf('The element: %s, is displayed and it should not have been')
+            );
+        } catch (\Exception $e) {
+            self::assertTrue(false, sprintf('Element "%s" cannot be found using selector "%s"', $selector, $by));
+        }
+    }
+
     public function assertElementNotExists($selector, $by = 'byId')
     {
         try {
@@ -113,17 +145,32 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->assertElementHasText('body', $text, $message);
     }
-    
+
+    /**
+     * @param $xpath
+     * @return \Facebook\WebDriver\Remote\RemoteWebElement
+     */
+
     public function byXpath($xpath)
     {
         return $this->webdriver->byXpath($xpath);
     }
-    
+
+    /**
+     * @param $id
+     * @return \Facebook\WebDriver\Remote\RemoteWebElement
+     */
+
     public function byId($id)
     {
         return $this->webdriver->byId($id);
     }
-    
+
+    /**
+     * @param $selector
+     * @return \Facebook\WebDriver\Remote\RemoteWebElement
+     */
+
     public function byCssSelector($selector)
     {
         return $this->webdriver->byCssSelector($selector);

@@ -10,7 +10,28 @@ class WebDriver extends RemoteWebDriver
 {
     const INSTRUCTION_MOUSE_MOVETO = 'mouseMoveTo';
     const INSTRUCTION_MOUSE_CLICK  = 'mouseClick';
-    
+
+    public function elementExists($selector, $by = 'byId')
+    {
+        try {
+            $this->$by($selector);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+
+    public function elementDisplayed($selector, $by = 'byId')
+    {
+        try {
+            $element = $this->$by($selector);
+            return $element->isDisplayed();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     /**
      * 
      * @param string $xpath

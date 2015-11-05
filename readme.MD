@@ -15,7 +15,7 @@ class TestEmailAddress extends AbstractMagentoTestCase
     {
         // Other stuff
 
-        $customer = $this->get('Magium\Magento\Authenticators\CustomerAuthenticator');
+        $customer = $this->get('Magium\Magento\Identities\CustomerIdentity');
         $customer->setEmailAddress('myemailaddress@gmail.com');
 
         $guestCheckout = $this->get('Magium\Magento\Actions\Checkout\GuestCheckout');
@@ -51,9 +51,14 @@ There are several base concepts that you need to be familiar with
 * Assertions - There are two types of assertions
 ** Static assertions - These are the kinds of assertions that you find in your test case itself.  assertEquals(), assertTrue(), etc.
 ** Programmable assertions - These are more complicated assertions that may be programmable
-* Authenticators - Used to manage authentication data
+* Identities - Used to manage users, such as a customer or admin user.
 * Navigators - These classes will navigate to some place on the web site, but will not do any actions.  They are intended to be read-only, in other words.  Navigating to a product page.  Navigate to a customer login page.  Navigate to and admin System Configuration panel.  And so on.
 * Themes - These are possibly mis-named.  They are intended to contain configuration information about your specific Magento instance.  So, if your customization has a different add-to-cart button you would either override these classes or provide configuration for internal use.
+* Extractors - These are classes that can be inserted in some execution flow to extract data from the page.  Useful for assertions or for gathering data for further command execution.
+
+As a matter of standardization Magium will use Xpath exclusively for internal functionality when the functionality is configurable  So if you intend to modify how Magium selects elements you will need to use Xpath to select elements.  If the item is not configurable (such as the selector IDs for payment methods) then whatever gives the most exact match will be used.
+
+However, in your own tests, I would consider it a best practice to use the XML id as a first resort, CSS selectors second, and Xpath third.  But I also expect that the use cases for CSS selectors will actually be a sliver of a window.  They have the specificity of ID-based, but its a query, not an identifier, and so it is quite possible to fat-finger something in a way that leaves you wonder.  CSS selectorss also have the ability for DOM traversal like Xpath, but its functionality significantly limited, particularly if you are looking for a specific element among many.  As such, my personal preference, based off of my own experience, is to use XML IDs first, and then just use Xpath.  Once you are comfortable with basic Xpath you will find that its wealth of functionality is incredibly useful.
 
 Configuration
 =============

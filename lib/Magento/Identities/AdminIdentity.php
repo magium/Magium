@@ -1,8 +1,9 @@
 <?php
 
-namespace Magium\Magento\Authenticators;
+namespace Magium\Magento\Identities;
 
-class AdminAuthenticator extends CustomerAuthenticator
+
+class AdminIdentity extends CustomerIdentity
 {
 
     protected $account   = 'admin';

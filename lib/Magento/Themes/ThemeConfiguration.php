@@ -97,7 +97,7 @@ class ThemeConfiguration extends AbstractConfigurableElement
         return $this->baseUrl;
     }
 
-    public function getCheckoutNavaigationInstructions()
+    public function getCheckoutNavigationInstructions()
     {
         return $this->checkoutNavigationInstructions;
     }
