@@ -49,8 +49,8 @@ There are several base concepts that you need to be familiar with
 * Commands - These tend to be basic WebDriver commands, such as open().  There aren't many of them.
 * Actions - These are sets of commands that do strings of things to get to a particular goal.  One goal could be logging in.  Another goal could be adding a product to the cart.  Another could be checking out
 * Assertions - There are two types of assertions
-** Static assertions - These are the kinds of assertions that you find in your test case itself.  assertEquals(), assertTrue(), etc.
-** Programmable assertions - These are more complicated assertions that may be programmable
+    * Static assertions - These are the kinds of assertions that you find in your test case itself.  assertEquals(), assertTrue(), etc.
+    * Programmable assertions - These are more complicated assertions that may be programmable
 * Identities - Used to manage users, such as a customer or admin user.
 * Navigators - These classes will navigate to some place on the web site, but will not do any actions.  They are intended to be read-only, in other words.  Navigating to a product page.  Navigate to a customer login page.  Navigate to and admin System Configuration panel.  And so on.
 * Themes - These are possibly mis-named.  They are intended to contain configuration information about your specific Magento instance.  So, if your customization has a different add-to-cart button you would either override these classes or provide configuration for internal use.
@@ -111,6 +111,6 @@ Rules for test utility classes
 ==============================
 
 * All calls will presume positive results.  For example, it will presume that if you are intending to add something to the cart, you are intending to actually have it added to the cart.  If you wish to test negative results you will need to build out that functionality in code yourself
-** But that said there are some classes, such as the checkout classes, which are intended to be integrated with or have their execution modified programmatically.
+    * But that said there are some classes, such as the checkout classes, which are intended to be integrated with or have their execution modified programmatically.
 * All calls will presume a pre-existing web page that is opened.  They will expect you to "set the stage" for the functionality you intend to call. For example, if you want to navigate to a particular category page, the test is going to presume that the page it is on has that functionality on it.
 * Whenever possible (hopefully 100% of the time) the DI container in the test case itself should be used to retrieve test objects. Some commonly used functionality, such as opening a web page, will have pre-existent convenience methods defined.
