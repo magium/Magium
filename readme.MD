@@ -35,7 +35,7 @@ Why are you using PHPUnit?
 Isn't PHPUnit for testing units of code?  Isn't this done in blatant disregard to pure software development?  Yes!  But for several reasons.
 
 * You probably already know much of PHPUnit's syntax
-* PHPUnit is most likely already integrated with your existing IDE, meaning you can run tests from directly in there
+* PHPUnit is most likely already integrated with your existing IDE, meaning you can run tests from directly in there.  It is also already integrated with a number of other development and testing tools.
 * It's mature, with many different options for customizing its behavior.  There is some hard coded functionality (which is also a reason why I had to go with a DiC), but most of what you need is either already there or easily installed.
 * A Selenium test needs assertions.  Was the product actually added to the cart?  Was I actually logged in, etc.
 
