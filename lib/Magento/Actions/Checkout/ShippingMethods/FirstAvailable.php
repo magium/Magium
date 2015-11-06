@@ -5,6 +5,7 @@ namespace Magium\Magento\Actions\Checkout\ShippingMethods;
 use Magium\AbstractTestCase;
 use Magium\Magento\AbstractMagentoTestCase;
 use Magium\Magento\Themes\OnePageCheckout\ThemeConfiguration;
+use Magium\WebDriver\ExpectedCondition;
 use Magium\WebDriver\WebDriver;
 
 class FirstAvailable implements ShippingMethodInterface
@@ -31,6 +32,8 @@ class FirstAvailable implements ShippingMethodInterface
             $this->testCase->assertElementExists($this->theme->getDefaultShippingXpath(), AbstractTestCase::BY_XPATH);
             $this->testCase->assertElementDisplayed($this->theme->getDefaultShippingXpath(), AbstractTestCase::BY_XPATH);
         }
+
+        usleep(500000); // Apparently the browser needs to breath a little
 
         if ($this->webDriver->elementDisplayed($this->theme->getDefaultShippingXpath(), AbstractTestCase::BY_XPATH)) {
             $this->webDriver->byXpath($this->theme->getDefaultShippingXpath())->click();
