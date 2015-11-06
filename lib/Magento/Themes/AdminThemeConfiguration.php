@@ -17,9 +17,29 @@ class AdminThemeConfiguration extends ThemeConfiguration
     protected $adminPopupMessageCloseButtonXpath        = '//*[@id="message-popup-window"]/descendant::*[@title="close"]';
 
     protected $systemConfigTabsXpath                = '//ul[@id="system_config_tabs"]/descendant::a[contains(concat(" ",normalize-space(.)," ")," %s ")]';
-    protected $systemConfigSectionToggleXpath             = '//form[@id="config_edit_form"]/descendant::div[@class="section-config"]/descendant::a[.="%s"]';
-    protected $systemConfigDisplayCheckXpath            = '//legend[.="%s"]';
+    protected $systemConfigSectionToggleXpath             = '//form[@id="config_edit_form"]/descendant::div[contains(concat(" ",normalize-space(@class)," ")," section-config ")]/descendant::a[.="%s"]';
+    protected $systemConfigSectionDisplayCheckXpath            = '//legend[.="%s"]';
     protected $systemConfigToggleEnableXpath            = '//legend[.="%s"]/../descendant::td[concat(" ",normalize-space(.)," ") = " Enabled "]/../td/descendant::select/option[@value="%d"]';
+
+    protected $systemConfigurationSaveButtonXpath       = '//div[@class="main-col-inner"]/div[@class="content-header"]/descendant::button[@title="Save Config"]';
+
+    protected $systemConfigSaveSuccessfulXpath          = '//li[@class="success-msg"]/descendant::span[.="The configuration has been saved."]';
+
+    /**
+     * @return string
+     */
+    public function getSystemConfigSaveSuccessfulXpath()
+    {
+        return $this->systemConfigSaveSuccessfulXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSystemConfigurationSaveButtonXpath()
+    {
+        return $this->systemConfigurationSaveButtonXpath;
+    }
 
     /**
      * @return string
@@ -32,9 +52,9 @@ class AdminThemeConfiguration extends ThemeConfiguration
     /**
      * @return string
      */
-    public function getSystemConfigDisplayCheckXpath()
+    public function getSystemConfigSectionDisplayCheckXpath()
     {
-        return $this->systemConfigDisplayCheckXpath;
+        return $this->systemConfigSectionDisplayCheckXpath;
     }
 
     /**

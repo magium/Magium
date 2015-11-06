@@ -88,7 +88,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         try {
             self::assertWebDriverElement($this->webdriver->$by($selector));
         } catch (\Exception $e) {
-            self::assertTrue(false, sprintf('Element "%s" cannot be found using selector "%s"', $selector, $by));
+            self::assertTrue(false, sprintf('Element "%s" cannot be found using selector "%s": %s', $selector, $by, $e->getMessage()));
         }
     }
 
