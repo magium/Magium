@@ -18,7 +18,7 @@ class ShippingAddress implements StepInterface
     public function __construct(
         WebDriver                   $webdriver,
         ThemeConfiguration          $theme,
-        CustomerIdentity            $customerIdentity,
+        Customer                    $customerIdentity,
         AbstractMagentoTestCase     $testCase
     ) {
         $this->webdriver        = $webdriver;

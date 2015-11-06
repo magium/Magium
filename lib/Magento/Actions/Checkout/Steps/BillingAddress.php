@@ -4,6 +4,7 @@ namespace Magium\Magento\Actions\Checkout\Steps;
 
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use Magium\Magento\AbstractMagentoTestCase;
+use Magium\Magento\Identities\Customer;
 use Magium\Magento\Identities\CustomerIdentity;
 use Magium\WebDriver\WebDriver;
 use Magium\Magento\Themes\OnePageCheckout\ThemeConfiguration;
@@ -18,7 +19,7 @@ class BillingAddress implements StepInterface
     public function __construct(
         WebDriver                   $webdriver,
         ThemeConfiguration          $theme,
-        CustomerIdentity            $customerIdentity,
+        Customer            $customerIdentity,
         AbstractMagentoTestCase     $testCase
     ) {
         $this->webdriver        = $webdriver;

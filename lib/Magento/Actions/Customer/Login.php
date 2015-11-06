@@ -18,10 +18,10 @@ class Login
 
 
     public function __construct(
-        WebDriver $webdriver,
-        ThemeConfiguration $theme,
-        InstructionNavigator $instructionsNavigator,
-        CustomerIdentity $customerIdentity,
+        WebDriver               $webdriver,
+        ThemeConfiguration      $theme,
+        InstructionNavigator    $instructionsNavigator,
+        Customer                $customerIdentity,
         AbstractMagentoTestCase $testCase
 
     ) {

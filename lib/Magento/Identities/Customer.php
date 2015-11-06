@@ -4,7 +4,7 @@ namespace Magium\Magento\Identities;
 
 use Magium\AbstractConfigurableElement;
 
-class CustomerIdentity extends AbstractConfigurableElement
+class Customer extends AbstractConfigurableElement
 {
     protected $emailAddress          = 'test@example.com';
     protected $password              = 'password';

@@ -1,6 +1,6 @@
 <?php
 
-namespace Magium\Magento\Admin;
+namespace Magium\Magento\Actions\Admin\Login;
 
 use Magium\WebDriver\WebDriver;
 

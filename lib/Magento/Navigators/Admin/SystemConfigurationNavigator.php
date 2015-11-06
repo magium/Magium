@@ -1,6 +1,6 @@
 <?php
 
-namespace Magium\Magento\Navigators;
+namespace Magium\Magento\Navigators\Admin;
 
 use Magium\WebDriver\WebDriver;
 use Magium\Magento\Themes\ThemeConfiguration;

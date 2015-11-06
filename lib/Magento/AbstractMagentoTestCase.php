@@ -35,23 +35,15 @@ abstract class AbstractMagentoTestCase extends AbstractTestCase
 
     /**
      *
-     * @param string $customer
-     * @return \Magium\Magento\Admin\Account
-     */
-
-    public function getAdminAccount($adminAccountCLass = 'Magium\Magento\Admin\Account')
-    {
-        return $this->get($adminAccountCLass);
-    }
-
-    /**
-     *
      * @param string $navigator
      * @return \Magium\Navigators\BaseMenuNavigator
      */
 
-    public function getNavigator($navigator = 'Magium\Magento\Navigators\BaseMenuNavigator')
+    public function getNavigator($navigator = 'BaseMenuNavigator')
     {
+        if (strpos($navigator, 'Magium') === false) {
+            $navigator = 'Magium\Magento\Navigators\\' . $navigator;
+        }
         return $this->get($navigator);
     }
 
@@ -73,17 +65,6 @@ abstract class AbstractMagentoTestCase extends AbstractTestCase
 
     }
 
-    /**
-     *
-     * @param string $navigator
-     * @return \Magium\Magento\Navigators\AdminMenuNavigator
-     */
-
-    public function getAdminNavigator($navigator = 'Magium\Magento\Navigators\AdminMenuNavigator')
-    {
-        return $this->get($navigator);
-    }
-
     public function commandOpen($url)
     {
         $this->get('Magium\Commands\Open')->open($url);
@@ -91,6 +72,16 @@ abstract class AbstractMagentoTestCase extends AbstractTestCase
 
     public function switchThemeConfiguration($fullyQualifiedClassName)
     {
-        $this->di->instanceManager()->setTypePreference('Magium\Magento\Navigators\BaseNavigator', $fullyQualifiedClassName);
+        $this->di->instanceManager()->setTypePreference('Magium\Magento\Navigators\BaseNavigator', [$fullyQualifiedClassName]);
+    }
+
+
+
+    public function getIdentity($name = 'Customer')
+    {
+        if (strpos($name, 'Magium') === false) {
+            $name = 'Magium\Magento\Identities\\' . $name;
+        }
+        return $this->get($name);
     }
 }

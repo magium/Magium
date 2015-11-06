@@ -1,16 +1,17 @@
 <?php
 
-namespace Magium\Magento\Admin;
+namespace Magium\Magento\Actions\Admin\Login;
 
 use Facebook\WebDriver\Exception\WebDriverException;
 use Magium\Commands\Open;
+use Magium\Magento\Identities\Admin;
 use Magium\Magento\Themes\AdminThemeConfiguration;
 use Magium\Magento\Identities\AdminIdentity;
 use Magium\Navigators\InstructionNavigator;
 use Magium\WebDriver\WebDriver;
 use Magium\Magento\AbstractMagentoTestCase;
 use Facebook\WebDriver\WebDriverExpectedCondition;
-class Account
+class Login
 {
     
     protected $theme;
@@ -22,7 +23,7 @@ class Account
     
     public function __construct(
         AdminThemeConfiguration $theme,
-        AdminIdentity      $adminIdentity,
+        Admin      $adminIdentity,
         InstructionNavigator    $instructionsNavigator,
         WebDriver               $webdriver,
         AbstractMagentoTestCase        $testCase,
@@ -40,15 +41,15 @@ class Account
     public function login($username = null, $password = null)
     {
 
-        $this->openCommand->open($this->adminIdentity->getUrl());
+        $this->openCommand->open($this->theme->getBaseUrl());
 
         $usernameElement = $this->webdriver->byXpath($this->theme->getLoginUsernameField());
         $passwordElement = $this->webdriver->byXpath($this->theme->getLoginPasswordField());
         $submitElement   = $this->webdriver->byXpath($this->theme->getLoginSubmitButton());
 
-        $this->testCase->assertInstanceOf('Facebook\Webdriver\WebDriverElement', $usernameElement);
-        $this->testCase->assertInstanceOf('Facebook\Webdriver\WebDriverElement', $passwordElement);
-        $this->testCase->assertInstanceOf('Facebook\Webdriver\WebDriverElement', $submitElement);
+        $this->testCase->assertWebDriverElement($usernameElement);
+        $this->testCase->assertWebDriverElement($passwordElement);
+        $this->testCase->assertWebDriverElement($submitElement);
 
         if ($username === null) {
             $username = $this->adminIdentity->getAccount();
