@@ -74,6 +74,16 @@ class ThemeConfiguration extends AbstractConfigurableElement
 
     protected $orderReceivedCompleteXpath = '//h1[.="Your order has been received."]';
 
+    protected $shippingMethodFormXpath      = '//form[@id="co-shipping-method-form"]';
+
+    /**
+     * @return string
+     */
+    public function getShippingMethodFormXpath()
+    {
+        return $this->shippingMethodFormXpath;
+    }
+
     /**
      * @return string
      */

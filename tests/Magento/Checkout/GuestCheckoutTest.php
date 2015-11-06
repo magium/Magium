@@ -3,6 +3,7 @@
 namespace Tests\Magento\Checkout;
 
 use Magium\Magento\AbstractMagentoTestCase;
+use Magium\Magento\Actions\Checkout\Extractors\OrderId;
 
 class GuestCheckoutTest extends AbstractMagentoTestCase
 {
@@ -21,6 +22,11 @@ class GuestCheckoutTest extends AbstractMagentoTestCase
         /* @var $guestCheckout \Magium\Magento\Actions\Checkout\GuestCheckout */
 
         $guestCheckout->execute();
+
+        $orderId = $this->get('Magium\Magento\Actions\Checkout\Extractors\OrderId');
+        /** @var $orderId OrderId */
+        self::assertNotNull($orderId->getOrderId());
+        self::assertGreaterThan(0, $orderId->getOrderId());
     }
 
 }

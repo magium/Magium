@@ -27,7 +27,11 @@ class FirstAvailable implements ShippingMethodInterface
 
     public function choose($required)
     {
-        usleep(500000); // Apparently the browser needs to breath a little
+        $this->webDriver->wait()->until(
+            ExpectedCondition::elementExists(
+                $this->theme->getShippingMethodFormXpath(), AbstractTestCase::BY_XPATH
+            )
+        );
 
         // Some products, such as virtual products, do not get shipped
         if ($required) {
