@@ -1,6 +1,8 @@
 # Magium
 A PHPUnit/Webdriver (Selenium (there for SEO)) based test framework for streamlining browser testing with Magento.  It basically boils down to building out reusable Web Driver commands for Magento allowing you to bypass much of the boilerplate code that browser/functional testing may require.  This is done through utility classes.
 
+(Getting Started is at towards the end of this document)
+
 The baseline classes are built to the Magento 1.9 CE theme and sample data.  _Refactoring may occur if it is necessary to make the code work with multiple themes_.  If you want to contribute (please do!!) please make sure that your contributions work with, at least, Magento 1.9 CE with sample data.
 
 The codebase as a whole uses dependency injection and a dependency injection container as part of a PHPUnit test.  Yes, that's correct. The tests use DI and a DIC.  Why would I commit such a horrible crime against the software development gods?  Well, because this is basically a glorified batch processing system.  But there are features in a DiC that allow you to make a lot of customizations. Say you want to build a test that adds to the cart, but there is some kind of popup that is non-standard.  Instead of building out all of this functionality yourself just extend the AddToCart action class, override the appropriate method and set a type preference in the di.php configuration file.  Does another site do something different?  Just extend AddToCart with a different class and re-use everything else.
@@ -78,7 +80,7 @@ Building a test case is quite simple.
 
 ```php
 
-class TestHomePageTitle extends Magium\AbstractTestCase
+class TestHomePageTitle extends Magium\Magento\AbstractMagentoTestCase
 {
     public function testTitleExists()
     {
@@ -94,7 +96,7 @@ Negative tests can be run too.
 
 ```php
 
-class TestHomePageTitle extends Magium\AbstractTestCase
+class TestHomePageTitle extends Magium\Magento\AbstractMagentoTestCase
 {
 
     public function testBadTitleNotExists()
@@ -106,6 +108,66 @@ class TestHomePageTitle extends Magium\AbstractTestCase
 
 }
 ```
+
+Getting Started
+===============
+
+The first thing you will need is the Selenium Server.  You can get it from http://www.seleniumhq.org/download/.  All tests are run using the Remote WebDriver functionality.  The purpose of that is simply consistency across as many use cases as possible.  So if you're using this for local development or Selenium grid, the goal is to re-use as much as possible.  That means using the remote Web Driver implementation.
+
+Out of the box Magium uses the Chrome Driver webdriver so you will need to download that from https://sites.google.com/a/chromium.org/chromedriver/downloads.  Why not Firefox?  Who actually uses Firefox for anything other than Selenium test building or building JMeter scripts?  Nobody.  That's right.  Nobody.
+
+So to get everything running you will need to download the Selenium Server jar and the Chrome Driver executable and put them in the same directory.  Once you have done that you need to execute
+
+```
+java -Dwebdriver.chrome.driver=chromedriver.exe -jar selenium-server-standalone-2.48.2.jar
+```
+
+Once Selenium Server is up and running you will need to build a test.  There will be more tutorials and some videos to help go through some of Magium's features as time goes on.
+
+The easiest test to get running is navigating your website.
+
+```php
+
+namespace Tests\Magento\Navigation;
+
+use Magium\Magento\AbstractMagentoTestCase;
+
+class BaseNavigationTest extends AbstractMagentoTestCase
+{
+
+    public function testNavigateToJewelry()
+    {
+
+        $this->commandOpen('http://localhost/');
+        $this->getNavigator()->navigateTo('Accessories/Jewelry');
+        $this->assertPageHasText('Blue Horizons Bracelets');
+    }
+}
+```
+
+This test navigates to the Accessories / Jewelry page and asserts that a certain product is on that page.
+
+But in truth, this test is not quite right.  The goal is to make as absolutely much as possible configurable and, thus, repeatable.  Following is an example.
+
+```php
+namespace Tests\Magento\Navigation;
+
+use Magium\Magento\AbstractMagentoTestCase;
+
+class BaseNavigationTest extends AbstractMagentoTestCase
+{
+
+    public function testNavigateToJewelry()
+    {
+        $theme = $this->getTheme();
+        $this->commandOpen($theme->getBaseUrl());
+        $this->getNavigator()->navigateTo($theme->getNavigationPathToProductCategory());
+        $this->assertPageHasText('Blue Horizons Bracelets');
+    }
+}
+```
+
+Anything repeatable, such as the base URL or the navigation to a standard category is intended to be configurable.  Why?  More details on this to come.
 
 Rules for test utility classes
 ==============================

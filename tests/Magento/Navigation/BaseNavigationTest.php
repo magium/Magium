@@ -9,8 +9,9 @@ class BaseNavigationTest extends AbstractMagentoTestCase
 
     public function testNavigateToJewelry()
     {
-        $this->commandOpen('http://magento19.loc/');
-        $this->getNavigator()->navigateTo('Accessories/Jewelry');
+        $theme = $this->getTheme();
+        $this->commandOpen($theme->getBaseUrl());
+        $this->getNavigator()->navigateTo($theme->getNavigationPathToProductCategory());
         $this->assertPageHasText('Blue Horizons Bracelets');
     }
 }
