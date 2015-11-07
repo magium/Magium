@@ -2,7 +2,7 @@
   "name" : "eschrade/magium",
   "type": "library",
   "description": "Selenium",
-  "keywords": ["selenium", "webdriver", 'testing'],
+  "keywords": ["selenium", "webdriver", "testing"],
   "homepage": "https://github.com/kschroeder/Magium",
   "license": "MIT",
   "authors": [
