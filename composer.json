@@ -1,5 +1,18 @@
 {
-  "name" : "Magium",
+  "name" : "eschrade/magium",
+  "type": "library",
+  "description": "Selenium",
+  "keywords": ["selenium", "webdriver", 'testing'],
+  "homepage": "https://github.com/kschroeder/Magium",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Kevin Schroeder",
+      "email": "kschroeder@mirageworks.com",
+      "homepage": "http://eschrade.com/",
+      "role": "Developer"
+    }
+  ],
   "require" : {
     "phpunit/phpunit" : "4.8.6",
     "zendframework/zend-di" : "2.5.1",
