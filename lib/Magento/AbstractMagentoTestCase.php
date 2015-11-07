@@ -30,6 +30,9 @@ abstract class AbstractMagentoTestCase extends AbstractTestCase
 
     public function getTheme($theme = 'Magium\Magento\Themes\ThemeConfiguration')
     {
+        if (strpos($theme, 'Magium') === false) {
+            $theme = 'Magium\Magento\Themes\\' . $theme;
+        }
         return $this->get($theme);
     }
 

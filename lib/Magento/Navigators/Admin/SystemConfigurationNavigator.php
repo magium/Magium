@@ -5,6 +5,7 @@ namespace Magium\Magento\Navigators\Admin;
 use Magium\AbstractTestCase;
 use Magium\InvalidInstructionException;
 use Magium\Magento\AbstractMagentoTestCase;
+use Magium\WebDriver\ExpectedCondition;
 use Magium\WebDriver\WebDriver;
 use Magium\Magento\Themes\AdminThemeConfiguration;
 class SystemConfigurationNavigator
@@ -38,7 +39,8 @@ class SystemConfigurationNavigator
 
         $this->webdriver->byXpath($tabXpath)->click();
 
-        $this->testCase->assertElementExists($sectionDisplayXpath, AbstractTestCase::BY_XPATH);
+        $this->webdriver->wait()->until(ExpectedCondition::elementExists($sectionDisplayXpath, AbstractTestCase::BY_XPATH));
+
         $this->testCase->assertElementExists($sectionToggleXpath, AbstractTestCase::BY_XPATH);
         if (!$this->webdriver->elementDisplayed($sectionDisplayXpath, AbstractTestCase::BY_XPATH)) {
             $this->webdriver->byXpath($sectionToggleXpath)->click();

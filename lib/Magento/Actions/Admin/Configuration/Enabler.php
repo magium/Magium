@@ -48,21 +48,23 @@ class Enabler
 
     protected function navigateToSystemConfiguration($setting)
     {
-        if (!$this->webDriver->elementDisplayed($this->adminThemeConfiguration->getSystemConfigTabsXpath(), AbstractTestCase::BY_XPATH)) {
+        $tabDisplayXpath = sprintf($this->adminThemeConfiguration->getSystemConfigTabsXpath(), $this->tab);
+        if (!$this->webDriver->elementDisplayed($tabDisplayXpath, AbstractTestCase::BY_XPATH)) {
             $this->adminMenuNavigator->navigateTo('System/Configuration');
         }
 
-        if (!$this->webDriver->elementDisplayed($this->adminThemeConfiguration->getSystemConfigSectionDisplayCheckXpath(), AbstractTestCase::BY_XPATH)) {
+        $sectionDisplayXpath = sprintf($this->adminThemeConfiguration->getSystemConfigSectionDisplayCheckXpath(), $this->section);
+        if (!$this->webDriver->elementDisplayed($sectionDisplayXpath, AbstractTestCase::BY_XPATH)) {
             $this->systemConfigurationNavigator->navigateTo($setting);
         }
     }
 
     public function enable($setting, $save = true)
     {
+        // @TODO Note that much of this functionality may end up being moved to a more general settings modification class
         $this->setting($setting);
         $this->navigateToSystemConfiguration($setting);
         $settingXpath = sprintf($this->adminThemeConfiguration->getSystemConfigToggleEnableXpath(), $this->section, 1);
-        $this->testCase->assertElementDisplayed($settingXpath);
         $element = $this->webDriver->byXpath($settingXpath);
         if (!$element->getAttribute('selected')) {
             $element->click();
@@ -75,12 +77,12 @@ class Enabler
 
     public function disable($setting, $save = true)
     {
+        // @TODO Note that much of this functionality may end up being moved to a more general settings modification class
         $this->setting($setting);
         $this->navigateToSystemConfiguration($setting);
         $settingXpath = sprintf($this->adminThemeConfiguration->getSystemConfigToggleEnableXpath(), $this->section, 0);
-        $this->testCase->assertElementDisplayed($settingXpath, AbstractTestCase::BY_XPATH);
         $element = $this->webDriver->byXpath($settingXpath);
-        if ($element->getAttribute('selected')) {
+        if (!$element->getAttribute('selected')) {
             $element->click();
             if ($save) {
                 $this->save->save();

@@ -9,15 +9,30 @@ class SaveSystemConfigurationSettingTest extends AbstractMagentoTestCase
 
     public function testLoginAdmin()
     {
+        $adminThemeConfiguration = $this->getTheme('AdminThemeConfiguration');
+
         $this->get('Magium\Magento\Actions\Admin\Login\Login')->login();
         $enabler = $this->get('Magium\Magento\Actions\Admin\Configuration\Enabler');
         /** @var $enabler \Magium\Magento\Actions\Admin\Configuration\Enabler */
 
         $enabler->disable('Payment Methods/Saved CC');
+        $settingXpath = sprintf($adminThemeConfiguration->getSystemConfigToggleEnableXpath(), 'Saved CC', 0); // Note the 0
+        $element = $this->webdriver->byXpath($settingXpath);
+        self::assertNotNull($element->getAttribute('selected'));
 
         $enabler->enable('Payment Methods/Saved CC');
 
-        $enabler->enable('Payment Methods/Saved CC');
+        $settingXpath = sprintf($adminThemeConfiguration->getSystemConfigToggleEnableXpath(), 'Saved CC', 1); // Note the 1
+        $element = $this->webdriver->byXpath($settingXpath);
+        self::assertNotNull($element->getAttribute('selected'));
+
+
+        $enabler->disable('Payment Methods/Saved CC');
+
+        $settingXpath = sprintf($adminThemeConfiguration->getSystemConfigToggleEnableXpath(), 'Saved CC', 0); // Note the 0
+        $element = $this->webdriver->byXpath($settingXpath);
+        self::assertNotNull($element->getAttribute('selected'));
+
     }
 
 

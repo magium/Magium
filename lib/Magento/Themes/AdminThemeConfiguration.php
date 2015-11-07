@@ -18,7 +18,7 @@ class AdminThemeConfiguration extends ThemeConfiguration
 
     protected $systemConfigTabsXpath                = '//ul[@id="system_config_tabs"]/descendant::a[contains(concat(" ",normalize-space(.)," ")," %s ")]';
     protected $systemConfigSectionToggleXpath             = '//form[@id="config_edit_form"]/descendant::div[contains(concat(" ",normalize-space(@class)," ")," section-config ")]/descendant::a[.="%s"]';
-    protected $systemConfigSectionDisplayCheckXpath            = '//legend[.="%s"]';
+    protected $systemConfigSectionDisplayCheckXpath            = '//legend[.="%s"]/ancestor::fieldset';
     protected $systemConfigToggleEnableXpath            = '//legend[.="%s"]/../descendant::td[concat(" ",normalize-space(.)," ") = " Enabled "]/../td/descendant::select/option[@value="%d"]';
 
     protected $systemConfigurationSaveButtonXpath       = '//div[@class="main-col-inner"]/div[@class="content-header"]/descendant::button[@title="Save Config"]';
