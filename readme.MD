@@ -175,6 +175,17 @@ class BaseNavigationTest extends AbstractMagentoTestCase
 
 Anything repeatable, such as the base URL or the navigation to a standard category is intended to be configurable.
 
+But how would you make that configuration work?  If a class extends AbstractConfigurableElement (such as the theming class), you can place a file in the /configuration directory that corresponds to the name of the class being requested.
+
+For example, the name of the basic theme class is Magium\Magento\Themes\ThemeConfiguration.  So what you would do is create a file called /configuration/Magium/Themes/ThemeConfiguration.php with the following code (to change the base URL).
+
+```php
+<?php
+
+$this->baseUrl                      = 'http://magento19.loc/';
+
+```
+
 Many more details on this to come.
 
 Rules for test utility classes
