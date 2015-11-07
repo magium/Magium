@@ -1,7 +1,7 @@
 {
   "name" : "eschrade/magium",
   "type": "library",
-  "description": "Selenium",
+  "description": "A Magento-focused testing suite using Web Driver.  Contains low-ish level functionality to quickly build browser/functional tests.",
   "keywords": ["selenium", "webdriver", "testing"],
   "homepage": "https://github.com/kschroeder/Magium",
   "license": "MIT",
