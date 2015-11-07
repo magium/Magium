@@ -167,7 +167,9 @@ class BaseNavigationTest extends AbstractMagentoTestCase
 }
 ```
 
-Anything repeatable, such as the base URL or the navigation to a standard category is intended to be configurable.  Why?  More details on this to come.
+Anything repeatable, such as the base URL or the navigation to a standard category is intended to be configurable.
+
+Many more details on this to come.
 
 Rules for test utility classes
 ==============================
