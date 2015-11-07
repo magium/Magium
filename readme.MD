@@ -122,9 +122,15 @@ So to get everything running you will need to download the Selenium Server jar a
 java -Dwebdriver.chrome.driver=chromedriver.exe -jar selenium-server-standalone-2.48.2.jar
 ```
 
-Once Selenium Server is up and running you will need to build a test.  There will be more tutorials and some videos to help go through some of Magium's features as time goes on.
+Once Selenium Server is up and running you will need to install Magium for your system.  There will be more tutorials and some videos to help go through some of Magium's features as time goes on.
 
-The easiest test to get running is navigating your website.
+To require Magium execute
+
+```
+php composer.phar require eschrade/magium
+```
+
+Then build a test.  The easiest test to get running is navigating your website.
 
 ```php
 
