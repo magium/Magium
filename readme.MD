@@ -1,7 +1,7 @@
 # Magium
 A PHPUnit/Webdriver (Selenium (there for SEO)) based test framework for streamlining browser testing with Magento.  It basically boils down to building out reusable Web Driver commands for Magento allowing you to bypass much of the boilerplate code that browser/functional testing may require.  This is done through utility classes.
 
-(Getting Started is at towards the end of this document)
+(Getting Started is at towards the end of this document, [Tutorials are on another Github project](https://github.com/kschroeder/MagiumTutorials).)
 
 The baseline classes are built to the Magento 1.9 CE theme and sample data.  _Refactoring may occur if it is necessary to make the code work with multiple themes_.  If you want to contribute (please do!!) please make sure that your contributions work with, at least, Magento 1.9 CE with sample data.
 
