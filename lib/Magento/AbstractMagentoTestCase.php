@@ -39,7 +39,21 @@ abstract class AbstractMagentoTestCase extends AbstractTestCase
     /**
      *
      * @param string $navigator
-     * @return \Magium\Navigators\BaseMenuNavigator
+     * @return mixed
+     */
+
+    public function getAction($action)
+    {
+        if (strpos($action, 'Magium') === false) {
+            $action = 'Magium\Magento\Actions\\' . $action;
+        }
+        return $this->get($action);
+    }
+
+    /**
+     *
+     * @param string $navigator
+     * @return \Magium\Magento\Navigators\BaseMenuNavigator
      */
 
     public function getNavigator($navigator = 'BaseMenuNavigator')
