@@ -44,7 +44,7 @@ abstract class AbstractMagentoTestCase extends AbstractTestCase
 
     public function getAction($action)
     {
-        if (strpos($action, 'Magium') === false) {
+        if (strpos($action, 'Magium' ) === false) {
             $action = 'Magium\Magento\Actions\\' . $action;
         }
         return $this->get($action);
