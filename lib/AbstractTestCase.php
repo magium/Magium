@@ -3,6 +3,7 @@
 namespace Magium;
 
 use Facebook\WebDriver\Remote\DesiredCapabilities;
+
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -92,6 +93,57 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function assertTitleEquals($title)
+    {
+        $webTitle = $this->webdriver->getTitle();
+        self::assertEquals($title, $webTitle);
+    }
+
+
+    public function assertTitleContains($title)
+    {
+        $webTitle = $this->webdriver->getTitle();
+        self::assertContains($title, $webTitle);
+    }
+
+
+    public function assertNotTitleEquals($title)
+    {
+        $webTitle = $this->webdriver->getTitle();
+        self::assertNotEquals($title, $webTitle);
+    }
+
+
+    public function assertNotTitleContains($title)
+    {
+        $webTitle = $this->webdriver->getTitle();
+        self::assertNotContains($title, $webTitle);
+    }
+
+    public function assertURLEquals($url)
+    {
+        $webUrl = $this->webdriver->getCurrentURL()
+        self::assertEquals($url, $webUrl);
+    }
+
+    public function assertURLContains($url)
+    {
+        $webUrl = $this->webdriver->getCurrentURL()
+        self::assertContains($url, $webUrl);
+    }
+
+
+    public function assertURLNotEquals($url)
+    {
+        $webUrl = $this->webdriver->getCurrentURL()
+        self::assertNotEquals($url, $webUrl);
+    }
+
+    public function assertURLNotContains($url)
+    {
+        $webUrl = $this->webdriver->getCurrentURL()
+        self::assertNotContains($url, $webUrl);
+    }
 
     public function assertElementDisplayed($selector, $by = 'byId')
     {
