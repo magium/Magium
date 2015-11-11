@@ -122,26 +122,26 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function assertURLEquals($url)
     {
-        $webUrl = $this->webdriver->getCurrentURL()
+        $webUrl = $this->webdriver->getCurrentURL();
         self::assertEquals($url, $webUrl);
     }
 
     public function assertURLContains($url)
     {
-        $webUrl = $this->webdriver->getCurrentURL()
+        $webUrl = $this->webdriver->getCurrentURL();
         self::assertContains($url, $webUrl);
     }
 
 
     public function assertURLNotEquals($url)
     {
-        $webUrl = $this->webdriver->getCurrentURL()
+        $webUrl = $this->webdriver->getCurrentURL();
         self::assertNotEquals($url, $webUrl);
     }
 
     public function assertURLNotContains($url)
     {
-        $webUrl = $this->webdriver->getCurrentURL()
+        $webUrl = $this->webdriver->getCurrentURL();
         self::assertNotContains($url, $webUrl);
     }
 
