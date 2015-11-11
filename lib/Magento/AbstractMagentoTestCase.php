@@ -92,7 +92,10 @@ abstract class AbstractMagentoTestCase extends AbstractTestCase
         $this->di->instanceManager()->setTypePreference('Magium\Magento\Navigators\BaseNavigator', [$fullyQualifiedClassName]);
     }
 
-
+    /**
+     * @param string $name
+     * @return \Magium\Magento\Identities\AbstractEntity
+     */
 
     public function getIdentity($name = 'Customer')
     {

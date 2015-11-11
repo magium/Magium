@@ -3,7 +3,7 @@
 namespace Magium\Magento\Identities;
 
 
-class Admin extends Customer
+class Admin extends AbstractEntity
 {
 
     protected $account   = 'admin';

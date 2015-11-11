@@ -2,9 +2,7 @@
 
 namespace Magium\Magento\Identities;
 
-use Magium\AbstractConfigurableElement;
-
-class Customer extends AbstractConfigurableElement
+class Customer extends AbstractEntity
 {
     protected $emailAddress          = 'test@example.com';
     protected $password              = 'password';
@@ -32,13 +30,6 @@ class Customer extends AbstractConfigurableElement
     protected $shippingCountryId        = 'US';
     protected $shippingTelephone        = '123-123-1234';
     protected $shippingFax              = '';
-
-
-
-    public function getPassword()
-    {
-        return $this->password;
-    }
 
     public function generateUniqueEmailAddress($domain = 'example.com')
     {

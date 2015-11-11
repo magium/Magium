@@ -3,14 +3,15 @@
 namespace Magium\Magento\Actions\Admin\Login;
 
 use Facebook\WebDriver\Exception\WebDriverException;
+use Facebook\WebDriver\WebDriverExpectedCondition;
 use Magium\Commands\Open;
+use Magium\Magento\AbstractMagentoTestCase;
 use Magium\Magento\Identities\Admin;
-use Magium\Magento\Themes\AdminThemeConfiguration;
 use Magium\Magento\Identities\AdminIdentity;
+use Magium\Magento\Themes\AdminThemeConfiguration;
 use Magium\Navigators\InstructionNavigator;
 use Magium\WebDriver\WebDriver;
-use Magium\Magento\AbstractMagentoTestCase;
-use Facebook\WebDriver\WebDriverExpectedCondition;
+
 class Login
 {
     
@@ -40,8 +41,19 @@ class Login
     
     public function login($username = null, $password = null)
     {
+        // We break SOLID here there might be scenarios where multiple logins are required.  So for expediency's sake
+        // We're having the login action take responsibility for figuring out how to get to the login screen.
 
-        $this->openCommand->open($this->theme->getBaseUrl());
+        $url = $this->webdriver->getCurrentURL();
+        if (strpos($url, 'http') === false) {
+            $this->openCommand->open($this->theme->getBaseUrl());
+        } else {
+            $this->webdriver->navigate()->to($this->theme->getBaseUrl());
+            $title = $this->webdriver->getTitle();
+            if (strpos($title, 'Dashboard') !== false) {
+                return;
+            }
+        }
 
         $usernameElement = $this->webdriver->byXpath($this->theme->getLoginUsernameField());
         $passwordElement = $this->webdriver->byXpath($this->theme->getLoginPasswordField());
