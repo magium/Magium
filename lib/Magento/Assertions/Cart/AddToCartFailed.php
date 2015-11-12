@@ -6,7 +6,7 @@ use Magium\Magento\AbstractMagentoTestCase;
 use Magium\Magento\Assertions\AssertionInterface;
 use Magium\Magento\Themes\ThemeConfiguration;
 
-class AddToCartSucceeded implements AssertionInterface
+class AddToCartFailed implements AssertionInterface
 {
 
     protected $testCase;
@@ -23,7 +23,7 @@ class AddToCartSucceeded implements AssertionInterface
 
     public function assert()
     {
-        $this->testCase->assertElementDisplayed($this->themeConfiguration->getAddToCartSuccessXpath(), AbstractMagentoTestCase::BY_XPATH);
+        $this->testCase->assertElementNotExists($this->themeConfiguration->getAddToCartSuccessXpath(), AbstractMagentoTestCase::BY_XPATH);
     }
 
 }

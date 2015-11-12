@@ -19,6 +19,10 @@ class ThemeConfiguration extends AbstractConfigurableElement
 
     protected $guestCheckoutButtonXpath = '//input[@id="login:guest"]';
 
+    protected $customerEmailInputXpath      = '//input[@id="login-email"]';
+    protected $customerPasswordInputXpath   = '//input[@id="login-password"]';
+    protected $customerButtonXpath          = '//button[@type="submit"]/descendant::span[.="Login"]';
+
     protected $billingFirstNameXpath      = '//input[@id="billing:firstname"]';
     protected $billingLastNameXpath       = '//input[@id="billing:lastname"]';
     protected $billingCompanyXpath        = '//input[@id="billing:company"]';
@@ -75,6 +79,32 @@ class ThemeConfiguration extends AbstractConfigurableElement
     protected $orderReceivedCompleteXpath = '//h1[.="Your order has been received."]';
 
     protected $shippingMethodFormXpath      = '//form[@id="co-shipping-method-form"]';
+
+    /**
+     * @return string
+     */
+    public function getCustomerEmailInputXpath()
+    {
+        return $this->customerEmailInputXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerPasswordInputXpath()
+    {
+        return $this->customerPasswordInputXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerButtonXpath()
+    {
+        return $this->customerButtonXpath;
+    }
+
+
 
     /**
      * @return string
