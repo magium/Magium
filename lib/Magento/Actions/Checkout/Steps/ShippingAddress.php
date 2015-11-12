@@ -4,9 +4,10 @@ namespace Magium\Magento\Actions\Checkout\Steps;
 
 use Magium\AbstractTestCase;
 use Magium\Magento\AbstractMagentoTestCase;
-use Magium\Magento\Identities\CustomerIdentity;
-use Magium\WebDriver\WebDriver;
+use Magium\Magento\Identities\Customer;
 use Magium\Magento\Themes\OnePageCheckout\ThemeConfiguration;
+use Magium\WebDriver\WebDriver;
+
 class ShippingAddress implements StepInterface
 {
 

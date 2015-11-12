@@ -6,8 +6,9 @@ use Facebook\WebDriver\WebDriverExpectedCondition;
 use Magium\Magento\AbstractMagentoTestCase;
 use Magium\Magento\Identities\Customer;
 use Magium\Magento\Identities\CustomerIdentity;
-use Magium\WebDriver\WebDriver;
 use Magium\Magento\Themes\OnePageCheckout\ThemeConfiguration;
+use Magium\WebDriver\WebDriver;
+
 class BillingAddress implements StepInterface
 {
     
@@ -15,6 +16,8 @@ class BillingAddress implements StepInterface
     protected $theme;
     protected $customerIdentity;
     protected $testCase;
+
+    protected $bypass = [];
     
     public function __construct(
         WebDriver                   $webdriver,
@@ -27,13 +30,28 @@ class BillingAddress implements StepInterface
         $this->customerIdentity = $customerIdentity;
         $this->testCase         = $testCase;
     }
-    
+
+    /**
+     * Allows you to bypass arbitrary element assertions and entry.  Currently only supports email address.
+     *
+     * @see Magium\Magento\Actions\Checkout\Steps\CustomerBillingAddress
+     *
+     * @param $element The name of the element
+     */
+
+    public function bypassElement($element)
+    {
+        $this->bypass[] = $element;
+    }
+
     public function execute()
     {
         $this->testCase->assertElementExists($this->theme->getBillingFirstNameXpath(), AbstractMagentoTestCase::BY_XPATH);
         $this->testCase->assertElementExists($this->theme->getBillingLastNameXpath(), AbstractMagentoTestCase::BY_XPATH);
         $this->testCase->assertElementExists($this->theme->getBillingCompanyXpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getBillingEmailAddressXpath(), AbstractMagentoTestCase::BY_XPATH);
+        if (!in_array($this->theme->getBillingEmailAddressXpath(), $this->bypass)) {
+            $this->testCase->assertElementExists($this->theme->getBillingEmailAddressXpath(), AbstractMagentoTestCase::BY_XPATH);
+        }
         $this->testCase->assertElementExists($this->theme->getBillingAddressXpath(), AbstractMagentoTestCase::BY_XPATH);
         $this->testCase->assertElementExists($this->theme->getBillingAddress2Xpath(), AbstractMagentoTestCase::BY_XPATH);
         $this->testCase->assertElementExists($this->theme->getBillingCityXpath(), AbstractMagentoTestCase::BY_XPATH);
@@ -49,7 +67,9 @@ class BillingAddress implements StepInterface
         $this->testCase->byXpath($this->theme->getBillingFirstNameXpath())->sendKeys($this->customerIdentity->getBillingFirstName());
         $this->testCase->byXpath($this->theme->getBillingLastNameXpath())->sendKeys($this->customerIdentity->getBillingLastName());
         $this->testCase->byXpath($this->theme->getBillingCompanyXpath())->sendKeys($this->customerIdentity->getBillingCompany());
-        $this->testCase->byXpath($this->theme->getBillingEmailAddressXpath())->sendKeys($this->customerIdentity->getEmailAddress());
+        if (!in_array($this->theme->getBillingEmailAddressXpath(), $this->bypass)) {
+            $this->testCase->byXpath($this->theme->getBillingEmailAddressXpath())->sendKeys($this->customerIdentity->getEmailAddress());
+        }
         $this->testCase->byXpath($this->theme->getBillingAddressXpath())->sendKeys($this->customerIdentity->getBillingAddress());
         $this->testCase->byXpath($this->theme->getBillingAddress2Xpath())->sendKeys($this->customerIdentity->getBillingAddress2());
         $this->testCase->byXpath($this->theme->getBillingCityXpath())->sendKeys($this->customerIdentity->getBillingCity());

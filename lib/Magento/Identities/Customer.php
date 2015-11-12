@@ -33,7 +33,7 @@ class Customer extends AbstractEntity
 
     public function generateUniqueEmailAddress($domain = 'example.com')
     {
-        $rand = openssl_random_pseudo_bytes(10);
+        $rand = uniqid(openssl_random_pseudo_bytes(10));
         $encoded = base64_encode($rand);
         $username = preg_replace('/\W/', '', $encoded);
 
