@@ -23,7 +23,7 @@ class AddToCartFailed implements AssertionInterface
 
     public function assert()
     {
-        $this->testCase->assertElementNotExists($this->themeConfiguration->getAddToCartSuccessXpath(), AbstractMagentoTestCase::BY_XPATH);
+        $this->testCase->assertElementNotExists($this->themeConfiguration->getAddToCartSuccessXpath(), WebDriver::BY_XPATH);
     }
 
 }

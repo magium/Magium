@@ -23,7 +23,7 @@ class AddToCartSucceeded implements AssertionInterface
 
     public function assert()
     {
-        $this->testCase->assertElementDisplayed($this->themeConfiguration->getAddToCartSuccessXpath(), AbstractMagentoTestCase::BY_XPATH);
+        $this->testCase->assertElementDisplayed($this->themeConfiguration->getAddToCartSuccessXpath(), WebDriver::BY_XPATH);
     }
 
 }

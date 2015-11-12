@@ -6,6 +6,7 @@ use Magium\Magento\AbstractMagentoTestCase;
 use Magium\Magento\Navigators\BaseMenuNavigator;
 use Magium\Magento\Themes\ThemeConfiguration;
 use Magium\WebDriver\WebDriver;
+
 class AddItemToCart
 {
     protected $webdriver;

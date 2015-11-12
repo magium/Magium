@@ -5,7 +5,7 @@ namespace Tests\Magento\Checkout;
 use Magium\Magento\AbstractMagentoTestCase;
 use Magium\Magento\Actions\Checkout\Extractors\OrderId;
 
-class CustomerCheckoutTest extends AbstractMagentoTestCase
+class RegisterNewCustomerCheckoutTest extends AbstractMagentoTestCase
 {
 
     public function testBasicCheckout()
@@ -18,8 +18,8 @@ class CustomerCheckoutTest extends AbstractMagentoTestCase
 
         $addToCart->addSimpleProductToCartFromCategoryPage();
         $this->setPaymentMethod('CashOnDelivery');
-         $customerCheckout= $this->getAction('Checkout\CustomerCheckout');
-        /* @var $customerCheckout \Magium\Magento\Actions\Checkout\CustomerCheckout */
+         $customerCheckout= $this->getAction('Checkout\RegisterNewCustomerCheckout');
+        /* @var $customerCheckout \Magium\Magento\Actions\Checkout\RegisterNewCustomerCheckout */
 
         $customerCheckout->execute();
 

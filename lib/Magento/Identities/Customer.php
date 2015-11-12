@@ -31,8 +31,11 @@ class Customer extends AbstractEntity
     protected $shippingTelephone        = '123-123-1234';
     protected $shippingFax              = '';
 
+    protected $uniqueEmailAddressGenerated = false;
+
     public function generateUniqueEmailAddress($domain = 'example.com')
     {
+        $this->uniqueEmailAddressGenerated = true;
         $rand = uniqid(openssl_random_pseudo_bytes(10));
         $encoded = base64_encode($rand);
         $username = preg_replace('/\W/', '', $encoded);
@@ -40,6 +43,24 @@ class Customer extends AbstractEntity
         $this->emailAddress = $username . '@' . $domain;
         return $this->emailAddress;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isUniqueEmailAddressGenerated()
+    {
+        return $this->uniqueEmailAddressGenerated;
+    }
+
+    /**
+     * @param boolean $uniqueEmailAddressGenerated
+     */
+    public function setUniqueEmailAddressGenerated($uniqueEmailAddressGenerated)
+    {
+        $this->uniqueEmailAddressGenerated = $uniqueEmailAddressGenerated;
+    }
+
+
 
     /**
      * @return string

@@ -9,7 +9,7 @@ class SystemConfigurationNavigationTest extends AbstractMagentoTestCase
 
     public function testConfigPanelOpened()
     {
-        $this->get('Magium\Magento\Actions\Admin\Login\Login')->login();
+        $this->getAction('Admin\Login\Login')->login();
         $adminMenuNavigator = $this->getNavigator('Admin\AdminMenuNavigator');
         $adminMenuNavigator->navigateTo('System/Configuration');
 

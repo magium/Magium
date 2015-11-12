@@ -11,8 +11,8 @@ class SaveSystemConfigurationSettingTest extends AbstractMagentoTestCase
     {
         $adminThemeConfiguration = $this->getTheme('AdminThemeConfiguration');
 
-        $this->get('Magium\Magento\Actions\Admin\Login\Login')->login();
-        $enabler = $this->get('Magium\Magento\Actions\Admin\Configuration\Enabler');
+        $this->getAction('Admin\Login\Login')->login();
+        $enabler = $this->getAction('Admin\Configuration\Enabler');
         /** @var $enabler \Magium\Magento\Actions\Admin\Configuration\Enabler */
 
         $enabler->disable('Payment Methods/Saved CC');

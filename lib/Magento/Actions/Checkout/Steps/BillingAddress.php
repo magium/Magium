@@ -5,7 +5,6 @@ namespace Magium\Magento\Actions\Checkout\Steps;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use Magium\Magento\AbstractMagentoTestCase;
 use Magium\Magento\Identities\Customer;
-use Magium\Magento\Identities\CustomerIdentity;
 use Magium\Magento\Themes\OnePageCheckout\ThemeConfiguration;
 use Magium\WebDriver\WebDriver;
 
@@ -46,23 +45,29 @@ class BillingAddress implements StepInterface
 
     public function execute()
     {
-        $this->testCase->assertElementExists($this->theme->getBillingFirstNameXpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getBillingLastNameXpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getBillingCompanyXpath(), AbstractMagentoTestCase::BY_XPATH);
-        if (!in_array($this->theme->getBillingEmailAddressXpath(), $this->bypass)) {
-            $this->testCase->assertElementExists($this->theme->getBillingEmailAddressXpath(), AbstractMagentoTestCase::BY_XPATH);
+        if ($this->webdriver->elementDisplayed($this->theme->getBillingAddressDropdownXpath(), WebDriver::BY_XPATH)) {
+            // We're logged in and we have an address.
+            $this->clickContinue();
+            return true;
         }
-        $this->testCase->assertElementExists($this->theme->getBillingAddressXpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getBillingAddress2Xpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getBillingCityXpath(), AbstractMagentoTestCase::BY_XPATH);
+
+        $this->testCase->assertElementExists($this->theme->getBillingFirstNameXpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getBillingLastNameXpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getBillingCompanyXpath(), WebDriver::BY_XPATH);
+        if (!in_array($this->theme->getBillingEmailAddressXpath(), $this->bypass)) {
+            $this->testCase->assertElementExists($this->theme->getBillingEmailAddressXpath(), WebDriver::BY_XPATH);
+        }
+        $this->testCase->assertElementExists($this->theme->getBillingAddressXpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getBillingAddress2Xpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getBillingCityXpath(), WebDriver::BY_XPATH);
         $regionXpath = sprintf($this->theme->getBillingRegionIdXpath(), $this->customerIdentity->getBillingRegionId());
-        $this->testCase->assertElementExists($regionXpath, AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getBillingPostCodeXpath(), AbstractMagentoTestCase::BY_XPATH);
+        $this->testCase->assertElementExists($regionXpath, WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getBillingPostCodeXpath(), WebDriver::BY_XPATH);
         $countryXpath = sprintf($this->theme->getBillingCountryIdXpath(), $this->customerIdentity->getBillingCountryId());
-        $this->testCase->assertElementExists($countryXpath, AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getBillingTelephoneXpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getBillingFaxXpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getBillingContinueButtonXpath(), AbstractMagentoTestCase::BY_XPATH);
+        $this->testCase->assertElementExists($countryXpath, WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getBillingTelephoneXpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getBillingFaxXpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getBillingContinueButtonXpath(), WebDriver::BY_XPATH);
 
         $this->testCase->byXpath($this->theme->getBillingFirstNameXpath())->sendKeys($this->customerIdentity->getBillingFirstName());
         $this->testCase->byXpath($this->theme->getBillingLastNameXpath())->sendKeys($this->customerIdentity->getBillingLastName());
@@ -81,9 +86,21 @@ class BillingAddress implements StepInterface
         $this->testCase->byXpath($this->theme->getBillingTelephoneXpath())->sendKeys($this->customerIdentity->getBillingTelephone());
         $this->testCase->byXpath($this->theme->getBillingFaxXpath())->sendKeys($this->customerIdentity->getBillingFax());
 
+        if ($this->webdriver->elementDisplayed($this->theme->getPasswordInputXpath(), WebDriver::BY_XPATH)
+            && $this->webdriver->elementDisplayed($this->theme->getPasswordInputXpath(), WebDriver::BY_XPATH)) {
+            $this->webdriver->byXpath($this->theme->getPasswordInputXpath())->sendKeys($this->customerIdentity->getPassword());
+            $this->webdriver->byXpath($this->theme->getConfirmPasswordInputXpath())->sendKeys($this->customerIdentity->getPassword());
+        }
+
+        $this->clickContinue();
+
+        return true; // continue to next step
+    }
+
+    protected function clickContinue()
+    {
         $this->testCase->byXpath($this->theme->getBillingContinueButtonXpath())->click();
 
         $this->webdriver->wait()->until(WebDriverExpectedCondition::not(WebDriverExpectedCondition::visibilityOf($this->webdriver->byXpath($this->theme->getBillingContinueCompletedXpath()))));
-        return true; // continue to next step
     }
 }

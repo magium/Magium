@@ -3,9 +3,9 @@
 namespace Magium\Magento\Actions\Customer;
 
 use Magium\Magento\AbstractMagentoTestCase;
-use Magium\Magento\Identities\CustomerIdentity;
-use Magium\Navigators\InstructionNavigator;
+use Magium\Magento\Identities\Customer;
 use Magium\Magento\Themes\ThemeConfiguration;
+use Magium\Navigators\InstructionNavigator;
 use Magium\WebDriver\WebDriver;
 
 class Login

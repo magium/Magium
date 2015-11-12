@@ -7,7 +7,6 @@ use Facebook\WebDriver\WebDriverExpectedCondition;
 use Magium\Commands\Open;
 use Magium\Magento\AbstractMagentoTestCase;
 use Magium\Magento\Identities\Admin;
-use Magium\Magento\Identities\AdminIdentity;
 use Magium\Magento\Themes\AdminThemeConfiguration;
 use Magium\Navigators\InstructionNavigator;
 use Magium\WebDriver\WebDriver;

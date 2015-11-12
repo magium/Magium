@@ -35,20 +35,20 @@ class ShippingAddress implements StepInterface
             return true;
         }
 
-        $this->testCase->assertElementExists($this->theme->getShippingFirstNameXpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getShippingLastNameXpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getShippingCompanyXpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getShippingAddressXpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getShippingAddress2Xpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getShippingCityXpath(), AbstractMagentoTestCase::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getShippingFirstNameXpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getShippingLastNameXpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getShippingCompanyXpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getShippingAddressXpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getShippingAddress2Xpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getShippingCityXpath(), WebDriver::BY_XPATH);
         $regionXpath = sprintf($this->theme->getShippingRegionIdXpath(), $this->customerIdentity->getShippingRegionId());
-        $this->testCase->assertElementExists($regionXpath, AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getShippingPostCodeXpath(), AbstractMagentoTestCase::BY_XPATH);
+        $this->testCase->assertElementExists($regionXpath, WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getShippingPostCodeXpath(), WebDriver::BY_XPATH);
         $countryXpath = sprintf($this->theme->getShippingCountryIdXpath(), $this->customerIdentity->getShippingCountryId());
-        $this->testCase->assertElementExists($countryXpath, AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getShippingTelephoneXpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getShippingFaxXpath(), AbstractMagentoTestCase::BY_XPATH);
-        $this->testCase->assertElementExists($this->theme->getShippingContinueButtonXpath(), AbstractMagentoTestCase::BY_XPATH);
+        $this->testCase->assertElementExists($countryXpath, WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getShippingTelephoneXpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getShippingFaxXpath(), WebDriver::BY_XPATH);
+        $this->testCase->assertElementExists($this->theme->getShippingContinueButtonXpath(), WebDriver::BY_XPATH);
 
         $this->testCase->byXpath($this->theme->getShippingFirstNameXpath())->sendKeys($this->customerIdentity->getShippingFirstName());
         $this->testCase->byXpath($this->theme->getShippingLastNameXpath())->sendKeys($this->customerIdentity->getShippingLastName());

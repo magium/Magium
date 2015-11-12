@@ -19,6 +19,14 @@ class ThemeConfiguration extends AbstractConfigurableElement
 
     protected $guestCheckoutButtonXpath = '//input[@id="login:guest"]';
 
+    /**
+     * @var string The checkbox (typically) that sets the new customer checkout
+     */
+
+    protected $registerNewCustomerCheckoutButtonXpath = '//input[@id="login:register"]';
+
+    protected $billingAddressDropdownXpath = '//select[@id="billing-address-select"]';
+
     protected $customerEmailInputXpath      = '//input[@id="login-email"]';
     protected $customerPasswordInputXpath   = '//input[@id="login-password"]';
     protected $customerButtonXpath          = '//button[@type="submit"]/descendant::span[.="Login"]';
@@ -79,6 +87,43 @@ class ThemeConfiguration extends AbstractConfigurableElement
     protected $orderReceivedCompleteXpath = '//h1[.="Your order has been received."]';
 
     protected $shippingMethodFormXpath      = '//form[@id="co-shipping-method-form"]';
+
+    protected $passwordInputXpath           = '//input[@id="billing:customer_password"]';
+    protected $confirmPasswordInputXpath           = '//input[@id="billing:confirm_password"]';
+
+    /**
+     * @return string
+     */
+    public function getBillingAddressDropdownXpath()
+    {
+        return $this->billingAddressDropdownXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPasswordInputXpath()
+    {
+        return $this->passwordInputXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfirmPasswordInputXpath()
+    {
+        return $this->confirmPasswordInputXpath;
+    }
+
+
+
+    /**
+     * @return string
+     */
+    public function getRegisterNewCustomerCheckoutButtonXpath()
+    {
+        return $this->registerNewCustomerCheckoutButtonXpath;
+    }
 
     /**
      * @return string

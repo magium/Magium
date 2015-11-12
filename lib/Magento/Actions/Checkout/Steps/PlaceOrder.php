@@ -2,7 +2,6 @@
 
 namespace Magium\Magento\Actions\Checkout\Steps;
 
-use Facebook\WebDriver\WebDriverExpectedCondition;
 use Magium\AbstractTestCase;
 use Magium\Magento\AbstractMagentoTestCase;
 use Magium\Magento\Themes\OnePageCheckout\ThemeConfiguration;

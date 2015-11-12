@@ -33,7 +33,7 @@ class Save
         $this->webDriver->wait()->until(ExpectedCondition::elementExists($this->adminThemeConfiguration->getSystemConfigurationSaveButtonXpath(), AbstractTestCase::BY_XPATH));
         $this->testCase->assertElementDisplayed($this->adminThemeConfiguration->getSystemConfigurationSaveButtonXpath(), AbstractTestCase::BY_XPATH);
         $this->webDriver->byXpath($this->adminThemeConfiguration->getSystemConfigurationSaveButtonXpath())->click();
-        $this->testCase->assertElementDisplayed($this->adminThemeConfiguration->getSystemConfigSaveSuccessfulXpath(), AbstractMagentoTestCase::BY_XPATH);
+        $this->testCase->assertElementDisplayed($this->adminThemeConfiguration->getSystemConfigSaveSuccessfulXpath(), WebDriver::BY_XPATH);
     }
 
 }

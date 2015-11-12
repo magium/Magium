@@ -68,6 +68,13 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         
     }
 
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->webdriver->close();
+    }
+
+
 
     /**
      * @return \Zend\Log\Logger

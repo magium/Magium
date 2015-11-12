@@ -6,8 +6,9 @@ use Facebook\WebDriver\WebDriverExpectedCondition;
 use Magium\AbstractTestCase;
 use Magium\Magento\AbstractMagentoTestCase;
 use Magium\Magento\Actions\Checkout\PaymentMethods\PaymentMethodInterface;
-use Magium\WebDriver\WebDriver;
 use Magium\Magento\Themes\OnePageCheckout\ThemeConfiguration;
+use Magium\WebDriver\WebDriver;
+
 class PaymentMethod implements StepInterface
 {
 

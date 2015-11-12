@@ -2,6 +2,7 @@
 
 namespace Magium\WebDriver;
 
+use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 
@@ -10,6 +11,10 @@ class WebDriver extends RemoteWebDriver
 {
     const INSTRUCTION_MOUSE_MOVETO = 'mouseMoveTo';
     const INSTRUCTION_MOUSE_CLICK  = 'mouseClick';
+
+    const BY_XPATH = 'byXpath';
+    const BY_ID    = 'byId';
+    const BY_CSS_SELECTOR = 'byCssSelector';
 
     public function elementExists($selector, $by = 'byId')
     {
@@ -67,6 +72,10 @@ class WebDriver extends RemoteWebDriver
     
     public function __destruct()
     {
-        $this->close();
+        try {
+            $this->close();
+        } catch (WebDriverException $e) {
+            // Not a problem.  It just means that the WebDriver session was closed somewhere else
+        }
     }
 }

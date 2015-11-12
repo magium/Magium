@@ -12,7 +12,7 @@ class AddItemToCartTest extends AbstractMagentoTestCase
         $theme = $this->getTheme();
         $this->commandOpen($theme->getBaseUrl());
         $this->getLogger()->info('Opening page ' . $theme->getBaseUrl());
-        $addToCart = $this->get('Magium\Magento\Actions\Cart\AddItemToCart');
+        $addToCart = $this->getAction('Cart\AddItemToCart');
         /* @var $addToCart \Magium\Magento\Actions\Cart\AddItemToCart */
 
         $addToCart->addSimpleProductToCartFromCategoryPage();
@@ -22,7 +22,7 @@ class AddItemToCartTest extends AbstractMagentoTestCase
     {
         $theme = $this->getTheme();
         $this->commandOpen($theme->getBaseUrl());
-        $addToCart = $this->get('Magium\Magento\Actions\Cart\AddItemToCart');
+        $addToCart = $this->getAction('Cart\AddItemToCart');
         /* @var $addToCart \Magium\Magento\Actions\Cart\AddItemToCart */
 
         $addToCart->addSimpleProductToCartFromCategoryPage('Accessories/Eyewear', '//a[@title="Aviator Sunglasses"]/../descendant::button');
@@ -33,7 +33,7 @@ class AddItemToCartTest extends AbstractMagentoTestCase
         $theme = $this->getTheme();
         $this->commandOpen($theme->getBaseUrl());
         $this->getLogger()->info('Opening page ' . $theme->getBaseUrl());
-        $addToCart = $this->get('Magium\Magento\Actions\Cart\AddItemToCart');
+        $addToCart = $this->getAction('Cart\AddItemToCart');
         /* @var $addToCart \Magium\Magento\Actions\Cart\AddItemToCart */
 
         $addToCart->addSimpleItemToCartFromProductPage();
@@ -46,7 +46,7 @@ class AddItemToCartTest extends AbstractMagentoTestCase
         $theme = $this->getTheme();
         $this->commandOpen($theme->getBaseUrl());
         $this->getLogger()->info('Opening page ' . $theme->getBaseUrl());
-        $addToCart = $this->get('Magium\Magento\Actions\Cart\AddItemToCart');
+        $addToCart = $this->getAction('Cart\AddItemToCart');
         /* @var $addToCart \Magium\Magento\Actions\Cart\AddItemToCart */
 
         $addToCart->addSimpleItemToCartFromProductPage('//a[@title="Aviator Sunglasses"]', 'Accessories/Eyewear');
