@@ -78,7 +78,7 @@ class ThemeConfiguration extends AbstractConfigurableElement
      * @var array Instructions in an Xpath array syntax to get to the login page.
      */
     
-    protected $loginInstructions            = [
+    protected $navigateToCustomerPageInstructions            = [
         [\Magium\WebDriver\WebDriver::INSTRUCTION_MOUSE_CLICK, '//div[@class="account-cart-wrapper"]/descendant::span[.="Account"]'],
         [\Magium\WebDriver\WebDriver::INSTRUCTION_MOUSE_CLICK, '//div[@id="header-account"]/descendant::a[@title="My Account"]']
     ];
@@ -112,9 +112,9 @@ class ThemeConfiguration extends AbstractConfigurableElement
         return $this->addToCartSuccessXpath;
     }
     
-    public function getLoginInstructions()
+    public function getNavigateToCustomerPageInstructions()
     {
-        return $this->loginInstructions;
+        return $this->navigateToCustomerPageInstructions;
     }
     
     public function getNavigationBaseXPathSelector()
