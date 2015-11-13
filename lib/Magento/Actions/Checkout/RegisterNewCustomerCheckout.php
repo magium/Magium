@@ -4,6 +4,7 @@ namespace Magium\Magento\Actions\Checkout;
 
 use Magium\Magento\Actions\Checkout\Extractors\OrderId;
 use Magium\Magento\Actions\Checkout\Steps\BillingAddress;
+use Magium\Magento\Actions\Checkout\Steps\NewCustomerPassword;
 use Magium\Magento\Actions\Checkout\Steps\PaymentMethod;
 use Magium\Magento\Actions\Checkout\Steps\PlaceOrder;
 use Magium\Magento\Actions\Checkout\Steps\ReviewOrder;
@@ -27,11 +28,13 @@ class RegisterNewCustomerCheckout extends AbstractCheckout
         ShippingMethod          $shippingMethod,
         PaymentMethod           $paymentMethod,
         PlaceOrder              $placeOrder,
-        OrderId                 $orderIdExtractor
+        OrderId                 $orderIdExtractor,
+        NewCustomerPassword     $newCustomerPassword
     )
     {
         $this->addStep($navigator);
         $this->addStep($registerNewCustomerCheckout);
+        $this->addStep($newCustomerPassword);
         $this->addStep($billingAddress);
         $this->addStep($shippingAddress);
         $this->addStep($shippingMethod);

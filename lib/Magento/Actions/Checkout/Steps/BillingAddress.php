@@ -86,11 +86,6 @@ class BillingAddress implements StepInterface
         $this->testCase->byXpath($this->theme->getBillingTelephoneXpath())->sendKeys($this->customerIdentity->getBillingTelephone());
         $this->testCase->byXpath($this->theme->getBillingFaxXpath())->sendKeys($this->customerIdentity->getBillingFax());
 
-        if ($this->webdriver->elementDisplayed($this->theme->getPasswordInputXpath(), WebDriver::BY_XPATH)
-            && $this->webdriver->elementDisplayed($this->theme->getPasswordInputXpath(), WebDriver::BY_XPATH)) {
-            $this->webdriver->byXpath($this->theme->getPasswordInputXpath())->sendKeys($this->customerIdentity->getPassword());
-            $this->webdriver->byXpath($this->theme->getConfirmPasswordInputXpath())->sendKeys($this->customerIdentity->getPassword());
-        }
 
         $this->clickContinue();
 
