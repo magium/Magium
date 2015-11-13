@@ -2,10 +2,10 @@
 
 namespace Magium\Magento\Navigators\Customer;
 
-use Magium\Navigators\InstructionNavigator;
 use Magium\Magento\Themes\ThemeConfiguration;
+use Magium\Navigators\InstructionNavigator;
 
-class Login
+class AccountHome
 {
 
     protected $theme;
@@ -21,10 +21,10 @@ class Login
         $this->instructionsNavigator = $instructionsNavigator;
     }
 
-    public function navigateToLogin()
+    public function navigateTo()
     {
 
-        $instructions = $this->theme->getLoginInstructions();
+        $instructions = $this->theme->getNavigateToCustomerPageInstructions();
         $this->instructionsNavigator->navigateTo($instructions);
 
     }

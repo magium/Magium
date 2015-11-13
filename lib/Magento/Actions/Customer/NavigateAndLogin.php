@@ -2,7 +2,7 @@
 
 namespace Magium\Magento\Actions\Customer;
 
-use Magium\Magento\Navigators\Customer\Login as CustomerLogin;
+use Magium\Magento\Navigators\Customer\AccountHome as CustomerLogin;
 
 class NavigateAndLogin
 {
@@ -32,7 +32,7 @@ class NavigateAndLogin
 
     public function login($username = null, $password = null, $requireLogin = false)
     {
-        $this->loginNavigator->navigateToLogin();
+        $this->loginNavigator->navigateTo();
         $this->login->login($username, $password, $requireLogin);
     }
 }
