@@ -71,7 +71,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         parent::tearDown();
-        $this->webdriver->close();
+        if ($this->webdriver) {
+            $this->webdriver->close();
+        }
     }
 
 
