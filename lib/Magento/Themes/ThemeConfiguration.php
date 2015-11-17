@@ -74,6 +74,8 @@ class ThemeConfiguration extends AbstractConfigurableElement
 
     protected $baseUrl                      = 'http://localhost/';
 
+    protected $myAccountTitle               = 'My Account';
+
     /**
      * @var array Instructions in an Xpath array syntax to get to the login page.
      */
@@ -91,11 +93,135 @@ class ThemeConfiguration extends AbstractConfigurableElement
         [\Magium\WebDriver\WebDriver::INSTRUCTION_MOUSE_CLICK, '//div[@class="header-minicart"]'],
         [\Magium\WebDriver\WebDriver::INSTRUCTION_MOUSE_CLICK, '//div[@class="minicart-actions"]/descendant::a[@title="Checkout"]']
     ];
-    
+
+    /**
+     * @var array Instructions in an Xpath array syntax to get to the customer registration page
+     */
+
+    protected $registrationNavigationInstructions         = [
+        [\Magium\WebDriver\WebDriver::INSTRUCTION_MOUSE_CLICK, '//div[@class="account-cart-wrapper"]/descendant::span[.="Account"]'],
+        [\Magium\WebDriver\WebDriver::INSTRUCTION_MOUSE_CLICK, '//div[@id="header-account"]/descendant::a[@title="Register"]']
+    ];
+
+    /**
+     * @var array Instructions in an Xpath array syntax to get to the customer registration page
+     */
+
+    protected $logoutNavigationInstructions         = [
+        [\Magium\WebDriver\WebDriver::INSTRUCTION_MOUSE_CLICK, '//div[@class="account-cart-wrapper"]/descendant::span[.="Account"]'],
+        [\Magium\WebDriver\WebDriver::INSTRUCTION_MOUSE_CLICK, '//div[@id="header-account"]/descendant::a[@title="Log Out"]']
+    ];
+
+    protected $registerFirstNameXpath           = '//input[@id="firstname"]';
+    protected $registerLastNameXpath            = '//input[@id="lastname"]';
+    protected $registerEmailXpath               = '//input[@id="email_address"]';
+    protected $registerPasswordXpath            = '//input[@id="password"]';
+    protected $registerConfirmPasswordXpath     = '//input[@id="confirmation"]';
+    protected $registerNewsletterXpath          = '//input[@id="is_subscribed"]';
+    protected $registerSubmitXpath              = '//button[@type="submit" and @title="Register"]';
+
+    protected $logoutSuccessXpath               = '//div[contains(concat(" ",normalize-space(@class)," ")," page-title ")]/descendant::h1[.="You are now logged out"]';
+
     public function getBaseUrl()
     {
         return $this->baseUrl;
     }
+
+    /**
+     * @return string
+     */
+    public function getLogoutSuccessXpath()
+    {
+        return $this->logoutSuccessXpath;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLogoutNavigationInstructions()
+    {
+        return $this->logoutNavigationInstructions;
+    }
+
+
+
+    /**
+     * @return string
+     */
+    public function getMyAccountTitle()
+    {
+        return $this->myAccountTitle;
+    }
+
+
+
+    /**
+     * @return string
+     */
+    public function getRegisterFirstNameXpath()
+    {
+        return $this->registerFirstNameXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegisterLastNameXpath()
+    {
+        return $this->registerLastNameXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegisterEmailXpath()
+    {
+        return $this->registerEmailXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegisterPasswordXpath()
+    {
+        return $this->registerPasswordXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegisterConfirmPasswordXpath()
+    {
+        return $this->registerConfirmPasswordXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegisterNewsletterXpath()
+    {
+        return $this->registerNewsletterXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegisterSubmitXpath()
+    {
+        return $this->registerSubmitXpath;
+    }
+
+
+
+    /**
+     * @return array
+     */
+    public function getRegistrationNavigationInstructions()
+    {
+        return $this->registrationNavigationInstructions;
+    }
+
+
 
     public function getCheckoutNavigationInstructions()
     {
