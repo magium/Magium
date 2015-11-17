@@ -3,12 +3,12 @@
 namespace Magium\Magento\Actions\Admin\Login;
 
 use Facebook\WebDriver\Exception\WebDriverException;
-use Facebook\WebDriver\WebDriverExpectedCondition;
 use Magium\Commands\Open;
 use Magium\Magento\AbstractMagentoTestCase;
 use Magium\Magento\Identities\Admin;
 use Magium\Magento\Themes\AdminThemeConfiguration;
 use Magium\Navigators\InstructionNavigator;
+use Magium\WebDriver\ExpectedCondition;
 use Magium\WebDriver\WebDriver;
 
 class Login
@@ -74,7 +74,7 @@ class Login
         $passwordElement->sendKeys($password);
         
         $submitElement->click();
-        $this->webdriver->wait(10)->until(WebDriverExpectedCondition::titleContains('Dashboard'));
+        $this->webdriver->wait(10)->until(ExpectedCondition::titleContains('Dashboard'));
 
         $this->extractMessages();
 

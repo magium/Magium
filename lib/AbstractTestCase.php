@@ -87,14 +87,15 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     public function sleep($time)
     {
         $length = (int)$time;
-        if (strpos($time, 's') !== false) {
-            sleep($length);
-        } else if (strpos($time, 'ms') !== false) {
+
+        if (strpos($time, 'ms') !== false) {
             usleep($length * 1000);
         } else if (strpos($time, 'us') !== false) {
             usleep($length);
         } else if (strpos($time, 'ns') !== false) {
             time_nanosleep(0, $length);
+        } else {
+            sleep($length);
         }
     }
 

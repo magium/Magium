@@ -25,6 +25,58 @@ class AdminThemeConfiguration extends ThemeConfiguration
 
     protected $systemConfigSaveSuccessfulXpath          = '//li[@class="success-msg"]/descendant::span[.="The configuration has been saved."]';
 
+    protected $testLoggedInAtBaseUrl                     = '//a[@class="active"]/span[.="Dashboard"]';
+
+    protected $tableButtonXpath                         = '//table[@class="actions"]/descendant::span[.="%s"]';
+
+    protected $selectOrderXpath                         = '//td[concat(" ",normalize-space(.)," ") = " %s "]/../td/a[.="View"]';
+
+    /**
+     * Why is this an option?  So you can have a different theme setup for different languages and still use the same code.
+     *
+     * @var string
+     */
+
+    protected $searchButtonText                         = 'Search';
+
+    /**
+     * @return string
+     */
+    public function getSearchButtonText()
+    {
+        return $this->searchButtonText;
+    }
+
+
+
+    /**
+     * @return string
+     */
+    public function getSelectOrderXpath()
+    {
+        return $this->selectOrderXpath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTableButtonXpath()
+    {
+        return $this->tableButtonXpath;
+    }
+
+
+
+    /**
+     * @return string
+     */
+    public function getTestLoggedInAtBaseUrl()
+    {
+        return $this->testLoggedInAtBaseUrl;
+    }
+
+
+
     /**
      * @return string
      */
