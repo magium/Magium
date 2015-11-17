@@ -76,6 +76,27 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * Sleep the specified amount of time.
+     *
+     * Options: 1s (1 second), 1ms (1 millisecond), 1us (1 microsecond), 1ns (1 nanosecond)
+     *
+     * @param $time
+     */
+
+    public function sleep($time)
+    {
+        $length = (int)$time;
+        if (strpos($time, 's') !== false) {
+            sleep($length);
+        } else if (strpos($time, 'ms') !== false) {
+            usleep($length * 1000);
+        } else if (strpos($time, 'us') !== false) {
+            usleep($length);
+        } else if (strpos($time, 'ns') !== false) {
+            time_nanosleep(0, $length);
+        }
+    }
 
 
     /**
