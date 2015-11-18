@@ -1,6 +1,6 @@
 <?php
 
-namespace Magium\Magento\Assertions;
+namespace Magium\Assertions;
 
 interface AssertionInterface
 {
