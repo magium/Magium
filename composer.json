@@ -3,7 +3,7 @@
   "type": "library",
   "description": "A browser/functional testing suite using Web Driver.  Contains low-ish level functionality to quickly build browser/functional tests.",
   "keywords": ["selenium", "webdriver", "testing"],
-  "homepage": "https://github.com/kschroeder/Magium",
+  "homepage": "https://github.com/magium/Magium",
   "license": "MIT",
   "authors": [
     {
