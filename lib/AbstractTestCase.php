@@ -6,6 +6,11 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
+
+    protected $baseNamespace = 'Magium';
+
+
+
     /**
      * @var \Magium\WebDriver\WebDriver
      */
@@ -77,6 +82,76 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @TODO Need to properly set the return type
+     * @param string $theme
+     * @return \Magium\Magento\Themes\ThemeConfiguration
+     */
+
+    public function getTheme($theme = 'ThemeConfiguration')
+    {
+        if (strpos($theme, $this->baseNamespace) === false) {
+            $theme = $this->baseNamespace . '\Themes\\' . $theme;
+        }
+        return $this->get($theme);
+    }
+
+    /**
+     *
+     * @param string $navigator
+     * @return mixed
+     */
+
+    public function getAction($action)
+    {
+        if (strpos($action, $this->baseNamespace ) === false) {
+            $action = $this->baseNamespace . '\Actions\\' . $action;
+        }
+        return $this->get($action);
+    }
+
+
+    /**
+     * @param string $name
+     * @return \Magium\Magento\Identities\AbstractEntity
+     */
+
+    public function getIdentity($name = 'Customer')
+    {
+        if (strpos($name, $this->baseNamespace) === false) {
+            $name = $this->baseNamespace . '\Identities\\' . $name;
+        }
+        return $this->get($name);
+    }
+
+    /**
+     *
+     * @param string $navigator
+     * @return \Magium\Magento\Navigators\BaseMenuNavigator
+     */
+
+    public function getNavigator($navigator = 'BaseMenuNavigator')
+    {
+        if (strpos($navigator, $this->baseNamespace) === false) {
+            $navigator = $this->baseNamespace . '\Navigators\\' . $navigator;
+        }
+        return $this->get($navigator);
+    }
+
+    /**
+     *
+     * @param string $extractor
+     * @return \Magium\Extractors\AbstractExtractor
+     */
+
+    public function getExtractor($extractor)
+    {
+        if (strpos($extractor, $this->baseNamespace) === false) {
+            $extractor = $this->baseNamespace . '\Extractors\\' . $extractor;
+        }
+        return $this->get($extractor);
+    }
+
+    /**
      * Sleep the specified amount of time.
      *
      * Options: 1s (1 second), 1ms (1 millisecond), 1us (1 microsecond), 1ns (1 nanosecond)
@@ -97,6 +172,12 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         } else {
             sleep($length);
         }
+    }
+
+
+    public function commandOpen($url)
+    {
+        $this->get('Magium\Commands\Open')->open($url);
     }
 
 
