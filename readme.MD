@@ -17,10 +17,10 @@ class TestEmailAddress extends AbstractMagentoTestCase
     {
         // Other stuff
 
-        $customer = $this->get('Magium\Magento\Identities\CustomerIdentity');
+        $customer = $this->getIdentity();
         $customer->setEmailAddress('myemailaddress@gmail.com');
 
-        $guestCheckout = $this->get('Magium\Magento\Actions\Checkout\GuestCheckout');
+        $guestCheckout = $this->getAction('Checkout\GuestCheckout');
         $guestCheckout->execute();
     }
 
