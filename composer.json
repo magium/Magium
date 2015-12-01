@@ -17,7 +17,9 @@
     "phpunit/phpunit" : "4.8.6",
     "zendframework/zend-di" : "2.5.1",
     "facebook/webdriver" : "1.0.2",
-    "zendframework/zend-log": "2.6.0"
+    "zendframework/zend-log": "2.6.0",
+    "zendframework/zend-i18n": "2.5.1",
+    "zendframework/zend-cache": "2.5.3"
   },
   "repositories" : [ {
     "type" : "composer",
@@ -29,5 +31,3 @@
     }
   }
 }
-
-

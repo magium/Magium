@@ -339,11 +339,14 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         return $this->webdriver->byCssSelector($selector);
     }
-    
-}
 
-function __($term)
-{
-    // TODO; actually implement.  This is a placeholder for future functionality.
-    return $term;
+    /**
+     * @return \Zend\I18n\Translator\Translator
+     */
+
+    public function getTranslator()
+    {
+        return $this->get('Zend\I18n\Translator\Translator');
+    }
+    
 }
