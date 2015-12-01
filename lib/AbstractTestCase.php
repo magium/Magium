@@ -341,3 +341,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     }
     
 }
+
+function __($term)
+{
+    // TODO; actually implement.  This is a placeholder for future functionality.
+    return $term;
+}
