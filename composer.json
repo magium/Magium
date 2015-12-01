@@ -1,5 +1,5 @@
 {
-  "name" : "eschrade/magium",
+  "name" : "magium/magium",
   "type": "library",
   "description": "A browser/functional testing suite using Web Driver.  Contains low-ish level functionality to quickly build browser/functional tests.",
   "keywords": ["selenium", "webdriver", "testing"],
