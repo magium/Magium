@@ -16,4 +16,6 @@ class TranslatorTest extends AbstractTestCase
         self::assertEquals('Test Value', $translator->translate('Test Value'));
     }
 
+
+
 }
