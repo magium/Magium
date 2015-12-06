@@ -292,6 +292,18 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
+
+    public function switchThemeConfiguration($fullyQualifiedClassName)
+    {
+        $reflection = new \ReflectionClass($fullyQualifiedClassName);
+        if ($reflection->isSubclassOf('Magium\Themes\ThemeConfigurationInterface')) {
+            $this->di->instanceManager()->setTypePreference('Magium\Themes\ThemeConfigurationInterface', [$fullyQualifiedClassName]);
+        } else {
+            throw new InvalidConfigurationException('The theme configuration implement Magium\Themes\ThemeConfigurationInterface');
+        }
+
+    }
+
     public static function assertWebDriverElement($element)
     {
         self::assertInstanceOf('Facebook\WebDriver\WebDriverElement', $element);

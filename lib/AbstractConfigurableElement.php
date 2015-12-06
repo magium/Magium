@@ -2,11 +2,16 @@
 
 namespace Magium;
 
+use Zend\I18n\Translator\Translator;
+
 abstract class AbstractConfigurableElement
 {
 
-    public function __construct($configurationFile = null)
+    protected $translator;
+
+    public function __construct(Translator $translator, $configurationFile = null)
     {
+        $this->translator = $translator;
         // TODO not sure if this is the best way.  Perhaps some kind of test configuration
         if ($configurationFile === null) {
             $configurationFile = get_class($this) . '.php';
@@ -27,6 +32,27 @@ abstract class AbstractConfigurableElement
             }
             $path .= '../';
         }
+    }
+
+    public function translate($translate)
+    {
+        if (is_array($translate)) {
+            foreach ($translate as $key => $value) {
+                $value = $this->translate($value);
+                $translate[$key] = $value;
+            }
+        } else {
+            $results = [];
+            preg_match_all('/\{\{([^\}]+)\}\}/', $translate, $results);
+            array_shift($results);
+
+            foreach ($results as $result) {
+                $result = array_shift($result);
+                $newResult = $this->translator->translate($result);
+                $translate = str_replace('{{' . $result . '}}', $newResult, $translate);
+            }
+        }
+        return $translate;
     }
 
 }
