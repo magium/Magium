@@ -84,4 +84,25 @@ class AbstractConfigurableElementTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('{{kevin}', $translated);
 
     }
+
+
+    public function testTranslateAbstractConfigurableElementDoesNotTranslateWithoutPlaceholders()
+    {
+        $translator = $this->getMockBuilder('Zend\I18n\Translator\Translator')
+            ->disableOriginalConstructor()
+            ->setMethods(['translate'])
+            ->getMock();
+        $translator->method('translate')->willReturn('boogers');
+
+        $abstractElement = $this->getMockBuilder('Magium\AbstractConfigurableElement')
+            ->setConstructorArgs([$translator])
+            ->setMethods(null)
+            ->getMock();
+        /* @var $abstractElement \Magium\AbstractConfigurableElement */
+
+        $translated = $abstractElement->translate('kevin');
+        self::assertEquals('kevin', $translated);
+
+
+    }
 }
