@@ -70,7 +70,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         // TODO I don't like this because it is hard-coded.  So this might change when I get a chance to think about it
         $this->di->instanceManager()->addSharedInstance($this, 'Magium\Magento\AbstractMagentoTestCase');
         $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
-        
+
     }
 
     protected function tearDown()
@@ -192,7 +192,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         return $this->get('Zend\Log\Logger');
     }
-    
+
     public function get($class)
     {
         return $this->di->get($class);
@@ -301,6 +301,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         $reflection = new \ReflectionClass($fullyQualifiedClassName);
         if ($reflection->isSubclassOf('Magium\Themes\ThemeConfigurationInterface')) {
             $this->baseThemeClass = $fullyQualifiedClassName;
+            $this->di->instanceManager()->unsetTypePreferences('Magium\Themes\ThemeConfigurationInterface');
             $this->di->instanceManager()->setTypePreference('Magium\Themes\ThemeConfigurationInterface', [$fullyQualifiedClassName]);
         } else {
             throw new InvalidConfigurationException('The theme configuration implement Magium\Themes\ThemeConfigurationInterface');
@@ -314,13 +315,13 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     }
 
 
-    
+
     public function assertElementHasText($node, $text, $message = null)
     {
         $element = $this->byXpath(sprintf('//%s[contains(., "%s")]', $node, addslashes($text)));
         self::assertNotNull($element, 'Text could not be found in an element ' . $node);
     }
- 
+
     public function assertPageHasText($text, $message = null)
     {
         $this->assertElementHasText('body', $text, $message);
@@ -364,5 +365,5 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         return $this->get('Zend\I18n\Translator\Translator');
     }
-    
+
 }
