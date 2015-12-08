@@ -2,10 +2,11 @@
 
 namespace Magium\Navigators;
 
-use Magium\WebDriver\WebDriver;
-use Magium\Magento\Themes\ThemeConfiguration;
-use Magium\InvalidConfigurationException;
 use Magium\AbstractTestCase;
+use Magium\InvalidConfigurationException;
+use Magium\Themes\ThemeConfigurationInterface;
+use Magium\WebDriver\WebDriver;
+
 class InstructionNavigator
 {
     
@@ -14,7 +15,7 @@ class InstructionNavigator
     protected $testCase;
     
     public function __construct(
-        ThemeConfiguration $theme,
+        ThemeConfigurationInterface $theme,
         AbstractTestCase $testCase,
         WebDriver $webdriver)
     {

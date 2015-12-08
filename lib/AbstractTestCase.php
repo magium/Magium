@@ -9,7 +9,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     protected $baseNamespace = 'Magium';
 
-
+    protected $baseThemeClass = 'Magium\Themes\ThemeConfigurationInterface';
 
     /**
      * @var \Magium\WebDriver\WebDriver
@@ -84,11 +84,14 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     /**
      * @TODO Need to properly set the return type
      * @param string $theme
-     * @return \Magium\Magento\Themes\ThemeConfiguration
+     * @return \Magium\Themes\ThemeConfigurationInterface
      */
 
-    public function getTheme($theme = 'ThemeConfiguration')
+    public function getTheme($theme = null)
     {
+        if ($theme === null) {
+            $theme = $this->baseThemeClass;
+        }
         if (strpos($theme, $this->baseNamespace) === false) {
             $theme = $this->baseNamespace . '\Themes\\' . $theme;
         }
@@ -297,6 +300,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         $reflection = new \ReflectionClass($fullyQualifiedClassName);
         if ($reflection->isSubclassOf('Magium\Themes\ThemeConfigurationInterface')) {
+            $this->baseThemeClass = $fullyQualifiedClassName;
             $this->di->instanceManager()->setTypePreference('Magium\Themes\ThemeConfigurationInterface', [$fullyQualifiedClassName]);
         } else {
             throw new InvalidConfigurationException('The theme configuration implement Magium\Themes\ThemeConfigurationInterface');
