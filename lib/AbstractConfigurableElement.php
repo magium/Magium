@@ -46,12 +46,24 @@ abstract class AbstractConfigurableElement
             preg_match_all('/\{\{([^\}]+)\}\}/', $translate, $results);
             array_shift($results);
 
+
             foreach ($results as $result) {
-                $result = array_shift($result);
-                $newResult = $this->translator->translate($result);
-                $translate = str_replace('{{' . $result . '}}', $newResult, $translate);
+                if (is_array($result)) {
+                    while (($part = array_shift($result)) !== null) {
+                        $translate = $this->translatePart($translate, $part);
+                    }
+                } else {
+                    $translate = $this->translatePart($translate, $result);
+                }
             }
         }
+        return $translate;
+    }
+
+    protected function translatePart($translate, $result)
+    {
+        $newResult = $this->translator->translate($result);
+        $translate = str_replace('{{' . $result . '}}', $newResult, $translate);
         return $translate;
     }
 

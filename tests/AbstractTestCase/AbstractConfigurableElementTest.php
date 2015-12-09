@@ -33,8 +33,11 @@ class AbstractConfigurableElementTest extends \PHPUnit_Framework_TestCase
         $translated = $abstractElement->translate('{{kevin}}{{kevin}}');
         self::assertEquals('boogersboogers', $translated);
 
-        $translated = $abstractElement->translate('{{kevin}} {{kevin}}');
-        self::assertEquals('boogers boogers', $translated);
+        $translated = $abstractElement->translate('{{kevin}}/{{kevin}}');
+        self::assertEquals('boogers/boogers', $translated);
+
+        $translated = $abstractElement->translate('{{Accessories}}/{{Jewelry}}');
+        self::assertEquals('boogers/boogers', $translated);
     }
 
     public function testTranslateAbstractConfigurableElementWithArray()
