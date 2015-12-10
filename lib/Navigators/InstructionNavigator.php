@@ -27,6 +27,8 @@ class InstructionNavigator
     
     public function navigateTo(array $instructions)
     {
+        $this->testCase->assertGreaterThan(0, count($instructions), 'Instruction navigator requires at least one instruction');
+
         foreach ($instructions as $instruction) {
             $this->testCase->assertCount(2, $instruction, 'Navigation instructions need to be a 2 member array.  First item is the instruction type, the second is the XPath');
             list($instruction, $xpath) = $instruction;
