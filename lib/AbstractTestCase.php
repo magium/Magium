@@ -11,6 +11,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     protected $baseThemeClass = 'Magium\Themes\ThemeConfigurationInterface';
 
+    protected $postCallbacks = [];
+
     /**
      * @var \Magium\WebDriver\WebDriver
      */
@@ -25,6 +27,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     const BY_XPATH = 'byXpath';
     const BY_ID    = 'byId';
     const BY_CSS_SELECTOR = 'byCssSelector';
+
+
 
     protected function setUp()
     {
@@ -75,10 +79,23 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
+        foreach ($this->postCallbacks as $callback) {
+            if (is_callable($callback)) {
+                call_user_func($callback);
+            }
+        }
         parent::tearDown();
         if ($this->webdriver) {
             $this->webdriver->close();
         }
+    }
+
+    public function addPostTestCallback($callback)
+    {
+        if (!is_callable($callback)) {
+            throw new InvalidConfigurationException('Callback is not callable');
+        }
+        $this->postCallbacks[] = $callback;
     }
 
     /**
@@ -132,7 +149,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
      * @return \Magium\Magento\Navigators\BaseMenuNavigator
      */
 
-    public function getNavigator($navigator = 'BaseMenuNavigator')
+    public function getNavigator($navigator = 'BaseMenuN')
     {
         if (strpos($navigator, $this->baseNamespace) === false) {
             $navigator = $this->baseNamespace . '\Navigators\\' . $navigator;
@@ -298,8 +315,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function switchThemeConfiguration($fullyQualifiedClassName)
     {
-        $reflection = new \ReflectionClass($fullyQualifiedClassName);
-        if ($reflection->isSubclassOf('Magium\Themes\ThemeConfigurationInterface')) {
+
+        if (is_subclass_of($fullyQualifiedClassName, 'Magium\Themes\ThemeConfigurationInterface')) {
             $this->baseThemeClass = $fullyQualifiedClassName;
             $this->di->instanceManager()->unsetTypePreferences('Magium\Themes\ThemeConfigurationInterface');
             $this->di->instanceManager()->setTypePreference('Magium\Themes\ThemeConfigurationInterface', [$fullyQualifiedClassName]);

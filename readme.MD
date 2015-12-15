@@ -127,7 +127,7 @@ Once Selenium Server is up and running you will need to install Magium for your 
 To require Magium execute
 
 ```
-php composer.phar require eschrade/magium
+php composer.phar require magium/magium
 ```
 
 Then build a test.  The easiest test to get running is navigating your website.
