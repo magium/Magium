@@ -23,4 +23,18 @@ class ExpectedCondition extends WebDriverExpectedCondition
         );
     }
 
+    public static function elementRemoved(WebDriverElement $element)
+    {
+        return new WebDriverExpectedCondition(
+            function () use ($element) {
+                try {
+                    $element->isDisplayed();
+                    return false;
+                } catch (\Exception $e) {
+                    return true;
+                }
+            }
+        );
+    }
+
 }
