@@ -90,6 +90,11 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
+    protected function normalizeClassRequest($class)
+    {
+        return str_replace('/', '\\', $class);
+    }
+
     public function addPostTestCallback($callback)
     {
         if (!is_callable($callback)) {
@@ -126,6 +131,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         if (strpos($action, $this->baseNamespace ) === false) {
             $action = $this->baseNamespace . '\Actions\\' . $action;
         }
+
         return $this->get($action);
     }
 
@@ -140,6 +146,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         if (strpos($name, $this->baseNamespace) === false) {
             $name = $this->baseNamespace . '\Identities\\' . $name;
         }
+
         return $this->get($name);
     }
 
@@ -149,11 +156,12 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
      * @return \Magium\Magento\Navigators\BaseMenuNavigator
      */
 
-    public function getNavigator($navigator = 'BaseMenuN')
+    public function getNavigator($navigator = 'BaseMenu')
     {
         if (strpos($navigator, $this->baseNamespace) === false) {
             $navigator = $this->baseNamespace . '\Navigators\\' . $navigator;
         }
+
         return $this->get($navigator);
     }
 
@@ -168,6 +176,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         if (strpos($extractor, $this->baseNamespace) === false) {
             $extractor = $this->baseNamespace . '\Extractors\\' . $extractor;
         }
+
         return $this->get($extractor);
     }
 
@@ -212,6 +221,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function get($class)
     {
+        $class = $this->normalizeClassRequest($class);
         return $this->di->get($class);
     }
 
