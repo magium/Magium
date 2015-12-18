@@ -19,7 +19,7 @@ abstract class AbstractConfigurableElement
         }
 
         $count = 0;
-        $path = '../';
+        $path = __DIR__ . '../';
 
         while ($count++ < 5) {
             $filename = "{$path}/configuration";
