@@ -5,6 +5,7 @@ namespace Magium\WebDriver;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverElement;
 
 
 class WebDriver extends RemoteWebDriver
@@ -20,6 +21,16 @@ class WebDriver extends RemoteWebDriver
     {
         try {
             $this->$by($selector);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function elementAttached(WebDriverElement $element)
+    {
+        try {
+            $element->isDisplayed();
             return true;
         } catch (\Exception $e) {
             return false;
