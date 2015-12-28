@@ -29,9 +29,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     const BY_CSS_SELECTOR = 'byCssSelector';
 
 
-
     protected function setUp()
     {
+
         $defaults = [
             'definition' => [
                 'class' => [
@@ -74,7 +74,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         // TODO I don't like this because it is hard-coded.  So this might change when I get a chance to think about it
         $this->di->instanceManager()->addSharedInstance($this, 'Magium\Magento\AbstractMagentoTestCase');
         $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
-
     }
 
     protected function tearDown()
@@ -163,6 +162,16 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
 
         return $this->get($navigator);
+    }
+
+    public function getAssertion($assertion)
+    {
+        // TODO figure out a way to fall back onto the default \Magium
+        if (strpos($assertion, $this->baseNamespace) === false) {
+            $assertion = $this->baseNamespace . '\Assertions\\' . $assertion;
+        }
+
+        return $this->get($assertion);
     }
 
     /**
