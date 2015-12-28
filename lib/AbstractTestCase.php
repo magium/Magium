@@ -71,8 +71,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         $this->di = new \Zend\Di\Di();
         $configuration->configure($this->di);
 
-        $this->di->instanceManager()->addSharedInstance($this, get_class($this));
-
         $rc = new \ReflectionClass($this);
         while ($rc->getParentClass()) {
             $class = $rc->getParentClass()->getName();
