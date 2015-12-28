@@ -2,7 +2,9 @@
 
 namespace Magium;
 
+use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Magium\WebDriver\WebDriver;
 
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -24,6 +26,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     protected $di;
 
+    protected $textElementNodeSearch = [];
+
     const BY_XPATH = 'byXpath';
     const BY_ID    = 'byId';
     const BY_CSS_SELECTOR = 'byCssSelector';
@@ -31,6 +35,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+
+        $this->textElementNodeSearch[] = 'span';
+        $this->textElementNodeSearch[] = 'a';
+        $this->textElementNodeSearch[] = 'li';
 
         $defaults = [
             'definition' => [
@@ -108,7 +116,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @TODO Need to properly set the return type
+
      * @param string $theme
      * @return \Magium\Themes\ThemeConfigurationInterface
      */
@@ -396,6 +404,29 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     public function byCssSelector($selector)
     {
         return $this->webdriver->byCssSelector($selector);
+    }
+
+
+    /**
+     * @param string $text
+     * @param string $parentElement
+     * @return \Facebook\WebDriver\Remote\RemoteWebElement
+     */
+    public function byText($text, $parentElement = null)
+    {
+        $xpathTemplate = '//%s[concat(" ",normalize-space(.)," ") = " %s "]';
+        if ($parentElement !== null) {
+            return $this->byXpath(sprintf($xpathTemplate, $parentElement, $text));
+        }
+
+        foreach ($this->textElementNodeSearch as $nodeName) {
+            $xpath = sprintf($xpathTemplate, $nodeName, $text);
+            if ($this->webdriver->elementExists($xpath, WebDriver::BY_XPATH)) {
+                return $this->webdriver->byXpath($xpath);
+            }
+        }
+        // This is here for consistency with the other by* methods
+        WebDriverException::throwException(7, 'Could not find element with text: ' . $text, []);
     }
 
     /**
