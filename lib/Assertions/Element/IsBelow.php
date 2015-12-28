@@ -8,6 +8,7 @@ use Magium\Assertions\AssertionInterface;
 
 class IsBelow implements AssertionInterface
 {
+    const ASSERTION = 'Element\IsBelow';
 
     /**
      * @var \Facebook\WebDriver\WebDriverElement
