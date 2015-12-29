@@ -102,6 +102,13 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function setTypePreference($type, $preference)
+    {
+        $this->di->instanceManager()->unsetTypePreferences($type);
+        $this->di->instanceManager()->setTypePreference($type, $preference);
+
+    }
+
     protected function normalizeClassRequest($class)
     {
         return str_replace('/', '\\', $class);
@@ -362,7 +369,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         self::assertInstanceOf('Facebook\WebDriver\WebDriverElement', $element);
     }
-
 
 
     public function assertElementHasText($node, $text, $message = null)

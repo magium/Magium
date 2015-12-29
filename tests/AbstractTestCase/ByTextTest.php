@@ -40,6 +40,7 @@ class ByTextTest extends AbstractTestCase
 <li><a>Text 1</a></li>
 <li>Text 2</li>
 <li><span><a>Text 2</a></span></li>
+</ol>
             </body></html>')
 SCRIPT;
 
