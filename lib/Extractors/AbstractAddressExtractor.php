@@ -3,7 +3,7 @@
 namespace Magium\Extractors;
 
 
-abstract class AddressExtractor extends AbstractExtractor
+abstract class AbstractAddressExtractor extends AbstractExtractor
 {
 
     protected $name;
