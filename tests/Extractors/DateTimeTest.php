@@ -154,11 +154,19 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     public function testTimezoneDetectedWithTime()
     {
         $dateTime = $this->getDateTimeObject();
-        $dateTime->setText('DECEMBER 13, 2015 12:32:10 CST');
+        $dateTime->setText('DECEMBER 13, 2015 01:01:01 CST');
         $dateTime->extract();
-        self::assertEquals('DECEMBER 13, 2015 12:32:10 CST', $dateTime->getDateString());
+        self::assertEquals('DECEMBER 13, 2015 01:01:01 CST', $dateTime->getDateString());
     }
 
+    public function testWithActualOrderText()
+    {
+        $dateTime = $this->getDateTimeObject();
+        $dateTime->setText('ORDER DATE: DECEMBER 30, 2015');
+        $dateTime->extract();
+        self::assertEquals('DECEMBER 30, 2015', $dateTime->getDateString());
+
+    }
 
     public function testIncorrectTimeIgnored()
     {
