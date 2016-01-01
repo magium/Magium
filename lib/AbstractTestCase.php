@@ -26,7 +26,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     protected $di;
 
-    protected $textElementNodeSearch = [];
+    protected $textElementNodeSearch = [
+        'span', 'a', 'li'
+    ];
 
     const BY_XPATH = 'byXpath';
     const BY_ID    = 'byId';
@@ -36,9 +38,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
 
-        $this->textElementNodeSearch[] = 'span';
-        $this->textElementNodeSearch[] = 'a';
-        $this->textElementNodeSearch[] = 'li';
 
         $defaults = [
             'definition' => [
