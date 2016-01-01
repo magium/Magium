@@ -105,7 +105,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     public function setTypePreference($type, $preference)
     {
         $this->di->instanceManager()->unsetTypePreferences($type);
-        $this->di->instanceManager()->setTypePreference($type, $preference);
+        $this->di->instanceManager()->setTypePreference($type, [$preference]);
 
     }
 
