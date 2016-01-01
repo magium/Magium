@@ -44,7 +44,7 @@ class DateTime extends AbstractExtractor
                  * have to be a bit greedy here.
                  */
                 $fn = 'test' . ucfirst($term);
-                if ($this->$fn($part)) {
+                if ($this->$fn($part) && $matchedParts[$term] === null) {
                     $matchedParts[$term] = $key;
                 }
 
@@ -113,7 +113,7 @@ class DateTime extends AbstractExtractor
             return true;
         }
         $parse = date_parse($part);
-        if ($parse && $parse['day'] !== false ) {
+        if ($parse && $parse['day'] !== false && $parse['error_count'] == 0 ) {
             return true;
         } else if (preg_match('/^\d{1,2}[\/\\-]\d{1,2}[\/\\-]\d{1,2}$/', $part)) {
             return true;
@@ -127,7 +127,7 @@ class DateTime extends AbstractExtractor
             return true;
         }
         $parse = date_parse($part);
-        if ($parse && $parse['month'] !== false ) {
+        if ($parse && $parse['month'] !== false && $parse['error_count'] == 0 ) {
             return true;
         } else if (preg_match('/^\d{1,2}[\/\\-]\d{1,2}[\/\\-]\d{1,2}$/', $part)) {
             return true;
@@ -138,15 +138,12 @@ class DateTime extends AbstractExtractor
     protected function testYear($part)
     {
         $parse = date_parse($part);
-        if ($parse) {
-            if ($parse['year'] !== false) {
-                return true;
-            }
+        if ($parse && $parse['year'] !== false && $parse['error_count'] == 0) {
+            return true;
             // DateTime parses 2015 as 20:15:00, so this is to account for the unique condition.
-            if (strlen($part) ==4 ) {
-                if ($parse['second'] === 0 && $parse['hour'] == substr($part, 0, 2) && $parse['minute'] == substr($part, 2, 2)) {
-                    return true;
-                }
+        } else if (strlen($part) ==4 ) {
+            if ($parse['second'] === 0 && $parse['hour'] == substr($part, 0, 2) && $parse['minute'] == substr($part, 2, 2)) {
+                return true;
             }
         } else if (preg_match('/^\d{1,2}[\/\\-]\d{1,2}[\/\\-]\d{2,4}$/', $part)) {
             return true;

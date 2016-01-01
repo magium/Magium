@@ -159,12 +159,23 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('DECEMBER 13, 2015 01:01:01 CST', $dateTime->getDateString());
     }
 
+
+
     public function testWithActualOrderText()
     {
         $dateTime = $this->getDateTimeObject();
         $dateTime->setText('ORDER DATE: DECEMBER 30, 2015');
         $dateTime->extract();
         self::assertEquals('DECEMBER 30, 2015', $dateTime->getDateString());
+
+    }
+
+    public function testWithActualOrderTex2()
+    {
+        $dateTime = $this->getDateTimeObject();
+        $dateTime->setText('ORDER DATE: JANUARY 1, 2016');
+        $dateTime->extract();
+        self::assertEquals('JANUARY 1, 2016', $dateTime->getDateString());
 
     }
 
