@@ -32,6 +32,16 @@ abstract class AbstractConfigurableElement
             }
             $path .= '../';
         }
+
+        $variablePrefix = 'MAGIUM_' . str_replace('\\', '_', strtoupper(get_class($this))) . '_';
+
+        foreach ($_ENV as $key => $value) {
+            if (strpos($key, $variablePrefix) === 0) {
+                $property = substr($key, strlen($variablePrefix));
+                $this->$property = $value;
+            }
+        }
+
     }
 
     public function translate($translate)
