@@ -39,7 +39,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
 
 
-        $defaults = [
+        $configArray = [
             'definition' => [
                 'class' => [
                     'Magium\WebDriver\WebDriver' => [
@@ -69,8 +69,19 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $diConfigPath = realpath(__DIR__ . '/../configuration/di.php');
-        $configArray = array_merge($defaults, include $diConfigPath);
+        $count = 0;
+        $path = realpath(__DIR__ . '/../');
+
+        while ($count++ < 5) {
+            $dir = "{$path}/configuration/";
+            if (is_dir($dir)) {
+                foreach (glob($dir . '*.php') as $file) {
+                    $configArray = array_merge($configArray, include $file);
+                }
+                break;
+            }
+            $path .= '../';
+        }
 
 
         $configuration = new \Zend\Di\Config($configArray);
