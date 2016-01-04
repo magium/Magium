@@ -12,7 +12,7 @@ class TranslatorTest extends AbstractTestCase
     public function testTranslatorBaseConfiguration()
     {
         $translator = $this->getTranslator();
-        self::assertInstanceOf('Zend\I18n\Translator\Translator', $translator);
+        self::assertInstanceOf('Magium\Util\Translator\Translator', $translator);
         self::assertEquals('Test Value', $translator->translate('Test Value'));
     }
 

@@ -27,13 +27,13 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     protected $di;
 
     protected $textElementNodeSearch = [
-        'span', 'a', 'li'
+        'span', 'a', 'li', 'option'
     ];
 
     const BY_XPATH = 'byXpath';
     const BY_ID    = 'byId';
     const BY_CSS_SELECTOR = 'byCssSelector';
-
+    const BY_TEXT = 'byText';
 
     protected function setUp()
     {
@@ -425,33 +425,37 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string $text
-     * @param string $parentElement
+     * @param string $specificNodeType
+     * @param string $parentElementSelector
      * @return \Facebook\WebDriver\Remote\RemoteWebElement
      */
-    public function byText($text, $parentElement = null)
+    public function byText($text, $specificNodeType = null, $parentElementSelector = null)
     {
         $xpathTemplate = '//%s[concat(" ",normalize-space(.)," ") = " %s "]';
-        if ($parentElement !== null) {
-            return $this->byXpath(sprintf($xpathTemplate, $parentElement, $text));
+        if ($parentElementSelector !== null) {
+            $xpathTemplate = $parentElementSelector . $xpathTemplate;
+        }
+        if ($specificNodeType !== null) {
+            return $this->byXpath(sprintf($xpathTemplate, $specificNodeType, $this->getTranslator()->translate($text)));
         }
 
         foreach ($this->textElementNodeSearch as $nodeName) {
-            $xpath = sprintf($xpathTemplate, $nodeName, $text);
+            $xpath = sprintf($xpathTemplate, $nodeName, $this->getTranslator()->translate($text));
             if ($this->webdriver->elementExists($xpath, WebDriver::BY_XPATH)) {
                 return $this->webdriver->byXpath($xpath);
             }
         }
         // This is here for consistency with the other by* methods
-        WebDriverException::throwException(7, 'Could not find element with text: ' . $text, []);
+        WebDriverException::throwException(7, 'Could not find element with text: ' . $this->getTranslator()->translate($text), []);
     }
 
     /**
-     * @return \Zend\I18n\Translator\Translator
+     * @return \Magium\Util\Translator\Translator
      */
 
     public function getTranslator()
     {
-        return $this->get('Zend\I18n\Translator\Translator');
+        return $this->get('Magium\Util\Translator\Translator');
     }
 
 }
