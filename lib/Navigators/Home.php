@@ -8,7 +8,7 @@ use Magium\WebDriver\WebDriver;
 class Home
 {
 
-    const NAVIGATOR = 'HOME';
+    const NAVIGATOR = 'Home';
 
     protected $webDriver;
     protected $baseTheme;

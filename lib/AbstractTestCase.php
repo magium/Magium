@@ -166,7 +166,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     public function getTheme($theme = null)
     {
         if ($theme === null) {
-            $theme = $this->baseThemeClass;
+            return $this->get($this->baseThemeClass);
         }
         $theme = self::resolveClass('Themes\\' . $theme);
         return $this->get($theme);
@@ -385,6 +385,11 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             $this->baseThemeClass = $fullyQualifiedClassName;
             $this->di->instanceManager()->unsetTypePreferences('Magium\Themes\ThemeConfigurationInterface');
             $this->di->instanceManager()->setTypePreference('Magium\Themes\ThemeConfigurationInterface', [$fullyQualifiedClassName]);
+
+            if (is_subclass_of($fullyQualifiedClassName, 'Magium\Themes\BaseThemeInterface')) {
+                $this->di->instanceManager()->unsetTypePreferences('Magium\Themes\BaseThemeInterface');
+                $this->di->instanceManager()->setTypePreference('Magium\Themes\BaseThemeInterface', [$fullyQualifiedClassName]);
+            }
         } else {
             throw new InvalidConfigurationException('The theme configuration implement Magium\Themes\ThemeConfigurationInterface');
         }
