@@ -261,6 +261,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     public function get($class)
     {
         $class = $this->normalizeClassRequest($class);
+        $preferredClass = $this->di->instanceManager()->getTypePreferences($class);
+        if (is_array($preferredClass) && count($preferredClass) > 0) {
+            $class = array_shift($preferredClass);
+        }
         return $this->di->get($class);
     }
 
@@ -432,6 +436,33 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     public function byText($text, $specificNodeType = null, $parentElementSelector = null)
     {
         $xpathTemplate = '//%s[concat(" ",normalize-space(.)," ") = " %s "]';
+        if ($parentElementSelector !== null) {
+            $xpathTemplate = $parentElementSelector . $xpathTemplate;
+        }
+        if ($specificNodeType !== null) {
+            return $this->byXpath(sprintf($xpathTemplate, $specificNodeType, $this->getTranslator()->translate($text)));
+        }
+
+        foreach ($this->textElementNodeSearch as $nodeName) {
+            $xpath = sprintf($xpathTemplate, $nodeName, $this->getTranslator()->translate($text));
+            if ($this->webdriver->elementExists($xpath, WebDriver::BY_XPATH)) {
+                return $this->webdriver->byXpath($xpath);
+            }
+        }
+        // This is here for consistency with the other by* methods
+        WebDriverException::throwException(7, 'Could not find element with text: ' . $this->getTranslator()->translate($text), []);
+    }
+
+
+    /**
+     * @param string $text
+     * @param string $specificNodeType
+     * @param string $parentElementSelector
+     * @return \Facebook\WebDriver\Remote\RemoteWebElement
+     */
+    public function containsText($text, $specificNodeType = null, $parentElementSelector = null)
+    {
+        $xpathTemplate = '//%s[contains(., "%s")]';
         if ($parentElementSelector !== null) {
             $xpathTemplate = $parentElementSelector . $xpathTemplate;
         }
