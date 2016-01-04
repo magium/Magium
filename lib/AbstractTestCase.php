@@ -9,7 +9,7 @@ use Magium\WebDriver\WebDriver;
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
 
-    protected $baseNamespace = 'Magium';
+    protected static $baseNamespaces = ['Magium'];
 
     protected $baseThemeClass = 'Magium\Themes\ThemeConfigurationInterface';
 
@@ -112,6 +112,31 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public static function addBaseNamespace($namespace)
+    {
+        if (!in_array($namespace, self::$baseNamespaces)) {
+            self::$baseNamespaces[] = trim($namespace, '\\');
+        }
+    }
+
+    public static function resolveClass($class)
+    {
+        foreach (self::$baseNamespaces as $namespace) {
+            if (strpos($namespace, $class) === 0) {
+                // We have a fully qualified class name
+                return $class;
+            }
+        }
+
+        foreach (self::$baseNamespaces as $namespace) {
+            $fqClass = $namespace . '\\' . $class;
+            if (class_exists($fqClass)) {
+                return $fqClass;
+            }
+        }
+        return $class;
+    }
+
     public function setTypePreference($type, $preference)
     {
         $this->di->instanceManager()->unsetTypePreferences($type);
@@ -143,9 +168,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         if ($theme === null) {
             $theme = $this->baseThemeClass;
         }
-        if (strpos($theme, $this->baseNamespace) === false) {
-            $theme = $this->baseNamespace . '\Themes\\' . $theme;
-        }
+        $theme = self::resolveClass('Themes\\' . $theme);
         return $this->get($theme);
     }
 
@@ -157,9 +180,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function getAction($action)
     {
-        if (strpos($action, $this->baseNamespace ) === false) {
-            $action = $this->baseNamespace . '\Actions\\' . $action;
-        }
+        $action = self::resolveClass('Actions\\' . $action);
 
         return $this->get($action);
     }
@@ -172,9 +193,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function getIdentity($name = 'Customer')
     {
-        if (strpos($name, $this->baseNamespace) === false) {
-            $name = $this->baseNamespace . '\Identities\\' . $name;
-        }
+        $name = self::resolveClass('Identities\\' . $name);
 
         return $this->get($name);
     }
@@ -187,19 +206,14 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function getNavigator($navigator = 'BaseMenu')
     {
-        if (strpos($navigator, $this->baseNamespace) === false) {
-            $navigator = $this->baseNamespace . '\Navigators\\' . $navigator;
-        }
+        $navigator = self::resolveClass('Navigators\\' . $navigator);
 
         return $this->get($navigator);
     }
 
     public function getAssertion($assertion)
     {
-        // TODO figure out a way to fall back onto the default \Magium
-        if (strpos($assertion, $this->baseNamespace) === false) {
-            $assertion = $this->baseNamespace . '\Assertions\\' . $assertion;
-        }
+        $assertion = self::resolveClass('Assertions\\' . $assertion);
 
         return $this->get($assertion);
     }
@@ -212,9 +226,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function getExtractor($extractor)
     {
-        if (strpos($extractor, $this->baseNamespace) === false) {
-            $extractor = $this->baseNamespace . '\Extractors\\' . $extractor;
-        }
+        $extractor = self::resolveClass('Extractors\\' . $extractor);
 
         return $this->get($extractor);
     }
