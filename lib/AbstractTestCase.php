@@ -261,6 +261,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     public function get($class)
     {
         $class = $this->normalizeClassRequest($class);
+        $preferredClass = $this->di->instanceManager()->getTypePreferences($class);
+        if (is_array($preferredClass) && count($preferredClass) > 0) {
+            $class = array_shift($preferredClass);
+        }
         return $this->di->get($class);
     }
 
