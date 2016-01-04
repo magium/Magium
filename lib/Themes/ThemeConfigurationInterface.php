@@ -12,4 +12,6 @@ namespace Magium\Themes;
 interface ThemeConfigurationInterface
 {
 
+
+
 }
