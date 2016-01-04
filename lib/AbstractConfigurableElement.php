@@ -2,7 +2,8 @@
 
 namespace Magium;
 
-use Zend\I18n\Translator\Translator;
+
+use Magium\Util\Translator\Translator;
 
 abstract class AbstractConfigurableElement
 {
@@ -27,7 +28,7 @@ abstract class AbstractConfigurableElement
                 $filename .= "/{$configurationFile}";
                 if (file_exists($filename)) {
                     include $filename;
-                    return;
+                    break;
                 }
             }
             $path .= '../';
@@ -46,35 +47,8 @@ abstract class AbstractConfigurableElement
 
     public function translate($translate)
     {
-        if (is_array($translate)) {
-            foreach ($translate as $key => $value) {
-                $value = $this->translate($value);
-                $translate[$key] = $value;
-            }
-        } else {
-            $results = [];
-            preg_match_all('/\{\{([^\}]+)\}\}/', $translate, $results);
-            array_shift($results);
-
-
-            foreach ($results as $result) {
-                if (is_array($result)) {
-                    while (($part = array_shift($result)) !== null) {
-                        $translate = $this->translatePart($translate, $part);
-                    }
-                } else {
-                    $translate = $this->translatePart($translate, $result);
-                }
-            }
-        }
-        return $translate;
-    }
-
-    protected function translatePart($translate, $result)
-    {
-        $newResult = $this->translator->translate($result);
-        $translate = str_replace('{{' . $result . '}}', $newResult, $translate);
-        return $translate;
+        $newTranslate = $this->translator->translate($translate);
+        return $newTranslate;
     }
 
 }

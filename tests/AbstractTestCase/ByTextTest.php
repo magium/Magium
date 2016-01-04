@@ -3,6 +3,7 @@
 namespace Tests\Magium\AbstractTestCase;
 
 use Magium\AbstractTestCase;
+use Magium\WebDriver\FastSelectElement;
 
 class ByTextTest extends AbstractTestCase
 {
@@ -29,6 +30,32 @@ class ByTextTest extends AbstractTestCase
         self::assertEquals('li', $element->getTagName());
     }
 
+    public function testOption()
+    {
+        $this->writePage();
+        $element = $this->byText('Some Text');
+        self::assertEquals('option', $element->getTagName());
+    }
+
+
+    public function testOptionWithParentSelector()
+    {
+        $this->writePage();
+        $element = $this->byText('Some Text', null, '//select[@id="select2"]');
+        $element->click();
+        $select = new FastSelectElement($this->webdriver, '//select[@id="select2"]');
+        $options = $select->getSelectedOptions();
+        $option = array_shift($options);
+        self::assertEquals('Some Text', $option['label']);
+    }
+
+
+    public function testOptionWithTranslator()
+    {
+        $this->writePage();
+        $this->byText('{{Some Text}}');
+    }
+
     protected function writePage()
     {
 
@@ -41,6 +68,13 @@ class ByTextTest extends AbstractTestCase
 <li>Text 2</li>
 <li><span><a>Text 2</a></span></li>
 </ol>
+<select id="select1">
+<option>Some Text</option>
+</select>
+<select id="select2">
+<option selected="selected">Some Text Begin</option>
+<option>Some Text</option>
+</select>
             </body></html>')
 SCRIPT;
 
