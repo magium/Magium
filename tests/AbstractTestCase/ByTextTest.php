@@ -49,6 +49,16 @@ class ByTextTest extends AbstractTestCase
         self::assertEquals('Some Text', $option['label']);
     }
 
+    public function testLabelSelector()
+    {
+        $this->writePage();
+        $checkElement = $this->byId('testcheckbox');
+        self::assertNull($checkElement->getAttribute('checked'));
+        $element = $this->byText('Checkbox');
+        $element->click();
+
+        self::assertNotNull($checkElement->getAttribute('checked'));
+    }
 
     public function testOptionWithTranslator()
     {
@@ -75,6 +85,8 @@ class ByTextTest extends AbstractTestCase
 <option selected="selected">Some Text Begin</option>
 <option>Some Text</option>
 </select>
+<input type="checkbox" id="testcheckbox">
+<label for="testcheckbox">Checkbox</label>
             </body></html>')
 SCRIPT;
 

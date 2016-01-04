@@ -27,7 +27,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     protected $di;
 
     protected $textElementNodeSearch = [
-        'span', 'a', 'li', 'option'
+        'span', 'a', 'li', 'label', 'option'
     ];
 
     const BY_XPATH = 'byXpath';
