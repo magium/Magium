@@ -38,7 +38,7 @@ class InstructionNavigator
             
             switch ($instruction) {
                 case WebDriver::INSTRUCTION_MOUSE_CLICK: 
-                    $this->webdriver->getMouse()->click($element->getCoordinates());
+                    $element->click();
                     break;
                 case WebDriver::INSTRUCTION_MOUSE_MOVETO:
                     $this->webdriver->getMouse()->mouseMove($element->getCoordinates());
