@@ -9,7 +9,7 @@ use Magium\WebDriver\WebDriver;
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
 
-    protected static $baseNamespaces = ['Magium'];
+    protected static $baseNamespaces = [];
 
     protected $baseThemeClass = 'Magium\Themes\ThemeConfigurationInterface';
 
@@ -38,6 +38,11 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        /*
+         * Putting this in the setup and not in the property means that an extending class can inject itself easily
+         * before the Magium namespace, thus, taking preference over the base namespace
+         */
+        self::addBaseNamespace('Magium');
        $configArray = [
             'definition' => [
                 'class' => [
