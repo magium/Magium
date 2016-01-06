@@ -35,16 +35,16 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     const BY_CSS_SELECTOR = 'byCssSelector';
     const BY_TEXT = 'byText';
 
+
     protected function setUp()
     {
-
-
-        $configArray = [
+       $configArray = [
             'definition' => [
                 'class' => [
                     'Magium\WebDriver\WebDriver' => [
                         'instantiator' => 'Magium\WebDriver\WebDriverFactory::create'
                     ],
+
                     'Magium\WebDriver\WebDriverFactory' => [
                         'create'       => [
                             'url' => ['default' => 'http://localhost:4444/wd/hub'],
@@ -54,6 +54,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                 ]
             ],
             'instance'  => [
+                'preference' => [
+                    'Zend\I18n\Translator\Translator' => ['Magium\Util\Translator\Translator']
+                ],
                 'Zend\Log\Logger'   => [
                     'parameters'    => [
                         'options'   => [
@@ -95,6 +98,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             $this->di->instanceManager()->addSharedInstance($this, $class);
             $rc = new \ReflectionClass($class);
         }
+
+
 
         $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
     }
@@ -506,4 +511,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         return $this->get('Magium\Util\Translator\Translator');
     }
 
+    public function addTranslationCsvFile($file, $locale)
+    {
+        $this->getTranslator()->addTranslationCsvFile($file, $locale);
+    }
 }

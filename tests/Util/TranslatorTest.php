@@ -105,6 +105,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             ),
         ));
         $translator->getPluginManager()->setService('phpmemoryarray', $loader);
+        $translator->setSkipServiceBuild(true);
         return $translator;
     }
 }
