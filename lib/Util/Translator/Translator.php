@@ -36,7 +36,9 @@ class Translator extends \Zend\I18n\Translator\Translator
             return;
         }
         $translation = [
-            'default'   => []
+            'default'   => [
+                'en_US' => []
+            ]
         ];
         foreach ($this->csvFiles as $locale => $fileList) {
             $translation['default'][$locale] = [];
@@ -58,9 +60,16 @@ class Translator extends \Zend\I18n\Translator\Translator
     public function translate($message, $textDomain = 'default', $locale = null)
     {
         $this->buildTranslationService();
+        return parent::translate($message, $textDomain, $locale);
+    }
+
+
+    public function translatePlaceholders($message, $textDomain = 'default', $locale = null)
+    {
+        $this->buildTranslationService();
         if (is_array($message)) {
             foreach ($message as $key => $value) {
-                $value = $this->translate($value);
+                $value = $this->translatePlaceholders($value);
                 $message[$key] = $value;
             }
         } else {
