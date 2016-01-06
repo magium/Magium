@@ -45,9 +45,9 @@ abstract class AbstractConfigurableElement
 
     }
 
-    public function translate($translate)
+    public function translatePlaceholders($translate)
     {
-        $newTranslate = $this->translator->translate($translate);
+        $newTranslate = $this->translator->translatePlaceholders($translate);
         return $newTranslate;
     }
 

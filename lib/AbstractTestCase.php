@@ -9,7 +9,7 @@ use Magium\WebDriver\WebDriver;
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
 
-    protected static $baseNamespaces = ['Magium'];
+    protected static $baseNamespaces = [];
 
     protected $baseThemeClass = 'Magium\Themes\ThemeConfigurationInterface';
 
@@ -35,16 +35,21 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     const BY_CSS_SELECTOR = 'byCssSelector';
     const BY_TEXT = 'byText';
 
+
     protected function setUp()
     {
-
-
-        $configArray = [
+        /*
+         * Putting this in the setup and not in the property means that an extending class can inject itself easily
+         * before the Magium namespace, thus, taking preference over the base namespace
+         */
+        self::addBaseNamespace('Magium');
+       $configArray = [
             'definition' => [
                 'class' => [
                     'Magium\WebDriver\WebDriver' => [
                         'instantiator' => 'Magium\WebDriver\WebDriverFactory::create'
                     ],
+
                     'Magium\WebDriver\WebDriverFactory' => [
                         'create'       => [
                             'url' => ['default' => 'http://localhost:4444/wd/hub'],
@@ -54,6 +59,14 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                 ]
             ],
             'instance'  => [
+                'preference' => [
+                    'Zend\I18n\Translator\Translator' => ['Magium\Util\Translator\Translator']
+                ],
+                'Magium\Util\Translator\Translator' => [
+                    'parameters'    => [
+                        'locale'    => 'en_US'
+                    ]
+                ],
                 'Zend\Log\Logger'   => [
                     'parameters'    => [
                         'options'   => [
@@ -95,6 +108,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             $this->di->instanceManager()->addSharedInstance($this, $class);
             $rc = new \ReflectionClass($class);
         }
+
+
 
         $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
     }
@@ -457,17 +472,17 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             $xpathTemplate = $parentElementSelector . $xpathTemplate;
         }
         if ($specificNodeType !== null) {
-            return $this->byXpath(sprintf($xpathTemplate, $specificNodeType, $this->getTranslator()->translate($text)));
+            return $this->byXpath(sprintf($xpathTemplate, $specificNodeType, $this->getTranslator()->translatePlaceholders($text)));
         }
 
         foreach ($this->textElementNodeSearch as $nodeName) {
-            $xpath = sprintf($xpathTemplate, $nodeName, $this->getTranslator()->translate($text));
+            $xpath = sprintf($xpathTemplate, $nodeName, $this->getTranslator()->translatePlaceholders($text));
             if ($this->webdriver->elementExists($xpath, WebDriver::BY_XPATH)) {
                 return $this->webdriver->byXpath($xpath);
             }
         }
         // This is here for consistency with the other by* methods
-        WebDriverException::throwException(7, 'Could not find element with text: ' . $this->getTranslator()->translate($text), []);
+        WebDriverException::throwException(7, 'Could not find element with text: ' . $this->getTranslator()->translatePlaceholders($text), []);
     }
 
 
@@ -484,17 +499,17 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             $xpathTemplate = $parentElementSelector . $xpathTemplate;
         }
         if ($specificNodeType !== null) {
-            return $this->byXpath(sprintf($xpathTemplate, $specificNodeType, $this->getTranslator()->translate($text)));
+            return $this->byXpath(sprintf($xpathTemplate, $specificNodeType, $this->getTranslator()->translatePlaceholders($text)));
         }
 
         foreach ($this->textElementNodeSearch as $nodeName) {
-            $xpath = sprintf($xpathTemplate, $nodeName, $this->getTranslator()->translate($text));
+            $xpath = sprintf($xpathTemplate, $nodeName, $this->getTranslator()->translatePlaceholders($text));
             if ($this->webdriver->elementExists($xpath, WebDriver::BY_XPATH)) {
                 return $this->webdriver->byXpath($xpath);
             }
         }
         // This is here for consistency with the other by* methods
-        WebDriverException::throwException(7, 'Could not find element with text: ' . $this->getTranslator()->translate($text), []);
+        WebDriverException::throwException(7, 'Could not find element with text: ' . $this->getTranslator()->translatePlaceholders($text), []);
     }
 
     /**
@@ -506,4 +521,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         return $this->get('Magium\Util\Translator\Translator');
     }
 
+    public function addTranslationCsvFile($file, $locale)
+    {
+        $this->getTranslator()->addTranslationCsvFile($file, $locale);
+    }
 }

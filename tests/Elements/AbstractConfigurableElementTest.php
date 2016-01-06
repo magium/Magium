@@ -3,9 +3,10 @@
 namespace Tests\Magium\Elements;
 
 use Magium\AbstractConfigurableElement;
+use Magium\AbstractTestCase;
 use Magium\Util\Translator\Translator;
 
-class AbstractConfigurableElementTest extends \PHPUnit_Framework_TestCase
+class AbstractConfigurableElementTest extends AbstractTestCase
 {
 
     public function testPropertyPassedViaEnvironmentVariable()
@@ -17,14 +18,14 @@ class AbstractConfigurableElementTest extends \PHPUnit_Framework_TestCase
 
     public function testTranslationSmokeTest()
     {
-        $obj =  new PropertyElement(new Translator());
-        $value = $obj->translate('{{Kevin}}');
+        $obj =  new PropertyElement($this->getTranslator());
+        $value = $obj->translatePlaceholders('{{Kevin}}');
         self::assertEquals('Kevin', $value);
 
-        $value = $obj->translate('Kevin');
+        $value = $obj->translatePlaceholders('Kevin');
         self::assertEquals('Kevin', $value);
 
-        $value = $obj->translate('Kevin}');
+        $value = $obj->translatePlaceholders('Kevin}');
         self::assertEquals('Kevin}', $value);
     }
 

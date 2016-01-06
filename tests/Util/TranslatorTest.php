@@ -16,25 +16,25 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             'Jewelry'   => 'boogers'
         ]);
 
-        $translated = $translator->translate('{{kevin}}');
+        $translated = $translator->translatePlaceholders('{{kevin}}');
         self::assertEquals('boogers', $translated);
 
-        $translated = $translator->translate('abc{{kevin}}');
+        $translated = $translator->translatePlaceholders('abc{{kevin}}');
         self::assertEquals('abcboogers', $translated);
 
-        $translated = $translator->translate('{{kevin}}xyz');
+        $translated = $translator->translatePlaceholders('{{kevin}}xyz');
         self::assertEquals('boogersxyz', $translated);
 
-        $translated = $translator->translate('abc{{kevin}}xyz');
+        $translated = $translator->translatePlaceholders('abc{{kevin}}xyz');
         self::assertEquals('abcboogersxyz', $translated);
 
-        $translated = $translator->translate('{{kevin}}{{kevin}}');
+        $translated = $translator->translatePlaceholders('{{kevin}}{{kevin}}');
         self::assertEquals('boogersboogers', $translated);
 
-        $translated = $translator->translate('{{kevin}}/{{kevin}}');
+        $translated = $translator->translatePlaceholders('{{kevin}}/{{kevin}}');
         self::assertEquals('boogers/boogers', $translated);
 
-        $translated = $translator->translate('{{Accessories}}/{{Jewelry}}');
+        $translated = $translator->translatePlaceholders('{{Accessories}}/{{Jewelry}}');
         self::assertEquals('boogers/boogers', $translated);
     }
 
@@ -44,11 +44,11 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             'kevin' => 'boogers'
         ]);
 
-        $translated = $translator->translate(['{{kevin}}']);
+        $translated = $translator->translatePlaceholders(['{{kevin}}']);
         self::assertCount(1, $translated);
         self::assertEquals('boogers', $translated[0]);
 
-        $translated = $translator->translate(['a' => '{{kevin}}']);
+        $translated = $translator->translatePlaceholders(['a' => '{{kevin}}']);
         self::assertCount(1, $translated);
         self::assertEquals('boogers', $translated['a']);
 
@@ -60,11 +60,11 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             'kevin' => 'boogers'
         ]);
 
-        $translated = $translator->translate('{kevin}}');
+        $translated = $translator->translatePlaceholders('{kevin}}');
         self::assertEquals('{kevin}}', $translated);
 
 
-        $translated = $translator->translate('{{kevin}');
+        $translated = $translator->translatePlaceholders('{{kevin}');
         self::assertEquals('{{kevin}', $translated);
 
     }
@@ -76,7 +76,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             'kevin' => 'boogers'
         ]);
 
-        $translated = $translator->translate('kevin');
+        $translated = $translator->translatePlaceholders('kevin');
         self::assertEquals('kevin', $translated);
 
 
@@ -105,6 +105,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
             ),
         ));
         $translator->getPluginManager()->setService('phpmemoryarray', $loader);
+        $translator->setSkipServiceBuild(true);
         return $translator;
     }
 }
