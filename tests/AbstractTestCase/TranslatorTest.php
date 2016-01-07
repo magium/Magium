@@ -4,8 +4,6 @@ namespace Tests\Magium\AbstractTestCase;
 
 use Magium\AbstractTestCase;
 
-;
-
 class TranslatorTest extends AbstractTestCase
 {
 

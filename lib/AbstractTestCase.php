@@ -376,7 +376,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             $this->assertElementExists($selector, $by);
             self::assertFalse(
                 $this->webdriver->$by($selector)->isDisplayed(),
-                sprintf('The element: %s, is displayed and it should not have been')
+                sprintf('The element: %s, is displayed and it should not have been', $selector)
             );
         } catch (\Exception $e) {
             self::assertTrue(false, sprintf('Element "%s" cannot be found using selector "%s"', $selector, $by));
@@ -416,16 +416,26 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf('Facebook\WebDriver\WebDriverElement', $element);
     }
 
-
     public function assertElementHasText($node, $text, $message = null)
     {
         $element = $this->byXpath(sprintf('//%s[contains(., "%s")]', $node, addslashes($text)));
         self::assertNotNull($element, 'Text could not be found in an element ' . $node);
     }
 
-    public function assertPageHasText($text, $message = null)
+    public function assertPageHasText($text)
     {
-        $this->assertElementHasText('body', $text, $message);
+        $element = $this->webdriver->byXpath(sprintf('//body[contains(., "%s")]', $text));
+        self::assertContains($text, $element->getText());
+    }
+
+    public function assertPageNotHasText($text)
+    {
+        try {
+            $element = $this->webdriver->byXpath(sprintf('//body[contains(., "%s")]', $text));
+            self::assertNotContains($text, $element->getText());
+        } catch (\Exception $e) {
+            // Exception thrown is a success
+        }
     }
 
     /**
