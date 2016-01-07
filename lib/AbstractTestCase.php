@@ -432,7 +432,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         try {
             $element = $this->webdriver->byXpath(sprintf('//body[contains(., "%s")]', $text));
-            self::assertNotContains($text, $element->getText());
         } catch (\Exception $e) {
             // Exception thrown is a success
         }
