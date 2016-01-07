@@ -5,6 +5,7 @@ namespace Magium\Navigators;
 use Magium\AbstractTestCase;
 use Magium\InvalidConfigurationException;
 use Magium\Themes\ThemeConfigurationInterface;
+use Magium\WebDriver\ExpectedCondition;
 use Magium\WebDriver\WebDriver;
 
 class InstructionNavigator
@@ -32,6 +33,8 @@ class InstructionNavigator
         foreach ($instructions as $instruction) {
             $this->testCase->assertCount(2, $instruction, 'Navigation instructions need to be a 2 member array.  First item is the instruction type, the second is the XPath');
             list($instruction, $xpath) = $instruction;
+            $this->webdriver->wait()->until(ExpectedCondition::elementExists($xpath, WebDriver::BY_XPATH));
+
             $element = $this->webdriver->byXpath($xpath);
             $this->testCase->assertNotNull($element);
             $this->testCase->assertTrue($element->isDisplayed());

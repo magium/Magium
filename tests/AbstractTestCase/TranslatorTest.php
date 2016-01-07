@@ -4,8 +4,6 @@ namespace Tests\Magium\AbstractTestCase;
 
 use Magium\AbstractTestCase;
 
-;
-
 class TranslatorTest extends AbstractTestCase
 {
 
@@ -13,7 +11,7 @@ class TranslatorTest extends AbstractTestCase
     {
         $translator = $this->getTranslator();
         self::assertInstanceOf('Magium\Util\Translator\Translator', $translator);
-        self::assertEquals('Test Value', $translator->translatePlaceholders('Test Value'));
+        self::assertEquals('Test Value', $translator->translate('Test Value'));
     }
 
     public function testTypePreference()
