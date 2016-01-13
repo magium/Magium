@@ -5,8 +5,9 @@ namespace Magium;
 
 
 use Magium\Util\Translator\Translator;
+use Magium\Util\Translator\TranslatorAware;
 
-abstract class AbstractConfigurableElement
+abstract class AbstractConfigurableElement implements TranslatorAware
 {
     protected $translator;
 
@@ -47,6 +48,17 @@ abstract class AbstractConfigurableElement
     public function setTranslator(Translator $translator)
     {
         $this->translator = $translator;
+    }
+
+    /**
+     * This method is used for Unit Testing.  You will probably not need it
+     *
+     * @return Translator
+     */
+
+    public function getTranslator()
+    {
+        return $this->translator;
     }
 
     public function translatePlaceholders($translate)
