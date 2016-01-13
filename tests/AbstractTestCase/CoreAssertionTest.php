@@ -85,12 +85,21 @@ class CoreAssertionTest extends AbstractTestCase
         $this->assertPageNotHasText('Text');
     }
 
+    protected $filename;
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        unlink($this->filename);
+    }
+
+
     protected function writePage()
     {
 
 
         $body = <<<SCRIPT
-            document.write('<html>
+<html>
 <head><title>Test Title</title></head>
 <body>
 <ol>
@@ -109,11 +118,14 @@ class CoreAssertionTest extends AbstractTestCase
 <input type="checkbox" id="testcheckbox">
 <label for="testcheckbox">Checkbox</label>
 <div id="hiddenElement" style="display: none;" >You should not see this</div>
-            </body></html>')
+            </body></html>
 SCRIPT;
 
-        $script = preg_replace("/[\n\r]/", '', $body);
-        $this->webdriver->executeScript($script);
+        $this->filename = tempnam('.', 'test');
+        $fh = fopen($this->filename, 'w+');
+        fwrite($fh, $body);
+        fclose($fh);
+        $this->commandOpen('file://' . $this->filename);
 
     }
 
