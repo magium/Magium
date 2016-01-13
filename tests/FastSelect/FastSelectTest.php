@@ -36,6 +36,8 @@ class FastSelectTest extends AbstractTestCase
         self::assertCount(0, $result);
     }
 
+    protected $filename;
+
     protected function tearDown()
     {
         parent::tearDown();
@@ -61,6 +63,7 @@ SCRIPT;
         $fh = fopen($this->filename, 'w+');
         fwrite($fh, $script);
         fclose($fh);
+        chmod($this->filename, 0666);
         $this->commandOpen('file://' . $this->filename);
 
     }

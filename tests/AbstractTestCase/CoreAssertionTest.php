@@ -125,6 +125,7 @@ SCRIPT;
         $fh = fopen($this->filename, 'w+');
         fwrite($fh, $body);
         fclose($fh);
+        chmod($this->filename, 0666);
         $this->commandOpen('file://' . $this->filename);
 
     }
