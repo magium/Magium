@@ -66,12 +66,20 @@ class ByTextTest extends AbstractTestCase
         $this->byText('{{Some Text}}');
     }
 
+    protected $filename;
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        unlink($this->filename);
+    }
+
     protected function writePage()
     {
 
 
         $body = <<<SCRIPT
-            document.write('<html><body>
+<html><body>
 <ol>
 <li>Text 1</li>
 <li><a>Text 1</a></li>
@@ -87,11 +95,15 @@ class ByTextTest extends AbstractTestCase
 </select>
 <input type="checkbox" id="testcheckbox">
 <label for="testcheckbox">Checkbox</label>
-            </body></html>')
+</body></html>
 SCRIPT;
 
-        $script = preg_replace("/[\n\r]/", '', $body);
-        $this->webdriver->executeScript($script);
+        $this->filename = tempnam(sys_get_temp_dir(), 'test');
+        $fh = fopen($this->filename, 'w+');
+        fwrite($fh, $body);
+        fclose($fh);
+        chmod($this->filename, 0666);
+        $this->commandOpen('file://' . $this->filename);
 
     }
 

@@ -36,13 +36,36 @@ class FastSelectTest extends AbstractTestCase
         self::assertCount(0, $result);
     }
 
+    protected $filename;
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        unlink($this->filename);
+    }
+
     protected function writePage()
     {
-        $this->webdriver->executeScript(
+        $script =
 <<<SCRIPT
-document.write('<html><body><form id="test">    <select id="select">        <option value="1">One</option>        <option value="2">Two</option>    </select></form></body></html>')
-SCRIPT
-        );
+<html>
+<body>
+<form id="test">
+    <select id="select">
+        <option value="1">One</option>
+        <option value="2">Two</option>
+    </select>
+</form>
+</body>
+</html>
+SCRIPT;
+        $this->filename = tempnam(sys_get_temp_dir(), 'test');
+        $fh = fopen($this->filename, 'w+');
+        fwrite($fh, $script);
+        fclose($fh);
+        chmod($this->filename, 0666);
+        $this->commandOpen('file://' . $this->filename);
+
     }
 
 }

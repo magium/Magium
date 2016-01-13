@@ -12,13 +12,15 @@ class AbstractConfigurableElementTest extends AbstractTestCase
     public function testPropertyPassedViaEnvironmentVariable()
     {
         $_ENV['MAGIUM_TESTS_MAGIUM_ELEMENTS_PROPERTYELEMENT_property'] = 'changed';
-        $obj =  new PropertyElement(new Translator());
+        $obj =  new PropertyElement();
+        $obj->setTranslator(new Translator());
         self::assertEquals('changed', $obj->getProperty());
     }
 
     public function testTranslationSmokeTest()
     {
-        $obj =  new PropertyElement($this->getTranslator());
+        $obj =  new PropertyElement();
+        $obj->setTranslator($this->getTranslator());
         $value = $obj->translatePlaceholders('{{Kevin}}');
         self::assertEquals('Kevin', $value);
 

@@ -46,7 +46,6 @@ class CoreAssertionTest extends AbstractTestCase
         $this->assertTitleContains('Title');
     }
 
-
     public function testTitleNotIs()
     {
         $this->writePage();
@@ -65,18 +64,42 @@ class CoreAssertionTest extends AbstractTestCase
         $this->assertPageHasText('Text');
     }
 
+    public function testPageHasTextWithNoTextThrowsException()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        $this->writePage();
+        $this->assertPageHasText('My little buttercup');
+    }
+
     public function testPageNotHasText()
     {
         $this->writePage();
         $this->assertPageNotHasText('My little buttercup');
     }
 
+
+    public function testPageNotHasTextWithRightTextThrowsException()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        $this->writePage();
+        $this->assertPageNotHasText('Text');
+    }
+
+    protected $filename;
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        unlink($this->filename);
+    }
+
+
     protected function writePage()
     {
 
 
         $body = <<<SCRIPT
-            document.write('<html>
+<html>
 <head><title>Test Title</title></head>
 <body>
 <ol>
@@ -95,11 +118,15 @@ class CoreAssertionTest extends AbstractTestCase
 <input type="checkbox" id="testcheckbox">
 <label for="testcheckbox">Checkbox</label>
 <div id="hiddenElement" style="display: none;" >You should not see this</div>
-            </body></html>')
+            </body></html>
 SCRIPT;
 
-        $script = preg_replace("/[\n\r]/", '', $body);
-        $this->webdriver->executeScript($script);
+        $this->filename = tempnam(sys_get_temp_dir(), 'test');
+        $fh = fopen($this->filename, 'w+');
+        fwrite($fh, $body);
+        fclose($fh);
+        chmod($this->filename, 0666);
+        $this->commandOpen('file://' . $this->filename);
 
     }
 
