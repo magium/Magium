@@ -3,7 +3,6 @@
 namespace Magium;
 
 use Facebook\WebDriver\Exception\WebDriverException;
-use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Magium\WebDriver\WebDriver;
 
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
@@ -30,6 +29,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         'span', 'a', 'li', 'label', 'option'
     ];
 
+    protected $testCaseConfiguration = 'Magium\TestCaseConfiguration';
+
     const BY_XPATH = 'byXpath';
     const BY_ID    = 'byId';
     const BY_CSS_SELECTOR = 'byCssSelector';
@@ -43,6 +44,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
          * before the Magium namespace, thus, taking preference over the base namespace
          */
         self::addBaseNamespace('Magium');
+        $configuration = new $this->testCaseConfiguration();
+        /* @var $configuration TestCaseConfiguration */
        $configArray = [
             'definition' => [
                 'class' => [
@@ -51,10 +54,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                     ],
 
                     'Magium\WebDriver\WebDriverFactory' => [
-                        'create'       => [
-                            'url' => ['default' => 'http://localhost:4444/wd/hub'],
-                            'desired_capabilities' => ['default' => DesiredCapabilities::chrome()]
-                        ]
+                        'create'       => $configuration->getWebDriverConfiguration()
                     ]
                 ]
             ],
@@ -83,6 +83,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         ];
 
         $count = 0;
+
         $path = realpath(__DIR__ . '/../');
 
         while ($count++ < 5) {
@@ -97,8 +98,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
 
 
+        $configArray = $configuration->reprocessConfiguration($configArray);
         $configuration = new \Zend\Di\Config($configArray);
-        // TODO set configurable configuration
+
         $this->di = new \Zend\Di\Di();
         $configuration->configure($this->di);
 
@@ -125,6 +127,11 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         if ($this->webdriver) {
             $this->webdriver->close();
         }
+    }
+
+    public function setTestCaseConfigurationClass($class)
+    {
+        $this->testCaseConfiguration = $class;
     }
 
     public static function addBaseNamespace($namespace)

@@ -3,16 +3,15 @@
 namespace Magium;
 
 
-use Magium\Util\Translator\Translator;
+use Zend\I18n\Translator\TranslatorAwareTrait;
 
 abstract class AbstractConfigurableElement
 {
+    use TranslatorAwareTrait;
 
-    protected $translator;
 
-    public function __construct(Translator $translator, $configurationFile = null)
+    public function __construct($configurationFile = null)
     {
-        $this->translator = $translator;
         // TODO not sure if this is the best way.  Perhaps some kind of test configuration
         if ($configurationFile === null) {
             $configurationFile = get_class($this) . '.php';
@@ -44,6 +43,8 @@ abstract class AbstractConfigurableElement
         }
 
     }
+
+
 
     public function translatePlaceholders($translate)
     {

@@ -67,6 +67,7 @@ class CoreAssertionTest extends AbstractTestCase
 
     public function testPageNotHasText()
     {
+
         $this->writePage();
         $this->assertPageNotHasText('My little buttercup');
     }
