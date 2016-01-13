@@ -31,6 +31,12 @@ class AbstractConfigurableElementTest extends AbstractTestCase
         self::assertEquals('Kevin}', $value);
     }
 
+    public function testInjection()
+    {
+        $obj = $this->get('Tests\Magium\Elements\PropertyElement');
+        self::assertInstanceOf('Magium\Util\Translator\Translator', $obj->getTranslator());
+    }
+
 }
 
 class PropertyElement extends AbstractConfigurableElement
