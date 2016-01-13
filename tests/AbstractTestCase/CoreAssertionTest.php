@@ -46,7 +46,6 @@ class CoreAssertionTest extends AbstractTestCase
         $this->assertTitleContains('Title');
     }
 
-
     public function testTitleNotIs()
     {
         $this->writePage();
@@ -65,11 +64,25 @@ class CoreAssertionTest extends AbstractTestCase
         $this->assertPageHasText('Text');
     }
 
+    public function testPageHasTextWithNoTextThrowsException()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        $this->writePage();
+        $this->assertPageHasText('My little buttercup');
+    }
+
     public function testPageNotHasText()
     {
-
         $this->writePage();
         $this->assertPageNotHasText('My little buttercup');
+    }
+
+
+    public function testPageNotHasTextWithRightTextThrowsException()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        $this->writePage();
+        $this->assertPageNotHasText('Text');
     }
 
     protected function writePage()

@@ -2,6 +2,7 @@
 
 namespace Magium;
 
+use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Magium\WebDriver\WebDriver;
 
@@ -308,7 +309,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         try {
             self::assertWebDriverElement($this->webdriver->$by($selector));
         } catch (\Exception $e) {
-            self::assertTrue(false, sprintf('Element "%s" cannot be found using selector "%s": %s', $selector, $by, $e->getMessage()));
+            $this->fail(sprintf('Element "%s" cannot be found using selector "%s": %s', $selector, $by, $e->getMessage()));
         }
     }
 
@@ -373,7 +374,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                 sprintf('The element: %s, is not displayed and it should have been', $selector)
             );
         } catch (\Exception $e) {
-            self::assertTrue(false, sprintf('Element "%s" cannot be found using selector "%s"', $selector, $by));
+            $this->fail(sprintf('Element "%s" cannot be found using selector "%s"', $selector, $by));
         }
     }
 
@@ -386,7 +387,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                 sprintf('The element: %s, is displayed and it should not have been', $selector)
             );
         } catch (\Exception $e) {
-            self::assertTrue(false, sprintf('Element "%s" cannot be found using selector "%s"', $selector, $by));
+            $this->fail(sprintf('Element "%s" cannot be found using selector "%s"', $selector, $by));
         }
     }
 
@@ -394,7 +395,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         try {
             self::assertWebDriverElement($this->webdriver->$by($selector));
-            self::assertTrue(false, sprintf('Element "%s" was found using selector "%s"', $selector, $by));
+            $this->fail(sprintf('Element "%s" was found using selector "%s"', $selector, $by));
         } catch (\Exception $e) {
         }
     }
@@ -425,21 +426,30 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function assertElementHasText($node, $text, $message = null)
     {
-        $element = $this->byXpath(sprintf('//%s[contains(., "%s")]', $node, addslashes($text)));
-        self::assertNotNull($element, 'Text could not be found in an element ' . $node);
+        try {
+            $this->byXpath(sprintf('//%s[contains(., "%s")]', $node, addslashes($text)));
+        } catch (\Exception $e) {
+            $this->fail('The body did not contain the text: ' . $text);
+        }
     }
 
     public function assertPageHasText($text)
     {
-        $element = $this->webdriver->byXpath(sprintf('//body[contains(., "%s")]', $text));
-        self::assertContains($text, $element->getText());
+        try {
+            $this->webdriver->byXpath(sprintf('//body[contains(., "%s")]', $text));
+            // If the element is not found then an exception will be thrown
+        } catch (\Exception $e) {
+            $this->fail('The body did not contain the text: ' . $text);
+        }
+
     }
 
     public function assertPageNotHasText($text)
     {
         try {
-            $element = $this->webdriver->byXpath(sprintf('//body[contains(., "%s")]', $text));
-        } catch (\Exception $e) {
+            $this->webdriver->byXpath(sprintf('//body[contains(., "%s")]', $text));
+            $this->fail('The page contains the words: ' . $text);
+        } catch (NoSuchElementException $e) {
             // Exception thrown is a success
         }
     }
@@ -508,7 +518,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
      * @param string $parentElementSelector
      * @return \Facebook\WebDriver\Remote\RemoteWebElement
      */
-    public function containsText($text, $specificNodeType = null, $parentElementSelector = null)
+    public function byContainsText($text, $specificNodeType = null, $parentElementSelector = null)
     {
         $xpathTemplate = '//%s[contains(., "%s")]';
         if ($parentElementSelector !== null) {
