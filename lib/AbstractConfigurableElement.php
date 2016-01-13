@@ -3,12 +3,12 @@
 namespace Magium;
 
 
-use Zend\I18n\Translator\TranslatorAwareTrait;
+
+use Magium\Util\Translator\Translator;
 
 abstract class AbstractConfigurableElement
 {
-    use TranslatorAwareTrait;
-
+    protected $translator;
 
     public function __construct($configurationFile = null)
     {
@@ -44,7 +44,10 @@ abstract class AbstractConfigurableElement
 
     }
 
-
+    public function setTranslator(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
 
     public function translatePlaceholders($translate)
     {
