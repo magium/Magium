@@ -84,7 +84,7 @@ class WebDriver extends RemoteWebDriver
     public function __destruct()
     {
         try {
-            $this->close();
+            $this->quit();
         } catch (WebDriverException $e) {
             // Not a problem.  It just means that the WebDriver session was closed somewhere else
         }
