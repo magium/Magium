@@ -12,6 +12,6 @@ namespace Magium\Themes;
 interface ThemeConfigurationInterface
 {
 
-
+    public function getGuaranteedPageLoadedElementDisplayedXpath();
 
 }
