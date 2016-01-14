@@ -14,4 +14,6 @@ interface ThemeConfigurationInterface
 
     public function getGuaranteedPageLoadedElementDisplayedXpath();
 
+    public function setGuaranteedPageLoadedElementDisplayedXpath($xpath);
+
 }
