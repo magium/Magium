@@ -9,7 +9,7 @@ use Magium\WebDriver\WebDriver;
 
 class WaitForPageLoaded
 {
-    const ACTION = 'Actions\WaitForPageLoaded';
+    const ACTION = 'WaitForPageLoaded';
 
     protected $webDriver;
     protected $theme;
