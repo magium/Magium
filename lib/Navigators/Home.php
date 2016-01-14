@@ -31,7 +31,7 @@ class Home
     public function navigateTo()
     {
         $testElement = $this->webDriver->byXpath('//body');
-        $this->webDriver->byXpath($this->baseTheme->getHomeXpath());
+        $this->webDriver->byXpath($this->baseTheme->getHomeXpath())->click();
         $this->loaded->execute($testElement);
     }
 

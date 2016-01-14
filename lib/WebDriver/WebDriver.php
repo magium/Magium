@@ -3,6 +3,7 @@
 namespace Magium\WebDriver;
 
 use Facebook\WebDriver\Exception\WebDriverException;
+use Facebook\WebDriver\Remote\HttpCommandExecutor;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
@@ -84,7 +85,9 @@ class WebDriver extends RemoteWebDriver
     public function __destruct()
     {
         try {
-            $this->quit();
+            if ($this->getCommandExecutor() instanceof HttpCommandExecutor) {
+                $this->quit();
+            }
         } catch (WebDriverException $e) {
             // Not a problem.  It just means that the WebDriver session was closed somewhere else
         }
