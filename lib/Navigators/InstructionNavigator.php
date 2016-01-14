@@ -3,6 +3,7 @@
 namespace Magium\Navigators;
 
 use Magium\AbstractTestCase;
+use Magium\Actions\WaitForPageLoaded;
 use Magium\InvalidConfigurationException;
 use Magium\Themes\ThemeConfigurationInterface;
 use Magium\WebDriver\ExpectedCondition;
@@ -14,15 +15,18 @@ class InstructionNavigator
     protected $webdriver;
     protected $themeConfiguration;
     protected $testCase;
+    protected $loaded;
     
     public function __construct(
         ThemeConfigurationInterface $theme,
         AbstractTestCase $testCase,
-        WebDriver $webdriver)
+        WebDriver $webdriver,
+        WaitForPageLoaded $loaded)
     {
         $this->themeConfiguration = $theme;
         $this->testCase = $testCase;
         $this->webdriver = $webdriver;
+        $this->loaded = $loaded;
     }
 
     
