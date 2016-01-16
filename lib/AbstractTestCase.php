@@ -4,6 +4,8 @@ namespace Magium;
 
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\WebDriverException;
+use Facebook\WebDriver\WebDriverBy;
+use Magium\WebDriver\ExpectedCondition;
 use Magium\WebDriver\WebDriver;
 
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
@@ -127,6 +129,47 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         parent::tearDown();
         if ($this->webdriver) {
             $this->webdriver->close();
+        }
+    }
+
+
+    protected function filterWebDriverAction($by)
+    {
+        switch ($by) {
+            case WebDriver::BY_XPATH:
+                return 'xpath';
+                break;
+            case WebDriver::BY_CSS_SELECTOR:
+                return 'css_selector';
+                break;
+            case WebDriver::BY_ID:
+                return 'id';
+                break;
+            default:
+                return $by;
+                break;
+        }
+    }
+
+    public function assertElementClickable($selector, $by = WebDriver::BY_ID)
+    {
+        $by = $this->filterWebDriverAction($by);
+        try {
+            $this->webdriver->wait(1)->until(ExpectedCondition::elementToBeClickable(WebDriverBy::$by($selector)));
+        } catch (\Exception $e) {
+            $this->fail(sprintf('The element %s, located with %s, cannot be clicked', $selector, $by));
+        }
+    }
+
+
+    public function assertElementNotClickable($selector, $by = WebDriver::BY_ID)
+    {
+        $by = $this->filterWebDriverAction($by);
+        try {
+            $this->webdriver->wait(1)->until(ExpectedCondition::elementToBeClickable(WebDriverBy::$by($selector)));
+            $this->fail(sprintf('The element %s, located with %s, is clickable but should not be', $selector, $by));
+        } catch (\Exception $e) {
+
         }
     }
 
