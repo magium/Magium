@@ -30,5 +30,9 @@ namespace Magium {
         {
             return null;
         }
+        public function setGuaranteedPageLoadedElementDisplayedXpath($value)
+        {
+            return null;
+        }
     }
 }
