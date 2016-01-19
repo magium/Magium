@@ -110,12 +110,16 @@ SCRIPT
     protected function getThemeMock()
     {
         $mock = $this->getMockBuilder('Magium\Themes\ThemeConfigurationInterface')
-                     ->setMethods(['getGuaranteedPageLoadedElementDisplayedXpath'])
+                     ->setMethods(['getGuaranteedPageLoadedElementDisplayedXpath', 'setGuaranteedPageLoadedElementDisplayedXpath'])
                      ->getMock();
         $mock->method('getGuaranteedPageLoadedElementDisplayedXpath')
-             ->willReturn(
+            ->willReturn(
                 '//div[@id="footer"]'
-             );
+            );
+        $mock->method('setGuaranteedPageLoadedElementDisplayedXpath')
+            ->willReturn(
+                null
+            );
         return $mock;
     }
 
