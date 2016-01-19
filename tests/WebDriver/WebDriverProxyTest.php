@@ -3,7 +3,6 @@
 namespace Tests\Magium\WebDriver;
 
 use Magium\AbstractTestCase;
-use Magium\WebDriver\ExpectedCondition;
 use Magium\WebDriver\WebDriverElementProxy;
 
 class WebDriverProxyTest extends AbstractTestCase
@@ -37,7 +36,7 @@ HTML
         );
         $proxy->click();
 
-        $this->webdriver->wait()->until(ExpectedCondition::alertIsPresent());
+        $this->webdriver->switchTo()->alert()->dismiss();
     }
 
     protected $filename;
