@@ -113,9 +113,13 @@ SCRIPT
                      ->setMethods(['getGuaranteedPageLoadedElementDisplayedXpath'])
                      ->getMock();
         $mock->method('getGuaranteedPageLoadedElementDisplayedXpath')
-             ->willReturn(
+            ->willReturn(
                 '//div[@id="footer"]'
-             );
+            );
+        $mock->method('setGuaranteedPageLoadedElementDisplayedXpath')
+            ->willReturn(
+                null
+            );
         return $mock;
     }
 
