@@ -110,7 +110,7 @@ SCRIPT
     protected function getThemeMock()
     {
         $mock = $this->getMockBuilder('Magium\Themes\ThemeConfigurationInterface')
-                     ->setMethods(['getGuaranteedPageLoadedElementDisplayedXpath'])
+                     ->setMethods(['getGuaranteedPageLoadedElementDisplayedXpath', 'setGuaranteedPageLoadedElementDisplayedXpath'])
                      ->getMock();
         $mock->method('getGuaranteedPageLoadedElementDisplayedXpath')
             ->willReturn(
