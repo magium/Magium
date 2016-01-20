@@ -49,7 +49,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         self::addBaseNamespace('Magium');
         $configuration = new $this->testCaseConfiguration();
         /* @var $configuration TestCaseConfiguration */
-       $configArray = [
+        $configArray = [
             'definition' => [
                 'class' => [
                     'Magium\WebDriver\WebDriver' => [
@@ -185,8 +185,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public static function resolveClass($class)
+    public static function resolveClass($prefix, $class)
     {
+        $origClass = $class;
+        $class = "{$prefix}\\{$class}";
         foreach (self::$baseNamespaces as $namespace) {
             if (strpos($namespace, $class) === 0) {
                 // We have a fully qualified class name
@@ -200,7 +202,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                 return $fqClass;
             }
         }
-        return $class;
+        return $origClass;
     }
 
     public function setTypePreference($type, $preference)
@@ -234,7 +236,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         if ($theme === null) {
             return $this->get($this->baseThemeClass);
         }
-        $theme = self::resolveClass('Themes\\' . $theme);
+        $theme = self::resolveClass('Themes',  $theme);
         return $this->get($theme);
     }
 
@@ -246,7 +248,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function getAction($action)
     {
-        $action = self::resolveClass('Actions\\' . $action);
+        $action = self::resolveClass('Actions',  $action);
 
         return $this->get($action);
     }
@@ -259,7 +261,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function getIdentity($name = 'Customer')
     {
-        $name = self::resolveClass('Identities\\' . $name);
+        $name = self::resolveClass('Identities',  $name);
 
         return $this->get($name);
     }
@@ -272,14 +274,14 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function getNavigator($navigator = 'BaseMenu')
     {
-        $navigator = self::resolveClass('Navigators\\' . $navigator);
+        $navigator = self::resolveClass('Navigators', $navigator);
 
         return $this->get($navigator);
     }
 
     public function getAssertion($assertion)
     {
-        $assertion = self::resolveClass('Assertions\\' . $assertion);
+        $assertion = self::resolveClass('Assertions',  $assertion);
 
         return $this->get($assertion);
     }
@@ -292,7 +294,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function getExtractor($extractor)
     {
-        $extractor = self::resolveClass('Extractors\\' . $extractor);
+        $extractor = self::resolveClass('Extractors',  $extractor);
 
         return $this->get($extractor);
     }
