@@ -458,6 +458,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                 $this->di->instanceManager()->unsetTypePreferences('Magium\Themes\BaseThemeInterface');
                 $this->di->instanceManager()->setTypePreference('Magium\Themes\BaseThemeInterface', [$fullyQualifiedClassName]);
             }
+            $this->getTheme()->configure($this);
         } else {
             throw new InvalidConfigurationException('The theme configuration implement Magium\Themes\ThemeConfigurationInterface');
         }
