@@ -26,6 +26,11 @@ namespace Magium {
             return null;
         }
 
+        public function configure(AbstractTestCase $testCase)
+        {
+            return null;
+        }
+
         public function getGuaranteedPageLoadedElementDisplayedXpath()
         {
             return null;
