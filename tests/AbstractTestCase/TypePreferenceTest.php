@@ -15,6 +15,14 @@ class TypePreferenceTest extends AbstractTestCase
         self::assertInstanceOf('Tests\Magium\AbstractTestCase\Super', $obj);
     }
 
+    public function testTypePreferenceWithShortenedNames()
+    {
+        self::addBaseNamespace('Tests\Magium');
+        $this->setTypePreference('Util\EmailGenerator\Generator', 'AbstractTestCase\Super');
+        $obj = $this->get('Magium\Util\EmailGenerator\Generator');
+        self::assertInstanceOf('Tests\Magium\AbstractTestCase\Super', $obj);
+    }
+
 }
 
 
