@@ -2,8 +2,9 @@
 
 namespace Magium\Commands;
 
+use Magium\Util\Log\Logger;
 use Magium\WebDriver\WebDriver;
-use Zend\Log\Logger;
+
 
 class Open
 {
