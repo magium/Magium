@@ -2,6 +2,7 @@
 
 namespace Magium\Navigators;
 
+use Facebook\WebDriver\WebDriverBy;
 use Magium\AbstractTestCase;
 use Magium\Actions\WaitForPageLoaded;
 use Magium\InvalidConfigurationException;
@@ -38,6 +39,7 @@ class InstructionNavigator
             $this->testCase->assertCount(2, $instruction, 'Navigation instructions need to be a 2 member array.  First item is the instruction type, the second is the XPath');
             list($instruction, $xpath) = $instruction;
             $this->webdriver->wait()->until(ExpectedCondition::elementExists($xpath, WebDriver::BY_XPATH));
+            $this->webdriver->wait()->until(ExpectedCondition::elementToBeClickable(WebDriverBy::xpath($xpath)));
 
             $element = $this->webdriver->byXpath($xpath);
             $this->testCase->assertNotNull($element);
