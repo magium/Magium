@@ -133,7 +133,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     }
 
 
-    protected function filterWebDriverAction($by)
+    public function filterWebDriverAction($by)
     {
         switch ($by) {
             case WebDriver::BY_XPATH:

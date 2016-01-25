@@ -24,6 +24,9 @@ class Open
         $this->logger->info(sprintf('Opening URL %s', $url));
         $this->webdriver->get($url);
         $this->logger->info(sprintf('URL %s has been opened', $url));
+        // This is done because firefox does not always scroll the admin menus into view.
+        // TODO - find a better way to beat Firefox into submission.
+        $this->webdriver->manage()->window()->maximize();
     }
     
 }
