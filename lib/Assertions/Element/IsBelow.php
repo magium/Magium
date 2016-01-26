@@ -3,10 +3,10 @@
 namespace Magium\Assertions\Element;
 
 use Facebook\WebDriver\WebDriverElement;
-use Magium\AbstractTestCase;
+use Magium\Assertions\AbstractAssertion;
 use Magium\Assertions\AssertionInterface;
 
-class IsBelow implements AssertionInterface
+class IsBelow extends AbstractAssertion
 {
     const ASSERTION = 'Element\IsBelow';
 
@@ -20,14 +20,6 @@ class IsBelow implements AssertionInterface
      */
 
     protected $belowElement;
-    protected $testCase;
-
-    public function __construct(
-        AbstractTestCase $testCase
-    )
-    {
-        $this->testCase = $testCase;
-    }
 
     public function setAboveElement(WebDriverElement $element)
     {
@@ -41,8 +33,7 @@ class IsBelow implements AssertionInterface
 
     public function assert()
     {
-        $this->testCase->assertWebDriverElement($this->aboveElement);
-        $this->testCase->assertWebDriverElement($this->belowElement);
+
         $aboveCoord = $this->aboveElement->getLocation();
         $belowCoord = $this->belowElement->getLocation();
         $this->testCase->assertGreaterThan($aboveCoord->getY(), $belowCoord->getY(), 'The "below" element was not below the "above" element');

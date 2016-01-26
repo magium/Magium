@@ -4,6 +4,7 @@ namespace Magium\Util\Log;
 
 use Exception;
 use Magium\Assertions\AbstractAssertion;
+use Magium\Assertions\AbstractSelectorAssertion;
 use Magium\Util\Phpunit\MasterListener;
 use Magium\Util\Phpunit\MasterListenerAware;
 use PHPUnit_Framework_AssertionFailedError;
@@ -30,6 +31,8 @@ class Logger extends \Zend\Log\Logger implements \PHPUnit_Framework_TestListener
 
     protected $testId;
 
+    protected $selectorConfig = null;
+
     public function setMasterListener(MasterListener $listener)
     {
         $listener->addListener($this);
@@ -41,12 +44,6 @@ class Logger extends \Zend\Log\Logger implements \PHPUnit_Framework_TestListener
 
     }
 
-    public function executeAssertion(AbstractAssertion $assertion)
-    {
-        $assertion->assert();
-        $this->addAssertionSuccess($assertion);
-        // A failed assertion with throw an exception, which will be caught by addFailure()
-    }
 
     public function setTestName($name)
     {
@@ -68,9 +65,16 @@ class Logger extends \Zend\Log\Logger implements \PHPUnit_Framework_TestListener
         $this->log($stepId, $this->createExtra(['type' => 'step']));
     }
 
-    public function addAssertionSuccess(AbstractAssertion $assertion)
+    public function logAssertionSuccess(AbstractAssertion $assertion, array $extra)
     {
-        $this->log(get_class($assertion), $this->createExtra(['type' => 'assertion']));
+        $extra = array_merge($extra, ['type' => 'assertion', 'result' => self::STATUS_PASSED]);
+        $this->info(get_class($assertion), $this->createExtra($extra));
+    }
+
+    public function logAssertionFailure(AbstractAssertion $assertion, array $extra)
+    {
+        $extra = array_merge($extra, ['type' => 'assertion', 'result' => self::STATUS_FAILED]);
+        $this->info(get_class($assertion), $this->createExtra($extra));
     }
 
     public function createExtra($includeArray = [])
@@ -78,8 +82,13 @@ class Logger extends \Zend\Log\Logger implements \PHPUnit_Framework_TestListener
         $defaultArray = [
             'type'      => 'message',
             'status'    => $this->status,
-            'name'     => $this->testName
+            'name'     => $this->testName,
+            'testId'    => $this->testId
         ];
+
+        if ($this->selectorConfig) {
+            $defaultArray = array_merge($this->selectorConfig, $defaultArray);
+        }
 
         return array_merge($defaultArray, $includeArray);
     }

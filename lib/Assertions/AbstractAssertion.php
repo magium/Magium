@@ -5,8 +5,10 @@ namespace Magium\Assertions;
 use Magium\TestCaseAware;
 use Magium\Util\Log\Logger;
 use Magium\Util\Log\LoggerAware;
+use Magium\WebDriver\WebDriver;
+use Magium\WebDriver\WebDriverAware;
 
-abstract class AbstractAssertion implements LoggerAware, TestCaseAware
+abstract class AbstractAssertion implements LoggerAware, TestCaseAware, WebDriverAware
 {
     /**
      * @var Logger
@@ -19,7 +21,17 @@ abstract class AbstractAssertion implements LoggerAware, TestCaseAware
      */
 
     protected $testCase;
-    protected $lastXpath;
+
+    /**
+     * @var WebDriver
+     */
+
+    protected $webDriver;
+
+    public function setWebDriver(WebDriver $webdriver)
+    {
+        $this->webDriver = $webdriver;
+    }
 
     public function setLogger(Logger $logger)
     {
@@ -29,11 +41,6 @@ abstract class AbstractAssertion implements LoggerAware, TestCaseAware
     public function setTestCase(\PHPUnit_Framework_TestCase $testCase)
     {
         $this->testCase = $testCase;
-    }
-
-    public function getLastXpath()
-    {
-        return $this->lastXpath;
     }
 
     public abstract function assert();
