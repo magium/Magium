@@ -28,6 +28,7 @@ HTML
             'sendMeKeys'
         );
         $proxy->sendKeys('Test');
+        $this->sleep('100ms');
         self::assertEquals('Test', $proxy->getAttribute('value'));
 
         $proxy = new WebDriverElementProxy(
