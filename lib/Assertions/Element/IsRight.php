@@ -4,7 +4,6 @@ namespace Magium\Assertions\Element;
 
 use Facebook\WebDriver\WebDriverElement;
 use Magium\Assertions\AbstractAssertion;
-use Magium\Assertions\AssertionInterface;
 
 class IsRight extends AbstractAssertion
 {
