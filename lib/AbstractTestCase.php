@@ -11,6 +11,7 @@ use Magium\Assertions\Element\NotDisplayed;
 use Magium\Assertions\Element\NotExists;
 use Magium\Assertions\LoggingAssertionExecutor;
 use Magium\Util\Phpunit\MasterListener;
+use Magium\Util\TestCase\RegistrationCallbackInterface;
 use Magium\WebDriver\WebDriver;
 use PHPUnit_Framework_TestResult;
 
@@ -50,6 +51,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     const BY_ID    = 'byId';
     const BY_CSS_SELECTOR = 'byCssSelector';
     const BY_TEXT = 'byText';
+
+    protected static $registrationCallbacks = [];
 
     protected function setUp()
     {
@@ -127,7 +130,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
         $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
 
-//        $logger = $this->getLogger();
+        foreach (self::$registrationCallbacks as $callback) {
+            /* @var $callback RegistrationCallbackInterface */
+            $callback->register($this);
+        }
 
     }
 
@@ -139,6 +145,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         parent::__construct($name, $data, $dataName);
     }
 
+    public static function addRegistrationCallback(RegistrationCallbackInterface $callback)
+    {
+        self::$registrationCallbacks[] = $callback;
+    }
 
     public function setTestResultObject(PHPUnit_Framework_TestResult $result)
     {

@@ -39,7 +39,7 @@ class BelowBesideTest extends AbstractTestCase
         $this->writePage();
         $leftElement = $this->byId('top-left');
         $rightElement = $this->byId('top-right');
-        $text = $leftElement->getText();
+
         $assertion = $this->getAssertion(IsRight::ASSERTION);
         /* @var $assertion IsRight */
         $assertion->setRightElement($rightElement);
