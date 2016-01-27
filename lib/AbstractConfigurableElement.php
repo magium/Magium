@@ -20,7 +20,7 @@ abstract class AbstractConfigurableElement implements TranslatorAware
         }
 
         $count = 0;
-        $path = __DIR__ . '../';
+        $path = realpath(__DIR__ . '/../');
 
         while ($count++ < 5) {
             $filename = "{$path}/configuration";
@@ -32,6 +32,7 @@ abstract class AbstractConfigurableElement implements TranslatorAware
                 }
             }
             $path .= '../';
+            $path = realpath($path); // More for debugging clarity.
         }
 
         $variablePrefix = 'MAGIUM_' . str_replace('\\', '_', strtoupper(get_class($this))) . '_';
