@@ -10,6 +10,7 @@ use Magium\Assertions\Element\NotClickable;
 use Magium\Assertions\Element\NotDisplayed;
 use Magium\Assertions\Element\NotExists;
 use Magium\Assertions\LoggingAssertionExecutor;
+use Magium\Util\Log\LoggerAware;
 use Magium\Util\Phpunit\MasterListener;
 use Magium\Util\TestCase\RegistrationCallbackInterface;
 use Magium\WebDriver\WebDriver;
@@ -111,7 +112,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                 }
                 break;
             }
-            $path .= '../';
+            $path .= '/../';
         }
 
 
@@ -139,9 +140,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function __construct($name = null, array $data = [], $dataName = null)
     {
-        if (!self::$masterListener instanceof MasterListener) {
-            self::$masterListener = new MasterListener();
-        }
+        self::getMasterListener();
         parent::__construct($name, $data, $dataName);
     }
 
@@ -163,6 +162,13 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         parent::setTestResultObject($result);
     }
 
+    public static function getMasterListener()
+    {
+        if (!self::$masterListener instanceof MasterListener) {
+            self::$masterListener = new MasterListener();
+        }
+        return self::$masterListener;
+    }
 
     protected function tearDown()
     {
