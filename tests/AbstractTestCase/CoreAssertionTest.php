@@ -19,6 +19,13 @@ class CoreAssertionTest extends AbstractTestCase
         $this->assertElementNotExists('select0000');
     }
 
+    public function testAssertElementNotExistsFailsWhenElementExists()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        $this->writePage();
+        $this->assertElementNotExists('select1');
+    }
+
     public function testElementDisplayed()
     {
         $this->writePage();
