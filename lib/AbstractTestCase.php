@@ -108,7 +108,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             $dir = "{$path}/configuration/";
             if (is_dir($dir)) {
                 foreach (glob($dir . '*.php') as $file) {
-                    $configArray = array_merge($configArray, include $file);
+                    $configArray = array_merge_recursive($configArray, include $file);
                 }
                 break;
             }
