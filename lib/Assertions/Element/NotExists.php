@@ -10,11 +10,14 @@ class NotExists extends AbstractSelectorAssertion
 
     public function assert()
     {
-
+        $exceptionThrown = false;
         try {
             $this->testCase->assertWebDriverElement($this->webDriver->{$this->by}($this->selector));
-            $this->fail(sprintf('Element "%s" was found using selector "%s"', $this->selector, $this->by));
         } catch (\Exception $e) {
+            $exceptionThrown = true;
+        }
+        if (!$exceptionThrown) {
+            $this->testCase->fail(sprintf('Element "%s" was found using selector "%s"', $this->selector, $this->by));
         }
     }
 
