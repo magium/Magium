@@ -2,12 +2,10 @@
 
 namespace Magium\Extractors\Navigation;
 
-use Facebook\WebDriver\WebDriverBy;
 use Magium\AbstractTestCase;
 use Magium\Extractors\AbstractExtractor;
 use Magium\Navigators\InstructionNavigator;
 use Magium\Themes\ThemeConfigurationInterface;
-use Magium\Util\Translator\Translator;
 use Magium\WebDriver\WebDriver;
 
 class Menu extends AbstractExtractor
@@ -63,12 +61,10 @@ class Menu extends AbstractExtractor
         WebDriver $webDriver,
         AbstractTestCase $testCase,
         ThemeConfigurationInterface $theme,
-        Translator $translator,
         InstructionNavigator $instructionNavigator
     )
     {
         parent::__construct($webDriver, $testCase, $theme);
-        $this->translator = $translator;
         $this->instructionNavigator = $instructionNavigator;
     }
 
@@ -87,10 +83,19 @@ class Menu extends AbstractExtractor
         return $this->childXpath;
     }
 
+    /**
+     * Attempts to extract an Xpath pattern to use for category navigation.
+     *
+     * Because this approach is somewhat manual translation needs to be done prior to executing this method.
+     *
+     * @throws MissingNavigationSchemeException
+     * @throws UnableToExtractMenuXpathException
+     */
+
     public function extract()
     {
         if (!$this->path) {
-            throw new MissingNavigationSchemeException('Missing the (translatable) navigation scheme in the format of "{{part1}}/{{part2}}"');
+            throw new MissingNavigationSchemeException('Missing the (translatable) navigation scheme in the format of "part1/part2."');
         }
 
         $parts = explode('/', $this->path);
@@ -98,9 +103,7 @@ class Menu extends AbstractExtractor
         if (count($parts) < 1) {
             throw new MissingNavigationSchemeException('Invalid navigation scheme."');
         }
-        foreach ($parts as $key => $part) {
-            $parts[$key] = $this->translator->translatePlaceholders($part);
-        }
+
         $baseChild = $parts[0];
         $html = $this->webDriver->byXpath('//body')->getAttribute('innerHTML');
         $doc = new \DOMDocument();
