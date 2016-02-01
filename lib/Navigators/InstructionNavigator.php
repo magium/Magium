@@ -2,35 +2,37 @@
 
 namespace Magium\Navigators;
 
+use Facebook\WebDriver\Exception\ElementNotVisibleException;
 use Facebook\WebDriver\WebDriverBy;
 use Magium\AbstractTestCase;
-use Magium\Actions\WaitForPageLoaded;
 use Magium\InvalidConfigurationException;
-use Magium\Themes\ThemeConfigurationInterface;
 use Magium\WebDriver\ExpectedCondition;
 use Magium\WebDriver\WebDriver;
 
 class InstructionNavigator
 {
-    
+    const NAVIGATOR = 'InstructionNavigator';
+
     protected $webdriver;
-    protected $themeConfiguration;
     protected $testCase;
-    protected $loaded;
     
     public function __construct(
-        ThemeConfigurationInterface $theme,
         AbstractTestCase $testCase,
-        WebDriver $webdriver,
-        WaitForPageLoaded $loaded)
+        WebDriver $webdriver
+    )
     {
-        $this->themeConfiguration = $theme;
         $this->testCase = $testCase;
         $this->webdriver = $webdriver;
-        $this->loaded = $loaded;
     }
 
-    
+    /**
+     * @param array $instructions
+     * @throws ElementNotVisibleException
+     * @throws InvalidConfigurationException
+     * @throws \Facebook\WebDriver\Exception\NoSuchElementException
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     */
+
     public function navigateTo(array $instructions)
     {
         $this->testCase->assertGreaterThan(0, count($instructions), 'Instruction navigator requires at least one instruction');
@@ -39,14 +41,16 @@ class InstructionNavigator
             $this->testCase->assertCount(2, $instruction, 'Navigation instructions need to be a 2 member array.  First item is the instruction type, the second is the XPath');
             list($instruction, $xpath) = $instruction;
             $this->webdriver->wait()->until(ExpectedCondition::elementExists($xpath, WebDriver::BY_XPATH));
-            $this->webdriver->wait()->until(ExpectedCondition::elementToBeClickable(WebDriverBy::xpath($xpath)));
+            $this->webdriver->wait(5)->until(ExpectedCondition::elementToBeClickable(WebDriverBy::xpath($xpath)));
 
             $element = $this->webdriver->byXpath($xpath);
-            $this->testCase->assertNotNull($element);
             $this->testCase->assertTrue($element->isDisplayed());
             
             switch ($instruction) {
-                case WebDriver::INSTRUCTION_MOUSE_CLICK: 
+                case WebDriver::INSTRUCTION_MOUSE_CLICK:
+                    if (!$element->isDisplayed()) {
+                        throw new ElementNotVisibleException('The element is not visible: ' . $xpath);
+                    }
                     $element->click();
                     break;
                 case WebDriver::INSTRUCTION_MOUSE_MOVETO:
