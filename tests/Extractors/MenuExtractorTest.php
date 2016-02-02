@@ -165,7 +165,7 @@ HTML
         ];
 
         $this->getNavigator(InstructionNavigator::NAVIGATOR)->navigateTo($instructions);
-        $this->webdriver->wait(1)->until(ExpectedCondition::alertIsPresent());
+        $this->webdriver->wait(5)->until(ExpectedCondition::alertIsPresent());
         $this->webdriver->switchTo()->alert()->accept();
     }
 
