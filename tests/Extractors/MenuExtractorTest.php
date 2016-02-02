@@ -159,12 +159,14 @@ HTML
             ];
             $lastXpath = $template;
         }
+        array_pop($instructions);
         $instructions[] = [
             WebDriver::INSTRUCTION_MOUSE_CLICK, $lastXpath
         ];
 
         $this->getNavigator(InstructionNavigator::NAVIGATOR)->navigateTo($instructions);
         $this->webdriver->wait(1)->until(ExpectedCondition::alertIsPresent());
+        $this->webdriver->switchTo()->alert()->accept();
     }
 
     protected function writePage($text)

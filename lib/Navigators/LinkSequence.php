@@ -42,6 +42,7 @@ class LinkSequence
         }
         $element = null;
         foreach ($parts as $part) {
+            $this->testCase->sleep('250ms');
             $part = $this->translator->translatePlaceholders($part);
             $xpath = sprintf('//a[concat(" ",normalize-space(.)," ") = " %s "]', $part);
             $elements = $this->webDriver->findElements(WebDriverBy::xpath($xpath));
