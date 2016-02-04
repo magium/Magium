@@ -31,7 +31,7 @@ abstract class AbstractConfigurableElement implements TranslatorAware
                     break;
                 }
             }
-            $path .= '../';
+            $path .= '/../';
             $path = realpath($path); // More for debugging clarity.
         }
 
