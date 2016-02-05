@@ -2,6 +2,7 @@
 
 namespace Magium\Assertions;
 
+use Magium\Assertions\Element\AbstractSelectorAssertion;
 use Magium\Util\Log\Logger;
 
 class LoggingAssertionExecutor
