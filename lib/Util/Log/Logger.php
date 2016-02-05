@@ -74,7 +74,7 @@ class Logger extends \Zend\Log\Logger implements \PHPUnit_Framework_TestListener
     public function logAssertionFailure(AbstractAssertion $assertion, array $extra)
     {
         $extra = array_merge($extra, ['type' => 'assertion', 'result' => self::STATUS_FAILED]);
-        $this->info(get_class($assertion), $this->createExtra($extra));
+        $this->err(get_class($assertion), $this->createExtra($extra));
     }
 
     public function createExtra($includeArray = [])

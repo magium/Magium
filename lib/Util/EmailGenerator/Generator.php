@@ -4,6 +4,7 @@ namespace Magium\Util\EmailGenerator;
 
 class Generator
 {
+
     public function generate($domain = null)
     {
         $rand = uniqid(openssl_random_pseudo_bytes(10));

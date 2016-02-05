@@ -4,12 +4,15 @@ namespace Magium\WebDriver;
 
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\Remote\HttpCommandExecutor;
+use Facebook\WebDriver\Remote\RemoteExecuteMethod;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
+use Magium\Util\Log\Logger;
+use Magium\Util\Log\LoggerAware;
 
 
-class WebDriver extends RemoteWebDriver
+class WebDriver extends RemoteWebDriver implements LoggerAware
 {
     const INSTRUCTION_MOUSE_MOVETO = 'mouseMoveTo';
     const INSTRUCTION_MOUSE_CLICK  = 'mouseClick';
@@ -17,6 +20,79 @@ class WebDriver extends RemoteWebDriver
     const BY_XPATH = 'byXpath';
     const BY_ID    = 'byId';
     const BY_CSS_SELECTOR = 'byCssSelector';
+
+    /**
+     * @var Logger
+     */
+
+    protected $logger;
+
+
+    public function logFind($by, $selector)
+    {
+        if ($this->logger instanceof Logger) {
+            $this->logger->debug(
+                sprintf(
+                    'By: %s %s',
+                    $by,
+                    $selector
+                ),
+                [
+                    'type' => 'webdriver-activity',
+                    'activity'  => 'select',
+                    'by'        => $by,
+                    'selector'  => $selector
+                ]
+            );
+        }
+    }
+
+    public function logElement(WebDriverElement $element)
+    {
+        if ($this->logger instanceof Logger) {
+            $this->logger->debug(
+                sprintf(
+                    'Returned element: %s ID: %s',
+                    get_class($element),
+                    $element->getID()
+                ),
+                [
+                    'type'      => 'webdriver-activity',
+                    'activity'  => 'element-return',
+                    'type'      => get_class($element),
+                    'id'        => $element->getID()
+                ]
+            );
+        }
+    }
+
+    public function setRemoteExecuteMethod(LoggingRemoteExecuteMethod $method)
+    {
+        $this->executeMethod = $method;
+    }
+
+    public function setLogger(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function findElements(WebDriverBy $by)
+    {
+        $this->logFind($by->getMechanism(), $by->getValue());
+        $elements = parent::findElements($by);
+        foreach ($elements as $element) {
+            $this->logElement($element);
+        }
+        return $elements;
+    }
+
+    public function findElement(WebDriverBy $by)
+    {
+        $this->logFind($by->getMechanism(), $by->getValue());
+        $element = parent::findElement($by);
+        $this->logElement($element);
+        return $element;
+    }
 
     public function elementExists($selector, $by = 'byId')
     {
@@ -103,4 +179,5 @@ class WebDriver extends RemoteWebDriver
             // Not a problem.  It just means that the WebDriver session was closed somewhere else
         }
     }
+
 }
