@@ -23,7 +23,7 @@ class MasterListener implements \PHPUnit_Framework_TestListener
     public function addListener(\PHPUnit_Framework_TestListener $listener)
     {
         foreach ($this->listeners as $existingListener) {
-            if ($listener == $existingListener) {
+            if ($listener === $existingListener) {
                 return;
             }
         }

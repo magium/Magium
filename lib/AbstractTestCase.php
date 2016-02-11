@@ -137,7 +137,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             /* @var $callback RegistrationCallbackInterface */
             $callback->register($this);
         }
-
     }
 
     public function __construct($name = null, array $data = [], $dataName = null)
