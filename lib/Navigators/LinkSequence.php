@@ -6,6 +6,8 @@ use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
 use Magium\AbstractTestCase;
 use Magium\InvalidInstructionException;
+use Magium\Util\Log\Logger;
+use Magium\Util\Log\LoggerAware;
 use Magium\Util\Translator\Translator;
 use Magium\WebDriver\WebDriver;
 
@@ -17,6 +19,7 @@ class LinkSequence
     protected $testCase;
     protected $translator;
     protected $path;
+    protected $logger;
 
     /**
      * LinkSequence constructor.
@@ -26,12 +29,14 @@ class LinkSequence
     public function __construct(
         AbstractTestCase $testCase,
         WebDriver $webDriver,
-        Translator $translator
+        Translator $translator,
+        Logger $logger
     )
     {
         $this->testCase = $testCase;
         $this->webDriver = $webDriver;
         $this->translator = $translator;
+        $this->logger = $logger;
     }
 
     public function navigateTo($path, $clickToSelect = false)
@@ -44,7 +49,7 @@ class LinkSequence
         foreach ($parts as $part) {
             $this->testCase->sleep('250ms');
             $part = $this->translator->translatePlaceholders($part);
-            $xpath = sprintf('//a[concat(" ",normalize-space(.)," ") = " %s "]', $part);
+            $xpath = sprintf('//a[concat(" ",normalize-space(.)," ") = " %s "]|//*[concat(" ",normalize-space(.)," ") = " %s "]/ancestor::a', $part, $part);
             $elements = $this->webDriver->findElements(WebDriverBy::xpath($xpath));
             foreach ($elements as $element) {
                 // Sometimes responsive templates have multiple nav menus.  So we iterate over the results to find a visible element.
@@ -60,10 +65,14 @@ class LinkSequence
             }
         }
 
-        if (!$element instanceof WebDriverElement) {
-            throw new InvalidInstructionException('The element is not an instanceof WebDriverElement.  If you get this exception something weird has happened.');
+        // We will have already clicked it previously
+        if (!$clickToSelect) {
+            if (!$element instanceof WebDriverElement) {
+                throw new InvalidInstructionException('The element is not an instanceof WebDriverElement.  If you get this exception something weird has happened.');
+            }
+            $element->click();
         }
-        $element->click();
+
 
     }
 
