@@ -51,6 +51,8 @@ class LinkSequence
             $part = $this->translator->translatePlaceholders($part);
             $xpath = sprintf('//a[concat(" ",normalize-space(.)," ") = " %s "]|//*[concat(" ",normalize-space(.)," ") = " %s "]/ancestor::a', $part, $part);
             $elements = $this->webDriver->findElements(WebDriverBy::xpath($xpath));
+            $action = false;
+            $this->testCase->assertNotCount(0, $elements, 'Did not find 1 or more elements with the Xpath: ' . $xpath);
             foreach ($elements as $element) {
                 // Sometimes responsive templates have multiple nav menus.  So we iterate over the results to find a visible element.
                 if (!$element->isDisplayed()) {
@@ -61,8 +63,10 @@ class LinkSequence
                 } else {
                     $this->webDriver->getMouse()->mouseMove($element->getCoordinates());
                 }
+                $action = true;
                 break; // If either of these options work we don't need to iterate over the remain elements
             }
+            $this->testCase->assertTrue($action, 'No action was taken.  Elements not visible?  Xpath: ' . $xpath);
         }
 
         // We will have already clicked it previously
