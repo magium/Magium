@@ -10,13 +10,10 @@ use Magium\Assertions\Element\NotClickable;
 use Magium\Assertions\Element\NotDisplayed;
 use Magium\Assertions\Element\NotExists;
 use Magium\Assertions\LoggingAssertionExecutor;
-use Magium\Util\Log\LoggerAware;
 use Magium\Util\Phpunit\MasterListener;
-use Magium\Util\TestCase\RegistrationCallbackInterface;
 use Magium\Util\TestCase\RegistrationListener;
 use Magium\WebDriver\WebDriver;
 use PHPUnit_Framework_TestResult;
-use Zend\Stdlib\SplPriorityQueue;
 
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -148,12 +145,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         // This odd little function is here because the first place where you can reliably add a listener without
         // having to make a phpunit.xml or program argument change
-        static $masterListenerAdded = false;
-        if (!$masterListenerAdded) {
-            $result->addListener(self::$masterListener);
-            $masterListenerAdded = true;
-        }
 
+        self::getMasterListener()->bindToResult($result);
         parent::setTestResultObject($result);
     }
 

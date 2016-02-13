@@ -1,0 +1,8 @@
+<phpunit bootstrap="priority.bootstrap.php">
+    <testsuites>
+        <testsuite name="Priority Registration Tests">
+            <file>PriorityRegistrationTest.php</file>
+            <file>SecondPriorityRegistrationTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
