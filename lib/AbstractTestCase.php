@@ -15,6 +15,7 @@ use Magium\Util\Phpunit\MasterListener;
 use Magium\Util\TestCase\RegistrationCallbackInterface;
 use Magium\WebDriver\WebDriver;
 use PHPUnit_Framework_TestResult;
+use Zend\Stdlib\SplPriorityQueue;
 
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -53,7 +54,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     const BY_CSS_SELECTOR = 'byCssSelector';
     const BY_TEXT = 'byText';
 
-    protected static $registrationCallbacks = [];
+    protected static $registrationCallbacks;
 
     protected function setUp()
     {
@@ -133,10 +134,22 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
         $this->webdriver->setRemoteExecuteMethod($this->di->get('Magium\WebDriver\LoggingRemoteExecuteMethod'));
 
-        foreach (self::$registrationCallbacks as $callback) {
+        foreach (self::getRegistrationCallbacks() as $callback) {
             /* @var $callback RegistrationCallbackInterface */
             $callback->register($this);
         }
+    }
+
+    /**
+     * @return SplPriorityQueue
+     */
+
+    public static function getRegistrationCallbacks()
+    {
+        if (!self::$registrationCallbacks instanceof SplPriorityQueue) {
+            self::$registrationCallbacks = new SplPriorityQueue();
+        }
+        return self::$registrationCallbacks;
     }
 
     public function __construct($name = null, array $data = [], $dataName = null)
@@ -145,9 +158,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         parent::__construct($name, $data, $dataName);
     }
 
-    public static function addRegistrationCallback(RegistrationCallbackInterface $callback)
+    public static function addRegistrationCallback(RegistrationCallbackInterface $callback, $priority = 0)
     {
-        self::$registrationCallbacks[] = $callback;
+
+        self::getRegistrationCallbacks()->insert($callback, $priority);
     }
 
     public function setTestResultObject(PHPUnit_Framework_TestResult $result)
