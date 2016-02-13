@@ -8,13 +8,25 @@ use Zend\Stdlib\SplPriorityQueue;
 class RegistrationListener
 {
     protected static $callbacks;
-    protected static $currentTest;
+
+    public static function executeCallbacks(AbstractTestCase $testCase)
+    {
+        $callbacks = self::getCallbacks();
+        self::$callbacks = new SplPriorityQueue();
+        foreach ($callbacks as $callback) {
+            list($callback, $priority) = $callback;
+            if ($callback instanceof RegistrationCallbackInterface) {
+                $callback->register($testCase);
+            }
+            self::addCallback($callback, $priority);
+        }
+    }
 
     /**
      * @return SplPriorityQueue
      */
 
-    public static function getCallbacks()
+    protected static function getCallbacks()
     {
         if (!self::$callbacks instanceof SplPriorityQueue) {
             self::$callbacks = new SplPriorityQueue();
@@ -22,17 +34,9 @@ class RegistrationListener
         return self::$callbacks;
     }
 
-    public static function executeCallbacks(AbstractTestCase $test)
-    {
-        foreach (self::getCallbacks() as $callback) {
-            /* @var $callback \Magium\Util\TestCase\RegistrationCallbackInterface */
-            $callback->register($test);
-        }
-    }
-
     public static function addCallback(RegistrationCallbackInterface $callback, $priority = 0)
     {
-        self::getCallbacks()->insert($callback, $priority);
+        self::getCallbacks()->insert([$callback, $priority], $priority);
     }
 
 }

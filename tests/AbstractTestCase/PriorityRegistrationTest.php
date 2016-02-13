@@ -2,6 +2,8 @@
 
 namespace Tests\Magium\AbstractTestCase;
 
+require_once 'priority.bootstrap.php';
+
 use Magium\AbstractTestCase;
 use Magium\Util\TestCase\RegistrationCallbackInterface;
 use Magium\Util\TestCase\RegistrationListener;
@@ -24,7 +26,7 @@ class PriorityRegistrationTest extends AbstractTestCase
     public function testPriority()
     {
         self::assertGreaterThan($this->p1, $this->p2);
-    }
+     }
 
 
 }
