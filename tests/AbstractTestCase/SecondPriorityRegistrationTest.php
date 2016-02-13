@@ -4,6 +4,7 @@ namespace Tests\Magium\AbstractTestCase;
 
 use Magium\AbstractTestCase;
 use Magium\Util\TestCase\RegistrationCallbackInterface;
+use Magium\Util\TestCase\RegistrationListener;
 
 class SecondPriorityRegistrationTest extends AbstractTestCase
 {
@@ -13,11 +14,11 @@ class SecondPriorityRegistrationTest extends AbstractTestCase
 
     protected function setUp()
     {
-        $this->p1 = new Priority();
-        $this->p2 = new Priority();
+        $this->p1 = new SecondPriority();
+        $this->p2 = new SecondPriority();
 
-        self::addRegistrationCallback($this->p2, 0);
-        self::addRegistrationCallback($this->p1, 10);
+        RegistrationListener::addCallback($this->p2, 0);
+        RegistrationListener::addCallback($this->p1, 10);
         parent::setUp();
     }
 
@@ -29,7 +30,7 @@ class SecondPriorityRegistrationTest extends AbstractTestCase
 
 }
 
-abstract class AbstractRegistrationCallback implements RegistrationCallbackInterface
+abstract class SecondAbstractRegistrationCallback implements RegistrationCallbackInterface
 {
 
     public $executedAt;
@@ -40,6 +41,6 @@ abstract class AbstractRegistrationCallback implements RegistrationCallbackInter
     }
 }
 
-class Priority extends AbstractRegistrationCallback
+class SecondPriority extends SecondAbstractRegistrationCallback
 {
 }
