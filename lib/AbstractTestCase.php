@@ -13,6 +13,7 @@ use Magium\Assertions\LoggingAssertionExecutor;
 use Magium\Util\Log\LoggerAware;
 use Magium\Util\Phpunit\MasterListener;
 use Magium\Util\TestCase\RegistrationCallbackInterface;
+use Magium\Util\TestCase\RegistrationListener;
 use Magium\WebDriver\WebDriver;
 use PHPUnit_Framework_TestResult;
 use Zend\Stdlib\SplPriorityQueue;
@@ -134,34 +135,13 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
         $this->webdriver->setRemoteExecuteMethod($this->di->get('Magium\WebDriver\LoggingRemoteExecuteMethod'));
 
-        foreach (self::getRegistrationCallbacks() as $callback) {
-            /* @var $callback RegistrationCallbackInterface */
-            $callback->register($this);
-        }
-    }
-
-    /**
-     * @return SplPriorityQueue
-     */
-
-    public static function getRegistrationCallbacks()
-    {
-        if (!self::$registrationCallbacks instanceof SplPriorityQueue) {
-            self::$registrationCallbacks = new SplPriorityQueue();
-        }
-        return self::$registrationCallbacks;
+        RegistrationListener::executeCallbacks($this);
     }
 
     public function __construct($name = null, array $data = [], $dataName = null)
     {
         self::getMasterListener();
         parent::__construct($name, $data, $dataName);
-    }
-
-    public static function addRegistrationCallback(RegistrationCallbackInterface $callback, $priority = 0)
-    {
-
-        self::getRegistrationCallbacks()->insert($callback, $priority);
     }
 
     public function setTestResultObject(PHPUnit_Framework_TestResult $result)
@@ -176,6 +156,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
         parent::setTestResultObject($result);
     }
+
+    /**
+     * @return MasterListener
+     */
 
     public static function getMasterListener()
     {
