@@ -13,8 +13,8 @@ class SecondPriorityRegistrationTest extends AbstractTestCase
 
     protected function setUp()
     {
-        $this->p1 = new Priority();
-        $this->p2 = new Priority();
+        $this->p1 = new SecondPriority();
+        $this->p2 = new SecondPriority();
 
         self::addRegistrationCallback($this->p2, 0);
         self::addRegistrationCallback($this->p1, 10);
@@ -29,7 +29,7 @@ class SecondPriorityRegistrationTest extends AbstractTestCase
 
 }
 
-abstract class AbstractRegistrationCallback implements RegistrationCallbackInterface
+abstract class SecondAbstractRegistrationCallback implements RegistrationCallbackInterface
 {
 
     public $executedAt;
@@ -40,6 +40,6 @@ abstract class AbstractRegistrationCallback implements RegistrationCallbackInter
     }
 }
 
-class Priority extends AbstractRegistrationCallback
+class SecondPriority extends AbstractRegistrationCallback
 {
 }

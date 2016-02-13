@@ -39,6 +39,6 @@ abstract class AbstractRegistrationCallback implements RegistrationCallbackInter
     }
 }
 
-class Priority extends AbstractRegistrationCallback
+class Priority extends SecondAbstractRegistrationCallback
 {
 }
