@@ -170,8 +170,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             }
         }
         parent::tearDown();
-        if ($this->webdriver) {
-            $this->webdriver->close();
+        if ($this->webdriver instanceof WebDriver) {
+            $this->webdriver->quit();
+            $this->webdriver = null;
         }
     }
 
