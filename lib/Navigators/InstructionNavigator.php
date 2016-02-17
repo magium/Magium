@@ -6,6 +6,7 @@ use Facebook\WebDriver\Exception\ElementNotVisibleException;
 use Facebook\WebDriver\WebDriverBy;
 use Magium\AbstractTestCase;
 use Magium\InvalidConfigurationException;
+use Magium\Themes\ThemeConfigurationInterface;
 use Magium\WebDriver\ExpectedCondition;
 use Magium\WebDriver\WebDriver;
 
@@ -15,14 +16,17 @@ class InstructionNavigator
 
     protected $webdriver;
     protected $testCase;
+    protected $themeConfiguration;
     
     public function __construct(
         AbstractTestCase $testCase,
-        WebDriver $webdriver
+        WebDriver $webdriver,
+        ThemeConfigurationInterface $themeConfiguration
     )
     {
         $this->testCase = $testCase;
         $this->webdriver = $webdriver;
+        $this->themeConfiguration = $themeConfiguration;
     }
 
     /**
