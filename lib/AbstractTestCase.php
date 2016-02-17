@@ -42,7 +42,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     protected $di;
 
     protected $textElementNodeSearch = [
-        'button', 'a', 'li', 'label', 'option', 'h1', 'h2', 'h3', 'span', 'td'
+        'button', 'span', 'a', 'li', 'label', 'option', 'h1', 'h2', 'h3', 'td'
     ];
 
     protected $testCaseConfiguration = 'Magium\TestCaseConfiguration';
