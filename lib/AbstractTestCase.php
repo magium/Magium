@@ -10,10 +10,13 @@ use Magium\Assertions\Element\NotClickable;
 use Magium\Assertions\Element\NotDisplayed;
 use Magium\Assertions\Element\NotExists;
 use Magium\Assertions\LoggingAssertionExecutor;
+use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Phpunit\MasterListener;
 use Magium\Util\TestCase\RegistrationListener;
 use Magium\WebDriver\WebDriver;
 use PHPUnit_Framework_TestResult;
+use Zend\Di\Config;
+use Zend\Di\Di;
 
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -36,7 +39,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     protected $webdriver;
 
     /**
-     * @var \Zend\Di\Di
+     * @var Di
      */
 
     protected $di;
@@ -46,6 +49,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     ];
 
     protected $testCaseConfiguration = 'Magium\TestCaseConfiguration';
+
+    protected $testCaseConfigurationObject;
 
     const BY_XPATH = 'byXpath';
     const BY_ID    = 'byId';
@@ -61,7 +66,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
          * before the Magium namespace, thus, taking preference over the base namespace
          */
         self::addBaseNamespace('Magium');
-        $configuration = new $this->testCaseConfiguration();
+        if (!$this->testCaseConfigurationObject instanceof TestCaseConfiguration) {
+            $this->testCaseConfigurationObject = new $this->testCaseConfiguration(new StandardConfigurationProvider());
+        }
         /* @var $configuration TestCaseConfiguration */
         $configArray = [
             'definition' => [
@@ -71,7 +78,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                     ],
 
                     'Magium\WebDriver\WebDriverFactory' => [
-                        'create'       => $configuration->getWebDriverConfiguration()
+                        'create'       => $this->testCaseConfigurationObject->getWebDriverConfiguration()
                     ]
                 ]
             ],
@@ -115,10 +122,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
 
 
-        $configArray = $configuration->reprocessConfiguration($configArray);
-        $configuration = new \Zend\Di\Config($configArray);
+        $configArray = $this->testCaseConfigurationObject->reprocessConfiguration($configArray);
+        $configuration = new Config($configArray);
 
-        $this->di = new \Zend\Di\Di();
+        $this->di = new Di();
         $configuration->configure($this->di);
         $this->di->instanceManager()->addSharedInstance(self::$masterListener, 'Magium\Util\Phpunit\MasterListener');
 
@@ -135,10 +142,12 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         RegistrationListener::executeCallbacks($this);
     }
 
-    public function __construct($name = null, array $data = [], $dataName = null)
+    public function __construct($name = null, array $data = [], $dataName = null, TestCaseConfiguration $configuration = null)
     {
+        $this->testCaseConfigurationObject = $configuration;
         self::getMasterListener();
         parent::__construct($name, $data, $dataName);
+
     }
 
     public function setTestResultObject(PHPUnit_Framework_TestResult $result)
