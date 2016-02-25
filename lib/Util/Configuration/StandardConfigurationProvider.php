@@ -22,7 +22,7 @@ class StandardConfigurationProvider
         $count = 0;
         $path = realpath(__DIR__ . '/../');
 
-        while ($count++ < 5) {
+        while ($count++ < 10) {
             $filename = "{$path}/configuration";
             if (is_dir($filename)) {
                 $filename .= "/{$this->configurationFile}";
