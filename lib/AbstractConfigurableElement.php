@@ -2,48 +2,18 @@
 
 namespace Magium;
 
-
-
+use Magium\Util\Configuration\ConfigurableObjectInterface;
+use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Translator\Translator;
 use Magium\Util\Translator\TranslatorAware;
 
-abstract class AbstractConfigurableElement implements TranslatorAware
+abstract class AbstractConfigurableElement implements TranslatorAware, ConfigurableObjectInterface
 {
     protected $translator;
 
-    public function __construct($configurationFile = null)
+    public function __construct(StandardConfigurationProvider $configurationProvider)
     {
-        // TODO not sure if this is the best way.  Perhaps some kind of test configuration
-        if ($configurationFile === null) {
-            $configurationFile = get_class($this) . '.php';
-            $configurationFile = str_replace('\\', DIRECTORY_SEPARATOR, $configurationFile);
-        }
-
-        $count = 0;
-        $path = realpath(__DIR__ . '/../');
-
-        while ($count++ < 5) {
-            $filename = "{$path}/configuration";
-            if (is_dir($filename)) {
-                $filename .= "/{$configurationFile}";
-                if (file_exists($filename)) {
-                    include $filename;
-                    break;
-                }
-            }
-            $path .= '/../';
-            $path = realpath($path); // More for debugging clarity.
-        }
-
-        $variablePrefix = 'MAGIUM_' . str_replace('\\', '_', strtoupper(get_class($this))) . '_';
-
-        foreach ($_ENV as $key => $value) {
-            if (strpos($key, $variablePrefix) === 0) {
-                $property = substr($key, strlen($variablePrefix));
-                $this->$property = $value;
-            }
-        }
-
+        $configurationProvider->configureObject($this);
     }
 
     public function setTranslator(Translator $translator)
@@ -66,6 +36,21 @@ abstract class AbstractConfigurableElement implements TranslatorAware
     {
         $newTranslate = $this->translator->translatePlaceholders($translate);
         return $newTranslate;
+    }
+
+    public function get($key)
+    {
+        return $this->$key;
+    }
+
+    public function set($key, $value)
+    {
+        $this->$key = $value;
+    }
+
+    public function getDeclaredOptions()
+    {
+        return [];
     }
 
 }

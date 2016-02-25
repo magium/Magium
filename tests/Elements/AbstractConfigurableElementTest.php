@@ -4,6 +4,7 @@ namespace Tests\Magium\Elements;
 
 use Magium\AbstractConfigurableElement;
 use Magium\AbstractTestCase;
+use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Translator\Translator;
 
 class AbstractConfigurableElementTest extends AbstractTestCase
@@ -12,14 +13,14 @@ class AbstractConfigurableElementTest extends AbstractTestCase
     public function testPropertyPassedViaEnvironmentVariable()
     {
         $_ENV['MAGIUM_TESTS_MAGIUM_ELEMENTS_PROPERTYELEMENT_property'] = 'changed';
-        $obj =  new PropertyElement();
+        $obj =  new PropertyElement(new StandardConfigurationProvider());
         $obj->setTranslator(new Translator());
         self::assertEquals('changed', $obj->getProperty());
     }
 
     public function testTranslationSmokeTest()
     {
-        $obj =  new PropertyElement();
+        $obj =  new PropertyElement(new StandardConfigurationProvider());
         $obj->setTranslator($this->getTranslator());
         $value = $obj->translatePlaceholders('{{Kevin}}');
         self::assertEquals('Kevin', $value);
