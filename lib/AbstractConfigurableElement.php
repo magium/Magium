@@ -16,6 +16,18 @@ abstract class AbstractConfigurableElement implements TranslatorAware, Configura
         $configurationProvider->configureObject($this);
     }
 
+    public function __set($name, $value)
+    {
+        // Completely overriding PPP
+        $this->$name = $value;
+    }
+
+    public function __get($name)
+    {
+        // Completely overriding PPP
+        return $this->$name;
+    }
+
     public function setTranslator(Translator $translator)
     {
         $this->translator = $translator;
