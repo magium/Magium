@@ -38,15 +38,33 @@ class AbstractConfigurableElementTest extends AbstractTestCase
         self::assertInstanceOf('Magium\Util\Translator\Translator', $obj->getTranslator());
     }
 
+    public function testInclusion()
+    {
+        $obj =  new PropertyElement(new StandardConfigurationProvider('include-file.php'));
+        self::assertEquals(2, $obj->getValue());
+        self::assertEquals(1, $obj->property);
+    }
+
 }
 
 class PropertyElement extends AbstractConfigurableElement
 {
 
-    protected $property = 'original';
+    public $property = 'original';
+    public $value = null;
 
     public function getProperty()
     {
         return $this->property;
+    }
+
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
     }
 }
