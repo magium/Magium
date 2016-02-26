@@ -30,8 +30,8 @@ class StandardConfigurationProvider
     public function configureObject(ConfigurableObjectInterface $obj)
     {
         $this->object = $obj;
-
-        if ($this->configurationFile === null) {
+        $configurationFile = $this->configurationFile;
+        if ($configurationFile === null) {
             $configurationFile = get_class($obj) . '.php';
             $configurationFile = str_replace('\\', DIRECTORY_SEPARATOR, $configurationFile);
 
@@ -52,8 +52,8 @@ class StandardConfigurationProvider
             }
         }
 
-        if (file_exists($this->configurationFile)) {
-            include $this->configurationFile;
+        if (file_exists($configurationFile)) {
+            include $configurationFile;
         }
 
         $variablePrefix = 'MAGIUM_' . str_replace('\\', '_', strtoupper(get_class($obj))) . '_';
