@@ -43,7 +43,7 @@ class StandardConfigurationProvider
                 if (is_dir($filename)) {
                     $filename .= '/' . $configurationFile;
                     if (file_exists($filename)) {
-                        $this->configurationFile = realpath($filename);
+                        $configurationFile = realpath($filename);
                         break;
                     }
                 }
