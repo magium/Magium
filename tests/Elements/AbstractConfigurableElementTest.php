@@ -4,6 +4,7 @@ namespace Tests\Magium\Elements;
 
 use Magium\AbstractConfigurableElement;
 use Magium\AbstractTestCase;
+use Magium\Util\Configuration\BypassConfigurationProvider;
 use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Translator\Translator;
 
@@ -43,6 +44,14 @@ class AbstractConfigurableElementTest extends AbstractTestCase
         $obj =  new PropertyElement(new StandardConfigurationProvider('include-file.php'));
         self::assertEquals(2, $obj->getValue());
         self::assertEquals(1, $obj->property);
+    }
+
+    public function testConfigurationProviderCanBeDisabled()
+    {
+        $provider = new BypassConfigurationProvider('include-file.php');
+        $obj =  new PropertyElement($provider);
+        self::assertNull($obj->getValue());
+        self::assertEquals('original', $obj->property);
     }
 
 }
