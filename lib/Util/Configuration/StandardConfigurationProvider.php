@@ -30,6 +30,7 @@ class StandardConfigurationProvider
     public function configureObject(ConfigurableObjectInterface $obj)
     {
         $this->object = $obj;
+
         $configurationFile = $this->configurationFile;
         if ($configurationFile === null) {
             $configurationFile = get_class($obj) . '.php';
