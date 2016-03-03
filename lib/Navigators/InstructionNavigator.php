@@ -43,6 +43,7 @@ class InstructionNavigator
 
     public function navigateTo(array $instructions)
     {
+        $body = $this->webdriver->byXpath('//body');
         $this->testCase->assertGreaterThan(0, count($instructions), 'Instruction navigator requires at least one instruction');
 
         foreach ($instructions as $instruction) {
@@ -70,7 +71,7 @@ class InstructionNavigator
                     break;
             }
         }
-        
+        $this->loaded->execute($body);
     }
     
 }
