@@ -5,19 +5,45 @@ namespace Magium\Util\Configuration;
 class ConfigurationReader
 {
 
-    protected $xml;
+    protected $baseDir;
+
+    protected $config = null;
+
+    public function __construct(
+        $baseDir = null
+    )
+    {
+        $this->baseDir = $baseDir;
+    }
 
     public function configure(ConfigurableObjectInterface $config)
     {
-        if (!$this->xml instanceof \SimpleXMLElement) {
+        if ($this->config === null) {
             $file = 'magium.json';
-            $dir = __DIR__;
+            $dir = $this->baseDir;
+            if ($dir === null) {
+                $dir = __DIR__;
+            }
             $count = 0;
             while ($count++ < 10) {
-                $dir = realpath($dir . '/..');
                 $filePath = $dir . '/' . $file;
                 if (file_exists($filePath)) {
+                    $this->config = json_decode(file_get_contents($filePath), true);
+                    break;
+                }
+                $dir = realpath($dir . '/..');
+            }
+        }
 
+        if ($this->config === null) {
+            $this->config = false;
+        }
+
+        if ($this->config) {
+            $className = strtolower(get_class($config));
+            if (isset($this->config['magium'][$className])) {
+                foreach ($this->config['magium'][$className] as $property => $value) {
+                    $config->set($property, $value);
                 }
             }
         }
