@@ -41,7 +41,7 @@ class AbstractConfigurableElementTest extends AbstractTestCase
 
     public function testInclusion()
     {
-        $obj =  new PropertyElement(new StandardConfigurationProvider('include-file.php'));
+        $obj =  new PropertyElement(new StandardConfigurationProvider(__DIR__ . '/include-file.php'));
         self::assertEquals(2, $obj->getValue());
         self::assertEquals(1, $obj->property);
     }
