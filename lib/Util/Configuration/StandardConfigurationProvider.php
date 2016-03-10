@@ -6,14 +6,17 @@ class StandardConfigurationProvider
 {
     protected $configurationFile;
 
+    protected $configurationReader;
+
     /**
      * @var ConfigurableObjectInterface
      */
 
     protected $object;
 
-    public function __construct($configurationFile = null)
+    public function __construct(ConfigurationReader $configurationReader, $configurationFile = null)
     {
+        $this->configurationReader = $configurationReader;
         $this->configurationFile = $configurationFile;
     }
 
@@ -56,6 +59,8 @@ class StandardConfigurationProvider
         if (file_exists($configurationFile)) {
             include $configurationFile;
         }
+
+        $this->configurationReader->configure($obj);
 
         $variablePrefix = 'MAGIUM_' . str_replace('\\', '_', strtoupper(get_class($obj))) . '_';
 
