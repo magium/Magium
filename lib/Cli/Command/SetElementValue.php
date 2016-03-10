@@ -54,16 +54,13 @@ class SetElementValue extends Command implements ConfigurationPathInterface
         if (!class_exists($class)) {
             throw new NotFoundException('Could not find class: ' . $class . '.  You might need to escape blackslashes (\\\\)');
         }
-        $parts = explode('\\', $class);
-        $s = $config->magium;;
-        foreach ($parts as $part) {
-            $part = strtolower($part);
-            if (!isset($s->$part)) {
-                $s->$part = [];
-            }
-            $s = $s->$part;
+        $class = strtolower($class);
+        $s = $config->magium;
+        if (!isset($s[$class])) {
+            $s[$class] = [];
         }
-        $s->$property = $value;
+
+        $s[$class]->$property = $value;
 
         $writer = new Json();
         $writer->toFile($this->path . '/magium.json', $config);

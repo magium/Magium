@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Zend\Config\Config;
 use Zend\Config\Writer\Json;
 
-class Set extends Command implements ConfigurationPathInterface
+class SetSetting extends Command implements ConfigurationPathInterface
 {
 
     protected $path;
@@ -26,8 +26,8 @@ class Set extends Command implements ConfigurationPathInterface
     {
         $this->setName('magium:set');
         $this->setDescription('Modifies a setting');
-        $this->addArgument('name', InputArgument::REQUIRED, 'Need the name of the setting');
-        $this->addArgument('value', InputArgument::REQUIRED, 'Need the value of the setting');
+        $this->addArgument('name', InputArgument::REQUIRED, 'The name of the setting');
+        $this->addArgument('value', InputArgument::REQUIRED, 'The value of the setting');
         $this->addOption('json', null, InputOption::VALUE_NONE, 'If set, this will filter the value through json_decode().');
     }
 

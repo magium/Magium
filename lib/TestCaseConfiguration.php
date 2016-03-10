@@ -20,9 +20,9 @@ class TestCaseConfiguration extends AbstractConfigurableElement
     const CAPABILITIES_PHANTOMJS = 'phantomjs';
     const CAPABILITIES_SAFARI = 'safari';
 
-    protected $capabilities = self::CAPABILITIES_CHROME;
+    public $capabilities = self::CAPABILITIES_CHROME;
 
-    protected $webDriverRemote = 'http://localhost:4444/wd/hub';
+    public $webDriverRemote = 'http://localhost:4444/wd/hub';
 
 
     public function getWebDriverConfiguration()

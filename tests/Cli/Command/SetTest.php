@@ -23,13 +23,18 @@ class SetTest extends AbstractCliTest
             'name'      => 'booger',
             'value'     => 'boogee'
         ]);
+        $commandTester->execute([
+            'command'   => $command->getName(),
+            'name'      => 'booger2',
+            'value'     => 'boogee2'
+        ]);
 
         $this->assertFileExists($this->getCliConfigFilename());
         $json = json_decode(file_get_contents($this->getCliConfigFilename()), true);
 
         $this->assertArrayHasKey('config', $json);
-        $this->assertArrayHasKey('booger', $json['config']);
-        $this->assertEquals('boogee', $json['config']['booger']);
+        $this->assertArrayHasKey('booger2', $json['config']);
+        $this->assertEquals('boogee2', $json['config']['booger2']);
 
     }
 
