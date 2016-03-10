@@ -10,6 +10,7 @@ class CommandLoader
     protected $application;
     protected $config;
 
+    protected static $dirs = [];
     protected static $commands = [];
 
     public function __construct(
@@ -27,25 +28,36 @@ class CommandLoader
 
     public function load()
     {
-        $files = glob(__DIR__ . '/Command/*.php');
+        self::addCommandDir(__NAMESPACE__ . '\\Command', __DIR__ . '/Command');
 
-        foreach ($files as $file) {
-            $class = substr(basename($file), 0, -4);
-            $className = __NAMESPACE__ . '\\Command\\' . $class;
-            if (class_exists($className)) {
-                $object = new $className();
-                if ($object instanceof ConfigurationPathInterface) {
-                    $object->setPath($this->config);
-                }
-                if ($object instanceof Command) {
-                    self::addCommand($object);
+        foreach (self::$dirs as $namespace => $dir) {
+            $files = glob($dir . '/*.php');
+
+            foreach ($files as $file) {
+                $class = substr(basename($file), 0, -4);
+                $className = $namespace . '\\' . $class;
+                if (class_exists($className)) {
+                    $object = new $className();
+                    if ($object instanceof ConfigurationPathInterface) {
+                        $object->setPath($this->config);
+                    }
+                    if ($object instanceof Command) {
+                        self::addCommand($object);
+                    }
                 }
             }
+
         }
+
 
         foreach (self::$commands as $command) {
             $this->application->add($command);
         }
+    }
+
+    public static function addCommandDir($namespacePrefix, $dir)
+    {
+        self::$dirs[$namespacePrefix] = $dir;
     }
 
     public static function addCommand(Command $command)
