@@ -10,6 +10,7 @@ use Magium\Assertions\Element\NotClickable;
 use Magium\Assertions\Element\NotDisplayed;
 use Magium\Assertions\Element\NotExists;
 use Magium\Assertions\LoggingAssertionExecutor;
+use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
 use Magium\Util\Configuration\ConfigurationReader;
 use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Phpunit\MasterListener;
@@ -68,7 +69,11 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
          */
         self::addBaseNamespace('Magium');
         if (!$this->testCaseConfigurationObject instanceof TestCaseConfiguration) {
-            $this->testCaseConfigurationObject = new $this->testCaseConfiguration(new StandardConfigurationProvider(new ConfigurationReader()));
+            if ($this->di instanceof Di) {
+                $this->testCaseConfigurationObject = $this->get($this->testCaseConfiguration);
+            } else {
+                $this->testCaseConfigurationObject = new $this->testCaseConfiguration(new StandardConfigurationProvider(new ConfigurationReader()), new DefaultPropertyCollector());
+            }
         }
         /* @var $configuration TestCaseConfiguration */
         $configArray = [
