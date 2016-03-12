@@ -6,6 +6,7 @@ use Magium\AbstractConfigurableElement;
 use Magium\AbstractTestCase;
 use Magium\Cli\CommandLoader;
 use Magium\Util\Configuration\BypassConfigurationProvider;
+use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
 use Magium\Util\Configuration\ConfigurationReader;
 use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Translator\Translator;
@@ -48,14 +49,14 @@ class AbstractConfigurableElementTest extends AbstractTestCase
     public function testPropertyPassedViaEnvironmentVariable()
     {
         $_ENV['MAGIUM_TESTS_MAGIUM_ELEMENTS_PROPERTYELEMENT_property'] = 'changed';
-        $obj =  new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader()));
+        $obj =  new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader()), new DefaultPropertyCollector());
         $obj->setTranslator(new Translator());
         self::assertEquals('changed', $obj->getProperty());
     }
 
     public function testTranslationSmokeTest()
     {
-        $obj =  new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader()));
+        $obj =  new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader()), new DefaultPropertyCollector());
         $obj->setTranslator($this->getTranslator());
         $value = $obj->translatePlaceholders('{{Kevin}}');
         self::assertEquals('Kevin', $value);
@@ -75,7 +76,7 @@ class AbstractConfigurableElementTest extends AbstractTestCase
 
     public function testInclusion()
     {
-        $obj =  new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), __DIR__ . '/include-file.php'));
+        $obj =  new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), __DIR__ . '/include-file.php'), new DefaultPropertyCollector());
         self::assertEquals(2, $obj->getValue());
         self::assertEquals(1, $obj->property);
     }
@@ -83,7 +84,7 @@ class AbstractConfigurableElementTest extends AbstractTestCase
     public function testConfigurationProviderCanBeDisabled()
     {
         $provider = new BypassConfigurationProvider(new ConfigurationReader(), 'include-file.php');
-        $obj =  new PropertyElement($provider);
+        $obj =  new PropertyElement($provider, new DefaultPropertyCollector());
         self::assertNull($obj->getValue());
         self::assertEquals('original', $obj->property);
     }
@@ -105,7 +106,7 @@ class AbstractConfigurableElementTest extends AbstractTestCase
             'value'     => 'boogee'
         ]);
 
-        $obj = new PropertyElement(new StandardConfigurationProvider($reader));
+        $obj = new PropertyElement(new StandardConfigurationProvider($reader), new DefaultPropertyCollector());
         self::assertEquals('boogee', $obj->getProperty());
 
     }
