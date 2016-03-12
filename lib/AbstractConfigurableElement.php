@@ -3,6 +3,7 @@
 namespace Magium;
 
 use Magium\Util\Configuration\ConfigurableObjectInterface;
+use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
 use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Translator\Translator;
 use Magium\Util\Translator\TranslatorAware;
@@ -10,10 +11,12 @@ use Magium\Util\Translator\TranslatorAware;
 abstract class AbstractConfigurableElement implements TranslatorAware, ConfigurableObjectInterface
 {
     protected $translator;
+    protected $collector;
 
-    public function __construct(StandardConfigurationProvider $configurationProvider)
+    public function __construct(StandardConfigurationProvider $configurationProvider, DefaultPropertyCollector $collector)
     {
         $configurationProvider->configureObject($this);
+        $this->collector = $collector;
     }
 
     public function __set($name, $value)
@@ -62,7 +65,7 @@ abstract class AbstractConfigurableElement implements TranslatorAware, Configura
 
     public function getDeclaredOptions()
     {
-        return [];
+        return $this->collector->extract($this);
     }
 
 }
