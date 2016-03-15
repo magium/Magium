@@ -12,11 +12,11 @@ class SetTest extends AbstractCliTest
     public function testExecute()
     {
         $application = $this->getConfiguredApplication();
-        $command = $application->find('magium:init');
+        $command = $application->find('init');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $command = $application->find('magium:set');
+        $command = $application->find('config:set');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command'   => $command->getName(),

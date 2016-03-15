@@ -25,7 +25,7 @@ class GetElementValue extends Command implements ConfigurationPathInterface
 
     protected function configure()
     {
-        $this->setName('magium:element:get');
+        $this->setName('element:get');
         $this->setDescription('Retrieves the default values for a configurable element');
         $this->addArgument('class', InputArgument::REQUIRED, 'Need the full name of the class, including namespace');
         $this->addArgument('filter', InputArgument::OPTIONAL, 'A stripos()-based filter of the properties');

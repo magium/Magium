@@ -24,7 +24,7 @@ class SetSetting extends Command implements ConfigurationPathInterface
 
     protected function configure()
     {
-        $this->setName('magium:set');
+        $this->setName('config:set');
         $this->setDescription('Modifies a setting');
         $this->addArgument('name', InputArgument::REQUIRED, 'The name of the setting');
         $this->addArgument('value', InputArgument::REQUIRED, 'The value of the setting');

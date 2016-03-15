@@ -13,7 +13,7 @@ class UnsetTest extends SetTest
 
         $application = $this->getConfiguredApplication();
 
-        $command = $application->find('magium:unset');
+        $command = $application->find('config:unset');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command'   => $command->getName(),

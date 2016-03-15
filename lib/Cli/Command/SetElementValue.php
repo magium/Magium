@@ -24,7 +24,7 @@ class SetElementValue extends Command implements ConfigurationPathInterface
 
     protected function configure()
     {
-        $this->setName('magium:element:set');
+        $this->setName('element:set');
         $this->setDescription('Modifies a property value for a configurable element');
         $this->addArgument('class', InputArgument::REQUIRED, 'Need the full name of the class, including namespace');
         $this->addArgument('property', InputArgument::REQUIRED, 'The name of the propery to set (this is not validated and is case sensitive)');

@@ -18,7 +18,7 @@ class UnsetElementValueTest extends SetElementValueTest
 
         $application = $this->getConfiguredApplication();
 
-        $command = $application->find('magium:element:unset');
+        $command = $application->find('element:unset');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command'   => $command->getName(),
@@ -38,7 +38,7 @@ class UnsetElementValueTest extends SetElementValueTest
 
         $application = $this->getConfiguredApplication();
 
-        $command = $application->find('magium:element:unset');
+        $command = $application->find('element:unset');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command'   => $command->getName(),

@@ -93,11 +93,11 @@ class AbstractConfigurableElementTest extends AbstractTestCase
     {
         $reader = new ConfigurationReader($this->baseDir);
         $application = $this->getConfiguredApplication();
-        $command = $application->find('magium:init');
+        $command = $application->find('init');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $command = $application->find('magium:element:set');
+        $command = $application->find('element:set');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command'   => $command->getName(),
