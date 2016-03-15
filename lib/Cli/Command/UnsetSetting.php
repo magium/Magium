@@ -24,7 +24,7 @@ class UnsetSetting extends Command implements ConfigurationPathInterface
 
     protected function configure()
     {
-        $this->setName('magium:unset');
+        $this->setName('config:unset');
         $this->setDescription('Removes a setting');
         $this->addArgument('name', InputArgument::REQUIRED, 'Need the name of the setting');
     }

@@ -11,13 +11,13 @@ class WebDriverTest extends AbstractCliTest
     public function testWebDriverUrl()
     {
         $application = $this->getConfiguredApplication();
-        $command = $application->find('magium:init');
+        $command = $application->find('init');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
         $this->assertFileExists($this->getCliConfigFilename());
 
         $application = $this->getConfiguredApplication();
-        $command = $application->find('magium:webdriver');
+        $command = $application->find('webdriver');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             '--url'   => 'http://whatever/'
@@ -35,13 +35,13 @@ class WebDriverTest extends AbstractCliTest
     public function testCapabilities()
     {
         $application = $this->getConfiguredApplication();
-        $command = $application->find('magium:init');
+        $command = $application->find('init');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
         $this->assertFileExists($this->getCliConfigFilename());
 
         $application = $this->getConfiguredApplication();
-        $command = $application->find('magium:webdriver');
+        $command = $application->find('webdriver');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             '--capability'   => 'chrome'
@@ -60,13 +60,13 @@ class WebDriverTest extends AbstractCliTest
     {
 
         $application = $this->getConfiguredApplication();
-        $command = $application->find('magium:init');
+        $command = $application->find('init');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
         $this->assertFileExists($this->getCliConfigFilename());
 
         $application = $this->getConfiguredApplication();
-        $command = $application->find('magium:webdriver');
+        $command = $application->find('webdriver');
         $commandTester = new CommandTester($command);
         $this->setExpectedException('Magium\InvalidInstructionException');
         $commandTester->execute([]);

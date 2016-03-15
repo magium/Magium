@@ -24,7 +24,7 @@ class UnsetElementValue extends Command implements ConfigurationPathInterface
 
     protected function configure()
     {
-        $this->setName('magium:element:unset');
+        $this->setName('element:unset');
         $this->setDescription('Removes an abstract configurable element\'s property');
         $this->addArgument('class', InputArgument::REQUIRED, 'The name of the class');
         $this->addArgument('property', InputArgument::OPTIONAL, 'The name of the property to remove.  Omitting will remove the entire class setting');

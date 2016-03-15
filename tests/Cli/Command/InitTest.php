@@ -11,7 +11,7 @@ class InitTest extends AbstractCliTest
     public function testInit()
     {
         $application = $this->getConfiguredApplication();
-        $command = $application->find('magium:init');
+        $command = $application->find('init');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
         $this->assertFileExists($this->getCliConfigFilename());

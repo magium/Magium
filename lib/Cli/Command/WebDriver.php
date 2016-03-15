@@ -14,7 +14,7 @@ class WebDriver extends Command
 
     protected function configure()
     {
-        $this->setName('magium:webdriver');
+        $this->setName('webdriver');
         $this->setDescription('Configures the WebDriver settings');
         $this->addOption(
             'url',
@@ -32,7 +32,7 @@ class WebDriver extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $command = $this->getApplication()->find('magium:element:set');
+        $command = $this->getApplication()->find('element:set');
 
         if (!$input->getOption('url') && !$input->getOption('capability')) {
             throw new InvalidInstructionException('url and/or capability required.  Neither found.');

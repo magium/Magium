@@ -9,6 +9,7 @@ use Magium\NotFoundException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Init extends Command implements ConfigurationPathInterface
@@ -23,14 +24,14 @@ class Init extends Command implements ConfigurationPathInterface
 
     protected function configure()
     {
-        $this->setName('magium:init');
+        $this->setName('init');
         $this->setDescription('Creates the magium.json config file in the specified project root directory.');
     }
 
-    protected function execute(Input $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = $this->path;
-        if ($path && $path[0] != '/') {
+        if ($path && $path[0] != '/' && $path[1] != ':') {
             $path = getcwd() . '/' . $path;
         }
         $calcPath = $path;
