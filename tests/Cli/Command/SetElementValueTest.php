@@ -12,7 +12,7 @@ class SetElementValueTest extends AbstractCliTest
     public function testAddConfigurationElementValue()
     {
         $application = $this->getConfiguredApplication();
-        $command = $application->find('init');
+        $command = $application->find('magium:init');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 

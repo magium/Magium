@@ -14,7 +14,7 @@ class WebDriver extends Command
 
     protected function configure()
     {
-        $this->setName('webdriver');
+        $this->setName('magium:webdriver');
         $this->setDescription('Configures the WebDriver settings');
         $this->addOption(
             'url',

@@ -12,7 +12,7 @@ class ListElementsTest extends AbstractCliTest
     public function testMissingNamespaceThrowsException()
     {
         $application = $this->getConfiguredApplication();
-        $command = $application->find('init');
+        $command = $application->find('magium:init');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
@@ -28,7 +28,7 @@ class ListElementsTest extends AbstractCliTest
     public function testMissingDirectoryThrowsException()
     {
         $application = $this->getConfiguredApplication();
-        $command = $application->find('init');
+        $command = $application->find('magium:init');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
@@ -44,7 +44,7 @@ class ListElementsTest extends AbstractCliTest
     public function testTraverseCustomPath()
     {
         $application = $this->getConfiguredApplication();
-        $command = $application->find('init');
+        $command = $application->find('magium:init');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 

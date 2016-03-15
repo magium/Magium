@@ -24,7 +24,7 @@ class Init extends Command implements ConfigurationPathInterface
 
     protected function configure()
     {
-        $this->setName('init');
+        $this->setName('magium:init');
         $this->setDescription('Creates the magium.json config file in the specified project root directory.');
     }
 
