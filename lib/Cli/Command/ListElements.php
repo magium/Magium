@@ -62,6 +62,11 @@ HELP
             InputArgument::OPTIONAL,
             'The psr-4 base namespace of the directory.  Required if <directory> is used'
         );
+        $this->addArgument(
+            'filter',
+            InputArgument::OPTIONAL,
+            'A stripos()-compatible filter'
+        );
 
         $this->addOption(
             'escape',
@@ -92,7 +97,7 @@ HELP
         }
 
         sort($paths);
-
+        $filter = $input->getArgument('filter');
         if (count($paths) > 0 ) {
             $output->writeln('Classes found: ');
             $escape = $input->getOption('escape');
@@ -101,7 +106,9 @@ HELP
                 if ($escape) {
                     $path = str_replace('\\', '\\\\', $path);
                 }
-                $output->writeln("\t" . $path);
+                if ($filter && stripos($path, $filter) !== false) {
+                    $output->writeln("\t" . $path);
+                }
             }
         } else {
             $output->writeln('No classes found.  If you were expecting to find some you might need to escape your namespace separators');
