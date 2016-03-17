@@ -28,7 +28,7 @@ class CommandLoader
 
     public function load()
     {
-        self::addCommandDir(__NAMESPACE__ . '\\Command', __DIR__ . '/Command');
+        self::addCommandDir('Magium\Cli\Command', __DIR__ . '/Command');
 
         foreach (self::$dirs as $namespace => $dir) {
             $files = glob($dir . '/*.php');

@@ -3,4 +3,4 @@ A PHPUnit/Webdriver (Selenium (there for SEO)) based test framework for streamli
 
 The goal for Magium is to make it really easy for automating the testing of user stories, focusing on ease of use, re-usability, and extensibility.
 
-[Documentation can be found on the Magium Tutorials project](https://github.com/magium/MagiumTutorials)
+[Find much more information at magiumlib.com](http://www.magiumlib.com/?utm_source=github&utm_medium=website&utm_campaign=social)
