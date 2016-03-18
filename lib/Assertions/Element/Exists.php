@@ -2,7 +2,6 @@
 
 namespace Magium\Assertions\Element;
 
-
 class Exists extends AbstractSelectorAssertion
 {
 

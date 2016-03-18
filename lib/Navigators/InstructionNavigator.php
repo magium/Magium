@@ -67,7 +67,6 @@ class InstructionNavigator
                     break;
                 default:
                     throw new InvalidConfigurationException('Unknown login instruction: ' .$instruction );
-                    break;
             }
         }
 

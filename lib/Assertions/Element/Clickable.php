@@ -3,6 +3,8 @@
 namespace Magium\Assertions\Element;
 
 use Facebook\WebDriver\WebDriverBy;
+use Magium\AbstractTestCase;
+use Magium\InvalidTestTypeException;
 use Magium\WebDriver\ExpectedCondition;
 
 class Clickable extends AbstractSelectorAssertion

@@ -45,5 +45,5 @@ abstract class AbstractExtractor
         return null;
     }
 
-    abstract function extract();
+    abstract public function extract();
 }

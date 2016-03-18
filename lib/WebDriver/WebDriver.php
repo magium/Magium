@@ -114,18 +114,6 @@ class WebDriver extends RemoteWebDriver implements LoggerAware
         }
     }
 
-    public function elementClickable(WebDriverElement $element)
-    {
-        try {
-            if ($element->isDisplayed()) {
-
-            }
-        } catch (\Exception $e) {
-
-        }
-        return false;
-    }
-
     public function elementDisplayed($selector, $by = 'byId')
     {
         try {
