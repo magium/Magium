@@ -5,7 +5,7 @@ namespace Magium;
 abstract class AbstractCallbackTestCase extends AbstractTestCase
 {
 
-    public abstract function getCallback();
+    abstract public function getCallback();
 
     public function testExecute()
     {

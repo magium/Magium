@@ -21,7 +21,6 @@ class DefaultPropertyCollector
         $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
         $defaultValues = $reflection->getDefaultProperties();
         foreach ($properties as $property) {
-            $option = null;
             $value = '<empty>';
             if (isset($defaultValues[$property->getName()])) {
                 $value = $defaultValues[$property->getName()];
