@@ -94,17 +94,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function configureDi()
+    protected function getDefaultConfiguration()
     {
-        if (!$this->testCaseConfigurationObject instanceof TestCaseConfiguration) {
-            if ($this->di instanceof Di) {
-                $this->testCaseConfigurationObject = $this->get($this->testCaseConfiguration);
-            } else {
-                $this->testCaseConfigurationObject = new $this->testCaseConfiguration(new StandardConfigurationProvider(new ConfigurationReader()), new DefaultPropertyCollector());
-            }
-        }
-        /* @var $configuration TestCaseConfiguration */
-        $configArray = [
+        return [
             'definition' => [
                 'class' => [
                     'Magium\WebDriver\WebDriver' => [
@@ -139,6 +131,19 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
+    }
+
+    public function configureDi()
+    {
+        if (!$this->testCaseConfigurationObject instanceof TestCaseConfiguration) {
+            if ($this->di instanceof Di) {
+                $this->testCaseConfigurationObject = $this->get($this->testCaseConfiguration);
+            } else {
+                $this->testCaseConfigurationObject = new $this->testCaseConfiguration(new StandardConfigurationProvider(new ConfigurationReader()), new DefaultPropertyCollector());
+            }
+        }
+        /* @var $configuration TestCaseConfiguration */
+        $configArray = $this->getDefaultConfiguration();
 
         $count = 0;
 
