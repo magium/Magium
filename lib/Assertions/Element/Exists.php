@@ -9,7 +9,7 @@ class Exists extends AbstractSelectorAssertion
 
     public function assert()
     {
-        $this->testCase->assertWebDriverElement($this->webDriver->{$this->by}($this->selector));
+        $this->getTestCase()->assertWebDriverElement($this->webDriver->{$this->by}($this->selector));
 
     }
 

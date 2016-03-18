@@ -42,11 +42,22 @@ abstract class AbstractAssertion implements LoggerAware, TestCaseAware, WebDrive
 
     public function setTestCase(\PHPUnit_Framework_TestCase $testCase)
     {
-        if (!$testCase instanceof AbstractTestCase) {
-            throw new InvalidTestTypeException('Magium only understands instances of Magium\AbstractTestCase');
-        }
         $this->testCase = $testCase;
     }
+
+    /**
+     * @return AbstractTestCase|\PHPUnit_Framework_TestCase
+     * @throws InvalidTestTypeException
+     */
+
+    protected function getTestCase()
+    {
+        if (!$this->testCase instanceof AbstractTestCase) {
+            throw new InvalidTestTypeException('Magium only understands instances of Magium\AbstractTestCase');
+        }
+        return $this->testCase;
+    }
+
 
     abstract public function assert();
 }

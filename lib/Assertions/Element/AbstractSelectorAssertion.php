@@ -49,6 +49,4 @@ abstract class AbstractSelectorAssertion extends AbstractAssertion
         return $this->selector;
     }
 
-
-
 }

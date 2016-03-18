@@ -27,7 +27,7 @@ class WebDriverElementProxy implements WebDriverElement
     public function __call($name, $arguments)
     {
         if (strpos($name, '::') > 0) {
-            list(, $name) = explode('::', $name);
+            list(   , $name) = explode('::', $name);
         }
         if (!$this->element instanceof WebDriverElement) {
             $this->element = $this->webDriver->{$this->by}($this->selector);
