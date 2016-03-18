@@ -113,7 +113,7 @@ class DateTime extends AbstractExtractor
             return true;
         }
         $parse = date_parse($part);
-        if ($parse && $parse['day'] !== false && $parse['error_count'] == 0 ) {
+        if (!empty($parse) && $parse['day'] !== false && $parse['error_count'] == 0 ) {
             return true;
         } else if (preg_match('/^\d{1,2}[\/\\-]\d{1,2}[\/\\-]\d{1,2}$/', $part)) {
             return true;
@@ -127,7 +127,7 @@ class DateTime extends AbstractExtractor
             return true;
         }
         $parse = date_parse($part);
-        if ($parse && $parse['month'] !== false && $parse['error_count'] == 0 ) {
+        if (!empty($parse) && $parse['month'] !== false && $parse['error_count'] == 0 ) {
             return true;
         } else if (preg_match('/^\d{1,2}[\/\\-]\d{1,2}[\/\\-]\d{1,2}$/', $part)) {
             return true;
@@ -138,7 +138,7 @@ class DateTime extends AbstractExtractor
     protected function testYear($part)
     {
         $parse = date_parse($part);
-        if ($parse && $parse['year'] !== false && $parse['error_count'] == 0) {
+        if (!empty($parse) && $parse['year'] !== false && $parse['error_count'] == 0) {
             return true;
             // DateTime parses 2015 as 20:15:00, so this is to account for the unique condition.
         } else if (strlen($part) ==4 ) {
@@ -162,7 +162,7 @@ class DateTime extends AbstractExtractor
             return false;
         }
         $parse = date_parse($part);
-        if ($parse && $parse['hour'] !== false && $parse['error_count'] == 0 ) {
+        if (!empty($parse) && $parse['hour'] !== false && $parse['error_count'] == 0 ) {
             return true;
         }
         return false;
@@ -179,7 +179,7 @@ class DateTime extends AbstractExtractor
             return false;
         }
         $parse = date_parse($part);
-        if ($parse && $parse['minute'] !== false && $parse['error_count'] == 0 ) {
+        if (!empty($parse) && $parse['minute'] !== false && $parse['error_count'] == 0 ) {
             return true;
 
         }
@@ -197,7 +197,7 @@ class DateTime extends AbstractExtractor
             return false;
         }
         $parse = date_parse($part);
-        if ($parse && $parse['second'] !== false && $parse['error_count'] == 0 ) {
+        if (!empty($parse) && $parse['second'] !== false && $parse['error_count'] == 0 ) {
             return true;
         }
         return false;
