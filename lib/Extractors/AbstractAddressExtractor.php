@@ -19,7 +19,7 @@ abstract class AbstractAddressExtractor extends AbstractExtractor
 
     protected $remainingRows;
 
-    abstract function getBaseXpath();
+    abstract public function getBaseXpath();
 
     public function extract()
     {

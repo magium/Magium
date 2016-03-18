@@ -2,6 +2,8 @@
 
 namespace Magium\Assertions;
 
+use Magium\AbstractTestCase;
+use Magium\InvalidTestTypeException;
 use Magium\TestCaseAware;
 use Magium\Util\Log\Logger;
 use Magium\Util\Log\LoggerAware;
@@ -43,5 +45,19 @@ abstract class AbstractAssertion implements LoggerAware, TestCaseAware, WebDrive
         $this->testCase = $testCase;
     }
 
-    public abstract function assert();
+    /**
+     * @return AbstractTestCase|\PHPUnit_Framework_TestCase
+     * @throws InvalidTestTypeException
+     */
+
+    protected function getTestCase()
+    {
+        if (!$this->testCase instanceof AbstractTestCase) {
+            throw new InvalidTestTypeException('Magium only understands instances of Magium\AbstractTestCase');
+        }
+        return $this->testCase;
+    }
+
+
+    abstract public function assert();
 }

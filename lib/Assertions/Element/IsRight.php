@@ -36,7 +36,7 @@ class IsRight extends AbstractAssertion
 
         $rightCoord = $this->rightElement->getLocation();
         $leftCoord = $this->leftElement->getLocation();
-        $this->testCase->assertGreaterThan($leftCoord->getX(), $rightCoord->getX(), 'The "right" element was not to the right of the "left" element');
+        $this->getTestCase()->assertGreaterThan($leftCoord->getX(), $rightCoord->getX(), 'The "right" element was not to the right of the "left" element');
     }
 
 }

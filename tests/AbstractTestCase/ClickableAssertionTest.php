@@ -18,7 +18,6 @@ SCRIPT
         $this->assertElementClickable('clickme');
     }
 
-
     public function testElementDisplayedAndNotClickable()
     {
         $this->writePage(

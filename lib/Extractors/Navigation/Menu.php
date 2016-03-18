@@ -111,8 +111,72 @@ class Menu extends AbstractExtractor
         $doc->loadHTML('<html><body>' . $html . '</body></html>');
         $xpath = new \DOMXPath($doc);
 
-        $baseMatches = [];
+        $baseMatches = $this->getBaseMatches($xpath, $baseChild);
 
+        $finalMatches = $this->getFinalMatches($baseMatches, $parts);
+
+        if ($finalMatches === true) {
+            return;
+        }
+
+        if (!count($finalMatches)) {
+            throw new UnableToExtractMenuXpathException('Could not extract menu Xpaths for the category path: ' . $this->path);
+        }
+
+        $this->baseXpath = $finalMatches[0]['baseNodePath'];
+        $this->childXpath = $finalMatches[0]['childNodePath'];
+    }
+
+    /**
+     * @param $baseMatches
+     * @param $parts
+     * @return bool|array Boolean if no further processing is needed, array if there is
+     */
+
+    protected function getFinalMatches($baseMatches, $parts)
+    {
+        foreach ($baseMatches as $match) {
+            $instructions = [
+                [WebDriver::INSTRUCTION_MOUSE_MOVETO, '//body']
+            ];
+            $template = $match['baseNodePath'];
+            $lastXpath = null;
+            foreach ($parts as $part) {
+                $childXpath = sprintf($match['childNodePath'], $part);
+                $template .= sprintf('/descendant::%s', $childXpath);
+                $instructions[] = [
+                    WebDriver::INSTRUCTION_MOUSE_MOVETO, $template
+                ];
+                $lastXpath = $template;
+            }
+
+            try {
+                foreach ($instructions as $instruction) {
+                    if (!$this->webDriver->elementExists($instruction[1], WebDriver::BY_XPATH)) {
+                        continue 2;
+                    }
+                }
+                $this->instructionNavigator->navigateTo($instructions);
+
+                // Will throw an exception on error
+                $this->testCase->assertElementClickable($lastXpath, WebDriver::BY_XPATH);
+
+                $this->baseXpath = $match['baseNodePath'];
+                $this->childXpath = $match['childNodePath'];
+                return true;
+
+            } catch (\Exception $e) {
+                // If an exception is thrown it just means we try the next template pattern
+            }
+
+        }
+        return false;
+    }
+
+
+    protected function getBaseMatches($xpath, $baseChild)
+    {
+        $baseMatches = [];
         foreach ($this->baseSearchOrder as $base) {
             $baseQuery = '//' . $base;
             $nodeList = $xpath->query($baseQuery);
@@ -142,52 +206,7 @@ class Menu extends AbstractExtractor
                 }
             }
         }
-
-        $finalMatches = [];
-        foreach ($baseMatches as $match) {
-            $instructions = [
-                [WebDriver::INSTRUCTION_MOUSE_MOVETO, '//body']
-            ];
-            $template = $match['baseNodePath'];
-            $lastXpath = null;
-            foreach ($parts as $part) {
-                $childXpath = sprintf($match['childNodePath'], $part);
-                $template .= sprintf('/descendant::%s', $childXpath);
-                $instructions[] = [
-                    WebDriver::INSTRUCTION_MOUSE_MOVETO, $template
-                ];
-                $lastXpath = $template;
-            }
-
-            try {
-                foreach ($instructions as $instruction) {
-                    if (!$this->webDriver->elementExists($instruction[1], WebDriver::BY_XPATH)) {
-                        continue 2;
-                    }
-                }
-                $this->instructionNavigator->navigateTo($instructions);
-
-                // Will throw an exception on error
-                $this->testCase->assertElementClickable($lastXpath, WebDriver::BY_XPATH);
-
-                $this->baseXpath = $match['baseNodePath'];
-                $this->childXpath = $match['childNodePath'];
-                return;
-
-            } catch (\Exception $e) {
-                // If an exception is thrown it just means we try the next template pattern
-            }
-
-        }
-
-
-        if (!count($finalMatches)) {
-            throw new UnableToExtractMenuXpathException('Could not extract menu Xpaths for the category path: ' . $this->path);
-        }
-
-        $this->baseXpath = $finalMatches[0]['baseNodePath'];
-        $this->childXpath = $finalMatches[0]['childNodePath'];
+        return $baseMatches;
     }
-
 
 }

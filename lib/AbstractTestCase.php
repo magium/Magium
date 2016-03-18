@@ -10,6 +10,8 @@ use Magium\Assertions\Element\NotClickable;
 use Magium\Assertions\Element\NotDisplayed;
 use Magium\Assertions\Element\NotExists;
 use Magium\Assertions\LoggingAssertionExecutor;
+use Magium\Themes\BaseThemeInterface;
+use Magium\Themes\ThemeConfigurationInterface;
 use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
 use Magium\Util\Configuration\ConfigurationReader;
 use Magium\Util\Configuration\StandardConfigurationProvider;
@@ -61,6 +63,28 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     protected static $registrationCallbacks;
 
+    protected function setUp()
+    {
+        /*
+         * Putting this in the setup and not in the property means that an extending class can inject itself easily
+         * before the Magium namespace, thus, taking preference over the base namespace
+         */
+        self::addBaseNamespace('Magium');
+        $this->configureDi();
+        $this->di->instanceManager()->addSharedInstance(self::$masterListener, 'Magium\Util\Phpunit\MasterListener');
+
+        $rc = new \ReflectionClass($this);
+        while ($rc->getParentClass()) {
+            $class = $rc->getParentClass()->getName();
+            $this->di->instanceManager()->addSharedInstance($this, $class);
+            $rc = new \ReflectionClass($class);
+        }
+        $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
+
+        $this->webdriver->setRemoteExecuteMethod($this->di->get('Magium\WebDriver\LoggingRemoteExecuteMethod'));
+
+        RegistrationListener::executeCallbacks($this);
+    }
 
     public function __construct($name = null, array $data = [], $dataName = null, TestCaseConfiguration $configuration = null)
     {
@@ -70,50 +94,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     }
 
-    protected function setUp()
+    protected function getDefaultConfiguration()
     {
-        /*
-         * Putting this in the setup and not in the property means that an extending class can inject itself easily
-         * before the Magium namespace, thus, taking preference over the base namespace
-         */
-        self::addBaseNamespace('Magium');
-
-        $this->configureDi();
-
-        // Adding the Clarivoyant logger is done like this because I can't see a way to get the logger configuration
-        // into the WriterPluginManager that Zend\Log\Log uses.
-
-        $this->di->get('Magium\Util\Log\Logger')->addWriter(
-            $this->di->get('Magium\Util\Log\Clairvoyant')
-        );
-        $this->di->instanceManager()->addSharedInstance(self::$masterListener, 'Magium\Util\Phpunit\MasterListener');
-
-        $rc = new \ReflectionClass($this);
-        while ($rc->getParentClass()) {
-            $class = $rc->getParentClass()->getName();
-            $this->di->instanceManager()->addSharedInstance($this, $class);
-            $rc = new \ReflectionClass($class);
-        }
-
-        $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
-        $this->webdriver->setRemoteExecuteMethod($this->di->get('Magium\WebDriver\LoggingRemoteExecuteMethod'));
-        self::getMasterListener()->addListener($this->getClairvoyant());
-
-        RegistrationListener::executeCallbacks($this);
-    }
-
-    public function configureDi()
-    {
-
-        if (!$this->testCaseConfigurationObject instanceof TestCaseConfiguration) {
-            if ($this->di instanceof Di) {
-                $this->testCaseConfigurationObject = $this->get($this->testCaseConfiguration);
-            } else {
-                $this->testCaseConfigurationObject = new $this->testCaseConfiguration(new StandardConfigurationProvider(new ConfigurationReader()), new DefaultPropertyCollector());
-            }
-        }
-        /* @var $configuration TestCaseConfiguration */
-        $configArray = [
+        return [
             'definition' => [
                 'class' => [
                     'Magium\WebDriver\WebDriver' => [
@@ -122,8 +105,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
                     'Magium\WebDriver\WebDriverFactory' => [
                         'create'       => $this->testCaseConfigurationObject->getWebDriverConfiguration()
-                    ],
-
+                    ]
                 ]
             ],
             'instance'  => [
@@ -135,8 +117,33 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                         'locale'    => 'en_US'
                     ]
                 ],
+                'Magium\Util\Log\Logger'   => [
+                    'parameters'    => [
+                        'options'   => [
+                            'writers' => [
+                                [
+                                    'name' => 'Zend\Log\Writer\Noop',
+                                    'options' => []
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
             ]
         ];
+    }
+
+    public function configureDi()
+    {
+        if (!$this->testCaseConfigurationObject instanceof TestCaseConfiguration) {
+            if ($this->di instanceof Di) {
+                $this->testCaseConfigurationObject = $this->get($this->testCaseConfiguration);
+            } else {
+                $this->testCaseConfigurationObject = new $this->testCaseConfiguration(new StandardConfigurationProvider(new ConfigurationReader()), new DefaultPropertyCollector());
+            }
+        }
+        /* @var $configuration TestCaseConfiguration */
+        $configArray = $this->getDefaultConfiguration();
 
         $count = 0;
 
@@ -153,41 +160,12 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             $path .= '/../';
         }
 
+
         $configArray = $this->testCaseConfigurationObject->reprocessConfiguration($configArray);
         $configuration = new Config($configArray);
 
         $this->di = new Di();
         $configuration->configure($this->di);
-    }
-    
-    public function markKeyCheckpoint($checkpoint)
-    {
-        $this->getClairvoyant()->markKeyCheckpoint($checkpoint);
-    }
-
-    /**
-     * @return \Magium\Util\Log\Clairvoyant
-     */
-
-    public function getClairvoyant()
-    {
-        return $this->di->get('Magium\Util\Log\Clairvoyant');
-    }
-
-    /**
-     * @param mixed $testTitle
-     */
-    public function setTestTitle($testTitle)
-    {
-        $this->getClairvoyant()->setTestTitle($testTitle);
-    }
-
-    /**
-     * @param mixed $testDescription
-     */
-    public function setTestDescription($testDescription)
-    {
-        $this->getClairvoyant()->setTestDescription($testDescription);
     }
 
     public function setTestResultObject(PHPUnit_Framework_TestResult $result)
@@ -231,16 +209,12 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         switch ($by) {
             case WebDriver::BY_XPATH:
                 return 'xpath';
-                break;
             case WebDriver::BY_CSS_SELECTOR:
                 return 'css_selector';
-                break;
             case WebDriver::BY_ID:
                 return 'id';
-                break;
             default:
                 return $by;
-                break;
         }
     }
 
@@ -329,7 +303,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      *
-     * @param string $navigator
+     * @param string $action
      * @return mixed
      */
 
@@ -528,16 +502,21 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     public function switchThemeConfiguration($fullyQualifiedClassName)
     {
 
-        if (is_subclass_of($fullyQualifiedClassName, 'Magium\Themes\ThemeConfigurationInterface')) {
+        $reflection = new \ReflectionClass($fullyQualifiedClassName);
+
+        if ($reflection->implementsInterface('Magium\Themes\ThemeConfigurationInterface')) {
             $this->baseThemeClass = $fullyQualifiedClassName;
             $this->di->instanceManager()->unsetTypePreferences('Magium\Themes\ThemeConfigurationInterface');
             $this->di->instanceManager()->setTypePreference('Magium\Themes\ThemeConfigurationInterface', [$fullyQualifiedClassName]);
 
-            if (is_subclass_of($fullyQualifiedClassName, 'Magium\Themes\BaseThemeInterface')) {
+            if ($reflection->implementsInterface('Magium\Themes\BaseThemeInterface')) {
                 $this->di->instanceManager()->unsetTypePreferences('Magium\Themes\BaseThemeInterface');
                 $this->di->instanceManager()->setTypePreference('Magium\Themes\BaseThemeInterface', [$fullyQualifiedClassName]);
             }
-            $this->getTheme()->configure($this);
+            $theme = $this->getTheme();
+            if ($theme instanceof BaseThemeInterface) {
+                $theme->configure($this);
+            }
         } else {
             throw new InvalidConfigurationException('The theme configuration implement Magium\Themes\ThemeConfigurationInterface');
         }
@@ -549,7 +528,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf('Facebook\WebDriver\WebDriverElement', $element);
     }
 
-    public function assertElementHasText($node, $text, $message = null)
+    public function assertElementHasText($node, $text)
     {
         try {
             $this->byXpath(sprintf('//%s[contains(., "%s")]', $node, addslashes($text)));
@@ -609,16 +588,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         return $this->webdriver->byCssSelector($selector);
     }
 
-
-    /**
-     * @param string $text
-     * @param string $specificNodeType
-     * @param string $parentElementSelector
-     * @return \Facebook\WebDriver\Remote\RemoteWebElement
-     */
-    public function byText($text, $specificNodeType = null, $parentElementSelector = null)
+    protected function getElementByTextXpath($xpathTemplate, $text, $specificNodeType = null, $parentElementSelector = null)
     {
-        $xpathTemplate = '//%s[concat(" ",normalize-space(.)," ") = " %s "]';
+
         if ($parentElementSelector !== null) {
             $xpathTemplate = $parentElementSelector . $xpathTemplate;
         }
@@ -636,6 +608,18 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         WebDriverException::throwException(7, 'Could not find element with text: ' . $this->getTranslator()->translatePlaceholders($text), []);
     }
 
+    /**
+     * @param string $text
+     * @param string $specificNodeType
+     * @param string $parentElementSelector
+     * @return \Facebook\WebDriver\Remote\RemoteWebElement
+     */
+    public function byText($text, $specificNodeType = null, $parentElementSelector = null)
+    {
+        $xpathTemplate = '//%s[concat(" ",normalize-space(.)," ") = " %s "]';
+        return $this->getElementByTextXpath($xpathTemplate, $text, $specificNodeType, $parentElementSelector);
+    }
+
 
     /**
      * @param string $text
@@ -646,21 +630,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     public function byContainsText($text, $specificNodeType = null, $parentElementSelector = null)
     {
         $xpathTemplate = '//%s[contains(., "%s")]';
-        if ($parentElementSelector !== null) {
-            $xpathTemplate = $parentElementSelector . $xpathTemplate;
-        }
-        if ($specificNodeType !== null) {
-            return $this->byXpath(sprintf($xpathTemplate, $specificNodeType, $this->getTranslator()->translatePlaceholders($text)));
-        }
-
-        foreach ($this->textElementNodeSearch as $nodeName) {
-            $xpath = sprintf($xpathTemplate, $nodeName, $this->getTranslator()->translatePlaceholders($text));
-            if ($this->webdriver->elementExists($xpath, WebDriver::BY_XPATH)) {
-                return $this->webdriver->byXpath($xpath);
-            }
-        }
-        // This is here for consistency with the other by* methods
-        WebDriverException::throwException(7, 'Could not find element with text: ' . $this->getTranslator()->translatePlaceholders($text), []);
+        return $this->getElementByTextXpath($xpathTemplate, $text, $specificNodeType, $parentElementSelector);
     }
 
     /**
