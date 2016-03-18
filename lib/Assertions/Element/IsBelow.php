@@ -36,7 +36,7 @@ class IsBelow extends AbstractAssertion
 
         $aboveCoord = $this->aboveElement->getLocation();
         $belowCoord = $this->belowElement->getLocation();
-        $this->testCase->assertGreaterThan($aboveCoord->getY(), $belowCoord->getY(), 'The "below" element was not below the "above" element');
+        $this->getTestCase()->assertGreaterThan($aboveCoord->getY(), $belowCoord->getY(), 'The "below" element was not below the "above" element');
     }
 
 }
