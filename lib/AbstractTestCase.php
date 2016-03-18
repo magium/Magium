@@ -61,6 +61,15 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     protected static $registrationCallbacks;
 
+
+    public function __construct($name = null, array $data = [], $dataName = null, TestCaseConfiguration $configuration = null)
+    {
+        $this->testCaseConfigurationObject = $configuration;
+        self::getMasterListener();
+        parent::__construct($name, $data, $dataName);
+
+    }
+
     protected function setUp()
     {
         /*
@@ -68,6 +77,34 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
          * before the Magium namespace, thus, taking preference over the base namespace
          */
         self::addBaseNamespace('Magium');
+
+        $this->configureDi();
+
+        // Adding the Clarivoyant logger is done like this because I can't see a way to get the logger configuration
+        // into the WriterPluginManager that Zend\Log\Log uses.
+
+        $this->di->get('Magium\Util\Log\Logger')->addWriter(
+            $this->di->get('Magium\Util\Log\Clairvoyant')
+        );
+        $this->di->instanceManager()->addSharedInstance(self::$masterListener, 'Magium\Util\Phpunit\MasterListener');
+
+        $rc = new \ReflectionClass($this);
+        while ($rc->getParentClass()) {
+            $class = $rc->getParentClass()->getName();
+            $this->di->instanceManager()->addSharedInstance($this, $class);
+            $rc = new \ReflectionClass($class);
+        }
+
+        $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
+        $this->webdriver->setRemoteExecuteMethod($this->di->get('Magium\WebDriver\LoggingRemoteExecuteMethod'));
+        self::getMasterListener()->addListener($this->getClairvoyant());
+
+        RegistrationListener::executeCallbacks($this);
+    }
+
+    public function configureDi()
+    {
+
         if (!$this->testCaseConfigurationObject instanceof TestCaseConfiguration) {
             if ($this->di instanceof Di) {
                 $this->testCaseConfigurationObject = $this->get($this->testCaseConfiguration);
@@ -85,7 +122,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
                     'Magium\WebDriver\WebDriverFactory' => [
                         'create'       => $this->testCaseConfigurationObject->getWebDriverConfiguration()
-                    ]
+                    ],
+
                 ]
             ],
             'instance'  => [
@@ -97,18 +135,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                         'locale'    => 'en_US'
                     ]
                 ],
-                'Magium\Util\Log\Logger'   => [
-                    'parameters'    => [
-                        'options'   => [
-                            'writers' => [
-                                [
-                                    'name' => 'Zend\Log\Writer\Noop',
-                                    'options' => []
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
             ]
         ];
 
@@ -127,33 +153,41 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             $path .= '/../';
         }
 
-
         $configArray = $this->testCaseConfigurationObject->reprocessConfiguration($configArray);
         $configuration = new Config($configArray);
 
         $this->di = new Di();
         $configuration->configure($this->di);
-        $this->di->instanceManager()->addSharedInstance(self::$masterListener, 'Magium\Util\Phpunit\MasterListener');
-
-        $rc = new \ReflectionClass($this);
-        while ($rc->getParentClass()) {
-            $class = $rc->getParentClass()->getName();
-            $this->di->instanceManager()->addSharedInstance($this, $class);
-            $rc = new \ReflectionClass($class);
-        }
-        $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
-
-        $this->webdriver->setRemoteExecuteMethod($this->di->get('Magium\WebDriver\LoggingRemoteExecuteMethod'));
-
-        RegistrationListener::executeCallbacks($this);
+    }
+    
+    public function markKeyCheckpoint($checkpoint)
+    {
+        $this->getClairvoyant()->markKeyCheckpoint($checkpoint);
     }
 
-    public function __construct($name = null, array $data = [], $dataName = null, TestCaseConfiguration $configuration = null)
-    {
-        $this->testCaseConfigurationObject = $configuration;
-        self::getMasterListener();
-        parent::__construct($name, $data, $dataName);
+    /**
+     * @return \Magium\Util\Log\Clairvoyant
+     */
 
+    public function getClairvoyant()
+    {
+        return $this->di->get('Magium\Util\Log\Clairvoyant');
+    }
+
+    /**
+     * @param mixed $testTitle
+     */
+    public function setTestTitle($testTitle)
+    {
+        $this->getClairvoyant()->setTestTitle($testTitle);
+    }
+
+    /**
+     * @param mixed $testDescription
+     */
+    public function setTestDescription($testDescription)
+    {
+        $this->getClairvoyant()->setTestDescription($testDescription);
     }
 
     public function setTestResultObject(PHPUnit_Framework_TestResult $result)

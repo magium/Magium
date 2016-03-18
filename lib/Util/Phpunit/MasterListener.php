@@ -3,6 +3,7 @@
 namespace Magium\Util\Phpunit;
 
 use Exception;
+use Magium\Util\Log\Clairvoyant;
 use Magium\Util\TestCase\RegistrationCallbackInterface;
 use PHPUnit_Framework_AssertionFailedError;
 use PHPUnit_Framework_Test;
@@ -15,10 +16,11 @@ class MasterListener implements \PHPUnit_Framework_TestListener
     protected $listeners = [];
     protected $result;
 
+
     public function addListener(\PHPUnit_Framework_TestListener $listener)
     {
         foreach ($this->listeners as $existingListener) {
-            if ($listener === $existingListener) {
+            if (get_class($listener) == get_class($existingListener)) {
                 return;
             }
         }

@@ -37,6 +37,10 @@ class CommandLoader
                 $class = substr(basename($file), 0, -4);
                 $className = $namespace . '\\' . $class;
                 if (class_exists($className)) {
+                    $reflection = new \ReflectionClass($className);
+                    if (!$reflection->isInstantiable()) {
+                        continue;
+                    }
                     $object = new $className();
                     if ($object instanceof ConfigurationPathInterface) {
                         $object->setPath($this->config);

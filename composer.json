@@ -25,7 +25,8 @@
     "zendframework/zend-cache": "^2.5.3",
     "symfony/console": "v3.0.3",
     "zendframework/zend-config": "2.6.0",
-    "zendframework/zend-json": "2.6.1"
+    "zendframework/zend-json": "2.6.1",
+    "league/oauth1-client": "^1.6"
   },
   "repositories" : [ {
     "type" : "composer",
