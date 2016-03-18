@@ -76,6 +76,11 @@ class WebDriver extends RemoteWebDriver implements LoggerAware
         $this->logger = $logger;
     }
 
+    /**
+     * @param WebDriverBy $by
+     * @return \Facebook\WebDriver\Remote\RemoteWebElement[]
+     */
+
     public function findElements(WebDriverBy $by)
     {
         $this->logFind($by->getMechanism(), $by->getValue());
@@ -85,6 +90,11 @@ class WebDriver extends RemoteWebDriver implements LoggerAware
         }
         return $elements;
     }
+
+    /**
+     * @param WebDriverBy $by
+     * @return \Facebook\WebDriver\Remote\RemoteWebElement
+     */
 
     public function findElement(WebDriverBy $by)
     {
