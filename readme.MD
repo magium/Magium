@@ -1,3 +1,4 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/magium/Magium/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/magium/Magium/?branch=master)
 # Magium
 A PHPUnit/Webdriver (Selenium (there for SEO)) based test framework for streamlining browser testing.  It basically boils down to building out reusable Web Driver commands for web applications (currently Magento) allowing you to bypass much of the boilerplate code that browser/functional testing may require.
 
