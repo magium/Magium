@@ -12,8 +12,10 @@ use Magium\Assertions\Element\NotExists;
 use Magium\Assertions\LoggingAssertionExecutor;
 use Magium\Themes\BaseThemeInterface;
 use Magium\Themes\ThemeConfigurationInterface;
+use Magium\Util\Configuration\ClassConfigurationReader;
 use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
 use Magium\Util\Configuration\ConfigurationReader;
+use Magium\Util\Configuration\EnvironmentConfigurationReader;
 use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Phpunit\MasterListener;
 use Magium\Util\TestCase\RegistrationListener;
@@ -139,7 +141,14 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             if ($this->di instanceof Di) {
                 $this->testCaseConfigurationObject = $this->get($this->testCaseConfiguration);
             } else {
-                $this->testCaseConfigurationObject = new $this->testCaseConfiguration(new StandardConfigurationProvider(new ConfigurationReader()), new DefaultPropertyCollector());
+                $this->testCaseConfigurationObject = new $this->testCaseConfiguration(
+                    new StandardConfigurationProvider(
+                        new ConfigurationReader(),
+                        new ClassConfigurationReader(),
+                        new EnvironmentConfigurationReader()
+                    )
+                    , new DefaultPropertyCollector()
+                );
             }
         }
         /* @var $configuration TestCaseConfiguration */
