@@ -46,14 +46,54 @@ class ApiPing extends Command
         );
         $content = json_decode($response->getBody(), true);
         $output->writeln(
-            'Checking for success message... '
-            . (is_array($content) && isset($content['success']) && $content['success'] === true?'OK':'Failed')
+            'Checking for successful response... '
+            . (is_array($content) && isset($content['status']) && $content['status'] === 'success'?'OK':'Failed')
         );
+
+        $output->writeln('');
+        $output->writeln('Attempting authenticated ping...');
 
         $request = $test->get('Magium\Util\Api\Request');
         /* @var $request \Magium\Util\Api\Request */
         $response = $request->fetch('/api/ping-authed');
-        $output->writeln($response);
+
+        $output->writeln(
+            'Checking for 200 status message... '
+            . ($response->getStatusCode() == '200'?'OK':'Failed')
+        );
+        $output->writeln(
+            'Checking for application/json content type... '
+            . (stripos($response->getContentType(), 'application/json') !== false?'OK':'Failed')
+        );
+        $content = $request->getPayload($response);
+        $output->writeln(
+            'Checking for successful response... '
+            . (is_array($content) && isset($content['status']) && $content['status'] === 'success'?'OK':'Failed')
+        );
+
+
+        $output->writeln('');
+        $output->writeln('Attempting authenticated echo...');
+        $request = $test->get('Magium\Util\Api\Request');
+        /* @var $request \Magium\Util\Api\Request */
+        $response = $request->push('/api/echo-auth', ['message' => 'hello world']);
+        $output->writeln(
+            'Checking for 200 status message... '
+            . ($response->getStatusCode() == '200'?'OK':'Failed')
+        );
+        $output->writeln(
+            'Checking for application/json content type... '
+            . (stripos($response->getContentType(), 'application/json') !== false?'OK':'Failed')
+        );
+        $content = $request->getPayload($response);
+        $output->writeln(
+            'Checking for successful response... '
+            . (is_array($content) && isset($content['status']) && $content['status'] === 'success'?'OK':'Failed')
+        );
+        $output->writeln(
+            'Checking for matching echo message... '
+            . (is_array($content) && isset($content['message']) && $content['message'] === 'hello world'?'OK':'Failed')
+        );
     }
     
 }

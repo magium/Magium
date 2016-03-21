@@ -8,18 +8,6 @@ class ApiConfiguration extends AbstractConfigurableElement
 {
 
     /**
-     * The consumer key
-     */
-
-    public $consumerKey;
-
-    /**
-     * The consumer secret
-     */
-
-    public $consumerSecret;
-
-    /**
      * The key for the API
      */
     public $key;
@@ -71,38 +59,6 @@ class ApiConfiguration extends AbstractConfigurableElement
     public function setEnabled($enabled)
     {
         $this->enabled = $enabled;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConsumerKey()
-    {
-        return $this->consumerKey;
-    }
-
-    /**
-     * @param mixed $consumerKey
-     */
-    public function setConsumerKey($consumerKey)
-    {
-        $this->consumerKey = $consumerKey;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConsumerSecret()
-    {
-        return $this->consumerSecret;
-    }
-
-    /**
-     * @param mixed $consumerSecret
-     */
-    public function setConsumerSecret($consumerSecret)
-    {
-        $this->consumerSecret = $consumerSecret;
     }
 
     /**

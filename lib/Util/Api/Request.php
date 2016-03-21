@@ -2,10 +2,12 @@
 
 namespace Magium\Util\Api;
 
-use djchen\OAuth1;
-use League\OAuth1\Client\Credentials\ClientCredentials;
-use League\OAuth1\Client\Credentials\TokenCredentials;
-use League\OAuth1\Client\Server\Magento;
+use Guzzle\Http\Client;
+use Guzzle\Http\Message\Response;
+use QueryAuth\Credentials\Credentials;
+use QueryAuth\Factory;
+use QueryAuth\Request\Adapter\Outgoing\GuzzleHttpRequestAdapter;
+use QueryAuth\Request\Adapter\Outgoing\GuzzleRequestAdapter;
 
 class Request
 {
@@ -25,27 +27,30 @@ class Request
             }
 
             $url = 'http://' . $this->apiConfiguration->getApiHostname() . $url;
-            $consumerCredentials = new ClientCredentials();
-            $consumerCredentials->setIdentifier($this->apiConfiguration->getConsumerKey());
-            $consumerCredentials->setSecret($this->apiConfiguration->getConsumerSecret());
 
-            $tokenCredentials = new TokenCredentials();
-            $tokenCredentials->setIdentifier($this->apiConfiguration->getKey());
-            $tokenCredentials->setSecret($this->apiConfiguration->getSecret());
+            $factory = new Factory();
+            $requestSigner = $factory->newRequestSigner();
+            $credentials = new Credentials(
+                $this->apiConfiguration->getKey(),
+                $this->apiConfiguration->getSecret()
+            );
 
-            $magento = new Magento($consumerCredentials);
-            $magento->
-            if ($method == 'POST') {
-                $response = $oauth->post($url);
-            } else {
-                $response = $oauth->get($url);
-            }
-            /* @var $response \Guzzle\Http\Message\Request */
-            $response->addCookie('XDEBUG_SESSION', 'PHPSTORM');
-            $result = $response->send();
-            return $result->getBody(true);
+            $guzzle = new Client();
+            $request = $guzzle->createRequest($method, $url, ['content-type' => 'application/json'], $payload);
+
+            $requestSigner->signRequest(new GuzzleRequestAdapter($request), $credentials);
+            $request->addCookie('XDEBUG_SESSION', 'PHPSTORM');
+            $response = $guzzle->send($request);
+
+            return $response;
         }
         return null;
+    }
+
+    public function getPayload(Response $response)
+    {
+        $payload = json_decode($response->getBody(true), true);
+        return $payload;
     }
 
     public function push($url, array $data = null)
