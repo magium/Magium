@@ -82,6 +82,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
 
         $this->webdriver->setRemoteExecuteMethod($this->di->get('Magium\WebDriver\LoggingRemoteExecuteMethod'));
+        self::getMasterListener()->addListener($this->get('Magium\Util\Log\Clairvoyant'));
 
         RegistrationListener::executeCallbacks($this);
     }
