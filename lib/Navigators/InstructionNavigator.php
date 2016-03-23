@@ -16,7 +16,7 @@ class InstructionNavigator
     const NAVIGATOR = 'InstructionNavigator';
 
     const INSTRUCTION_MOUSE_CLICK           = 'mouseClick';
-    const INSTRUCTION_MOUSE_MOVETO          = 'mouseMove';
+    const INSTRUCTION_MOUSE_MOVETO          = 'mouseMoveTo';
     const INSTRUCTION_WAIT_FOR_DISPLAYED    = 'waitForDisplayed';
     const INSTRUCTION_WAIT_FOR_EXISTS       = 'waitForExists';
     const INSTRUCTION_WAIT_FOR_NOT_EXISTS   = 'waitForNotExists';
