@@ -23,7 +23,7 @@ class Request
     {
         if ($this->apiConfiguration->getEnabled()) {
             if ($payload) {
-                $payload = json_encode($payload);
+                $payload = ['payload' => json_encode($payload)];
             }
 
             $url = 'http://' . $this->apiConfiguration->getApiHostname() . $url;
@@ -39,7 +39,6 @@ class Request
             $request = $guzzle->createRequest($method, $url, ['content-type' => 'application/json'], $payload);
 
             $requestSigner->signRequest(new GuzzleRequestAdapter($request), $credentials);
-            $request->addCookie('XDEBUG_SESSION', 'PHPSTORM');
             $response = $guzzle->send($request);
 
             return $response;

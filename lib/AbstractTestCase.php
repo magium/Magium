@@ -15,6 +15,7 @@ use Magium\Themes\ThemeConfigurationInterface;
 use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
 use Magium\Util\Configuration\ConfigurationReader;
 use Magium\Util\Configuration\StandardConfigurationProvider;
+use Magium\Util\Log\Clairvoyant;
 use Magium\Util\Phpunit\MasterListener;
 use Magium\Util\TestCase\RegistrationListener;
 use Magium\WebDriver\WebDriver;
@@ -82,8 +83,15 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
 
         $this->webdriver->setRemoteExecuteMethod($this->di->get('Magium\WebDriver\LoggingRemoteExecuteMethod'));
-        self::getMasterListener()->addListener($this->get('Magium\Util\Log\Clairvoyant'));
+        $clairvoyant = $this->get('Magium\Util\Api\Clairvoyant\Clairvoyant');
+        /* @var $clairvoyant \Magium\Util\Api\Clairvoyant\Clairvoyant */
+        $clairvoyant->setApiRequest($this->get('Magium\Util\Api\Request'));
+        $clairvoyant->setSessionId($this->webdriver->getSessionID());
+        $clairvoyant->setCapability($this->testCaseConfigurationObject->getCapabilities());
+        $clairvoyant->reset();
+        $this->getLogger()->addWriter($clairvoyant);
 
+        self::getMasterListener()->addListener($clairvoyant);
         RegistrationListener::executeCallbacks($this);
     }
 

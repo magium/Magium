@@ -1,27 +1,30 @@
 <?php
 
-namespace Magium\Util\Log;
+namespace Magium\Util\Api\Clairvoyant;
 
 use Exception;
-use League\OAuth1\Client\Credentials\ClientCredentials;
-use League\OAuth1\Client\Server\Magento;
+use Magium\AbstractConfigurableElement;
 use Magium\AbstractTestCase;
 use Magium\Util\Api\ApiConfiguration;
 use Magium\Util\Api\Request;
+use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
+use Magium\Util\Configuration\StandardConfigurationProvider;
+use Magium\Util\Log\Logger;
 use PHPUnit_Framework_AssertionFailedError;
 use PHPUnit_Framework_Test;
 use PHPUnit_Framework_TestSuite;
-use Zend\Log\Filter\FilterInterface as Filter;
-use Zend\Log\Formatter\FormatterInterface as Formatter;
+use RandomLib\Factory;
+use SecurityLib\Strength;
 use Zend\Log\Writer\WriterInterface;
 
-class Clairvoyant implements WriterInterface, \PHPUnit_Framework_TestListener
+class Clairvoyant extends AbstractConfigurableElement implements WriterInterface, \PHPUnit_Framework_TestListener
 {
 
     const TYPE_TEST_RESULT = 'test-result';
     const TYPE_TEST_STATUS = 'test-status';
     const TYPE_TEST_CHECKPOINT = 'test-checkpoint';
 
+    const TEST_RESULT_PASSED = 'passed';
     const TEST_RESULT_ERROR = 'error';
     const TEST_RESULT_FAILED = 'failed';
     const TEST_RESULT_SKIPPED = 'skipped';
@@ -31,16 +34,95 @@ class Clairvoyant implements WriterInterface, \PHPUnit_Framework_TestListener
     const TEST_STATUS_STARTED = 'started';
     const TEST_STATUS_COMPLETED = 'completed';
 
+    /**
+     * This provides the Clairvoyant-based project ID.  It must be retrieved from the MagiumLib.com website.  If 
+     * Clairvoyant is enabled and this project ID is missing an exception will be thrown.
+     *
+     * @var string
+     */
+
+    public $projectId;
+    public $enabled = null;
 
     protected $testName;
+    protected $logger;
     protected $testTitle;
     protected $testDescription;
+    protected $capability;
+    protected $sessionId;
     protected $request;
+    protected $testId;
+    protected static $testRunId;
     protected $events = [];
+    protected $apiConfiguration;
+    protected $testResult;
 
-    public function __construct(Request $request)
+    public function __construct(
+        StandardConfigurationProvider $configurationProvider,
+        DefaultPropertyCollector $collector,
+        ApiConfiguration $apiConfiguration,
+        Logger $logger)
+    {
+        parent::__construct($configurationProvider, $collector);
+        $this->apiConfiguration = $apiConfiguration;
+        $this->logger = $logger;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectId()
+    {
+        return $this->projectId;
+    }
+
+    /**
+     * @param mixed $projectId
+     */
+    public function setProjectId($projectId)
+    {
+        $this->projectId = $projectId;
+    }
+
+
+
+    public function setApiRequest(Request $request)
     {
         $this->request = $request;
+    }
+
+    /**
+     * Provide a test-run-wide ID that can be used to tie individual test runs together
+     *
+     * @param string $id
+     */
+
+    public static function setTestRunId($id = null)
+    {
+        if ($id === null) {
+
+            $factory = new Factory();
+            $generator = $factory->getGenerator(new Strength(Strength::MEDIUM));
+            $id = $generator->generateString(64);
+        }
+        self::$testRunId = $id;
     }
 
     public function reset()
@@ -48,7 +130,12 @@ class Clairvoyant implements WriterInterface, \PHPUnit_Framework_TestListener
         $this->testDescription
             = $this->testName
             = $this->testTitle = null;
+        $this->testResult = self::TEST_RESULT_PASSED;
         $this->events = [];
+
+        $factory = new Factory();
+        $generator = $factory->getGenerator(new Strength(Strength::MEDIUM));
+        $this->testId = $generator->generateString(64);
     }
 
     public function markKeyCheckpoint($checkpoint)
@@ -60,6 +147,19 @@ class Clairvoyant implements WriterInterface, \PHPUnit_Framework_TestListener
                 'value'    => $checkpoint
             ]
         ]);
+    }
+
+    public function setSessionId($sessionId)
+    {
+        $this->sessionId = $sessionId;
+    }
+
+    /**
+     * @param mixed $capability
+     */
+    public function setCapability($capability)
+    {
+        $this->capability = $capability;
     }
 
     /**
@@ -90,17 +190,21 @@ class Clairvoyant implements WriterInterface, \PHPUnit_Framework_TestListener
 
     public function write(array $event)
     {
+        if (isset($event['extra'][self::TYPE_TEST_RESULT])) {
+            $this->testResult = $event['extra'][self::TYPE_TEST_RESULT];
+        }
         $event['microtime'] = microtime(true);
         $this->events[] = $event;
     }
 
     public function shutdown()
     {
-        $a = 1;
+        // Ignored.  Test data is pushed at the end of each test run.
     }
 
     public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
+        $this->testResult = self::TEST_RESULT_ERROR;
         $this->write([
             'message'   => $e->getMessage(),
             'extra'     => [
@@ -112,6 +216,7 @@ class Clairvoyant implements WriterInterface, \PHPUnit_Framework_TestListener
 
     public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
     {
+        $this->testResult = self::TEST_RESULT_FAILED;
         $this->write([
             'message'   => $e->getMessage(),
             'extra'     => [
@@ -123,6 +228,7 @@ class Clairvoyant implements WriterInterface, \PHPUnit_Framework_TestListener
 
     public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
+        $this->testResult = self::TEST_RESULT_INCOMPLETE;
         $this->write([
             'message'   => $e->getMessage(),
             'extra'     => [
@@ -134,6 +240,7 @@ class Clairvoyant implements WriterInterface, \PHPUnit_Framework_TestListener
 
     public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
+        $this->testResult = self::TEST_RESULT_RISKY;
         $this->write([
             'message'   => $e->getMessage(),
             'extra'     => [
@@ -145,6 +252,7 @@ class Clairvoyant implements WriterInterface, \PHPUnit_Framework_TestListener
 
     public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
+        $this->testResult = self::TEST_RESULT_SKIPPED;
         $this->write([
             'message'   => $e->getMessage(),
             'extra'     => [
@@ -161,7 +269,7 @@ class Clairvoyant implements WriterInterface, \PHPUnit_Framework_TestListener
 
     public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
-        $this->send();
+        $this->send(); // Just in case.
     }
 
     public function startTest(PHPUnit_Framework_Test $test)
@@ -187,7 +295,7 @@ class Clairvoyant implements WriterInterface, \PHPUnit_Framework_TestListener
             'message'   => 'Test completed',
             'extra'     => [
                 'type'      => self::TYPE_TEST_STATUS,
-                'value'    => self::TEST_STATUS_COMPLETED
+                'value'    => self::TEST_STATUS_COMPLETED,
             ]
         ]);
         $this->send();
@@ -195,6 +303,39 @@ class Clairvoyant implements WriterInterface, \PHPUnit_Framework_TestListener
 
     public function send()
     {
-        $this->request->push('/clairvoyant/api/ingest', $this->events);
+
+        if (!$this->enabled === null) {
+            $this->enabled = $this->apiConfiguration->getEnabled();
+        }
+
+        if ($this->enabled && !empty($this->events)) {
+            if (!$this->getProjectId()) {
+                throw new MissingProjectIdException('Missing the project ID.  You either need to disable Clairvoyant or get a project ID from http://magiumlib.com/');
+            }
+
+            $this->write([
+                'message'   => 'Final test result',
+                'extra'     => [
+                    'type'      => self::TYPE_TEST_RESULT,
+                    'value'    => $this->testResult,
+                ]
+            ]);
+            $payload = [
+                'title'          => $this->testTitle,
+                'description'   => $this->testDescription,
+                'id'            => $this->testId,
+                'session_id'    => $this->sessionId,
+                'events'        => $this->events,
+                'version'       => '1',
+                'project_id'    => $this->projectId,
+                'invoked_test'  => $this->logger->getInvokedTest()
+            ];
+
+            if (self::$testRunId !== null) {
+                $payload['test_run_id'] = self::$testRunId;
+            }
+            $this->request->push('/clairvoyant/api/ingest', $payload);
+        }
+        $this->events = [];
     }
 }

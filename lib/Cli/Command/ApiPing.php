@@ -76,7 +76,7 @@ class ApiPing extends Command
         $output->writeln('Attempting authenticated echo...');
         $request = $test->get('Magium\Util\Api\Request');
         /* @var $request \Magium\Util\Api\Request */
-        $response = $request->push('/api/echo-auth', ['message' => 'hello world']);
+        $response = $request->push('/api/echo-authed', ['message' => 'hello world']);
         $output->writeln(
             'Checking for 200 status message... '
             . ($response->getStatusCode() == '200'?'OK':'Failed')

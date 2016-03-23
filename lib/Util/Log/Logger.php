@@ -31,6 +31,8 @@ class Logger extends \Zend\Log\Logger implements \PHPUnit_Framework_TestListener
 
     protected $testId;
 
+    protected $invokedTest;
+
     protected $selectorConfig = null;
 
     public function setMasterListener(MasterListener $listener)
@@ -44,6 +46,10 @@ class Logger extends \Zend\Log\Logger implements \PHPUnit_Framework_TestListener
 
     }
 
+    public function getInvokedTest()
+    {
+        return $this->invokedTest;
+    }
 
     public function setTestName($name)
     {
@@ -135,7 +141,10 @@ class Logger extends \Zend\Log\Logger implements \PHPUnit_Framework_TestListener
     public function startTest(PHPUnit_Framework_Test $test)
     {
         if ($test instanceof \PHPUnit_Framework_TestCase) {
-            $this->setTestName(get_class($test) . '::' . $test->getName());
+            if (!$this->testName) {
+                $this->setTestName(get_class($test) . '::' . $test->getName());
+            }
+            $this->invokedTest = get_class($test) . '::' . $test->getName();
             $this->setTestStatus(self::STATUS_PASSED);
         }
 
