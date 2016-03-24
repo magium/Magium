@@ -18,7 +18,7 @@ use Magium\Util\Configuration\ConfigurationReader;
 use Magium\Util\Configuration\EnvironmentConfigurationReader;
 use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Log\Logger;
-use Magium\Util\Log\Clairvoyant;
+use Magium\Util\Api\Clairvoyant\Clairvoyant;
 use Magium\Util\Phpunit\MasterListener;
 use Magium\Util\TestCase\RegistrationListener;
 use Magium\WebDriver\WebDriver;
@@ -84,19 +84,31 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             $rc = new \ReflectionClass($class);
         }
         $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
-        $this->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_OPERATING_SYSTEM, $this->webdriver->getPlatform());
-        $this->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_BROWSER, $this->webdriver->getBrowser());
 
         $this->webdriver->setRemoteExecuteMethod($this->di->get('Magium\WebDriver\LoggingRemoteExecuteMethod'));
-        $clairvoyant = $this->get('Magium\Util\Api\Clairvoyant\Clairvoyant');
+
+        // This is going to be refactored in a completely backwards compatible way.  Currently, because the DiC is
+        // rebuilt for each request it doesn't maintain state between tests.  This is a good thing... except when
+        // something that understands it (the MasterListener) does restain state.
+
+        $clairvoyant = self::getMasterListener()->getListener('Magium\Util\Api\Clairvoyant\Clairvoyant');
+        if ($clairvoyant instanceof Clairvoyant) {
+            $this->di->instanceManager()->addSharedInstance($clairvoyant);
+        } else {
+            $clairvoyant = $this->get('Magium\Util\Api\Clairvoyant\Clairvoyant');
+            self::getMasterListener()->addListener($clairvoyant);
+        }
+
         /* @var $clairvoyant \Magium\Util\Api\Clairvoyant\Clairvoyant */
         $clairvoyant->setApiRequest($this->get('Magium\Util\Api\Request'));
+        $clairvoyant->reset();
         $clairvoyant->setSessionId($this->webdriver->getSessionID());
         $clairvoyant->setCapability($this->testCaseConfigurationObject->getCapabilities());
-        $clairvoyant->reset();
         $this->getLogger()->addWriter($clairvoyant);
+        $this->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_BROWSER, $this->webdriver->getBrowser());
+        $this->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_OPERATING_SYSTEM, $this->webdriver->getPlatform());
 
-        self::getMasterListener()->addListener($clairvoyant);
+
         RegistrationListener::executeCallbacks($this);
     }
 

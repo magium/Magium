@@ -43,7 +43,7 @@ class Logger extends \Zend\Log\Logger implements \PHPUnit_Framework_TestListener
     public function addCharacteristic($type, $value)
     {
         $this->info(
-            sprintf('Set %s to $s', $type, $value),
+            sprintf('Set %s to %s', $type, $value),
             [
                 'type'              => 'characteristic',
                 'characteristic'    => $type,

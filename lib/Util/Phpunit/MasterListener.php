@@ -16,6 +16,19 @@ class MasterListener implements \PHPUnit_Framework_TestListener
     protected $listeners = [];
     protected $result;
 
+    /**
+     * @param $class
+     * @return \PHPUnit_Framework_TestListener
+     */
+
+    public function getListener($class)
+    {
+        foreach ($this->listeners as $listener) {
+            if (get_class($listener) == $class) {
+                return $listener;
+            }
+        }
+    }
 
     public function addListener(\PHPUnit_Framework_TestListener $listener)
     {

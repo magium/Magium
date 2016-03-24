@@ -19,7 +19,6 @@ use Zend\Log\Writer\WriterInterface;
 
 class Clairvoyant extends AbstractConfigurableElement implements WriterInterface, \PHPUnit_Framework_TestListener
 {
-
     const TYPE_TEST_RESULT = 'test-result';
     const TYPE_TEST_STATUS = 'test-status';
     const TYPE_TEST_CHECKPOINT = 'test-checkpoint';
@@ -50,12 +49,16 @@ class Clairvoyant extends AbstractConfigurableElement implements WriterInterface
     protected $testDescription;
     protected $capability;
     protected $sessionId;
+    /**
+     * @var Request
+     */
     protected $request;
     protected $testId;
     protected static $testRunId;
     protected $events = [];
     protected $apiConfiguration;
     protected $testResult;
+    protected $characteristics = [];
 
     public function __construct(
         StandardConfigurationProvider $configurationProvider,
@@ -190,6 +193,10 @@ class Clairvoyant extends AbstractConfigurableElement implements WriterInterface
 
     public function write(array $event)
     {
+        if (isset($event['extra']['type']) && $event['extra']['type'] == 'characteristic') {
+            $this->characteristics[$event['extra']['characteristic']] = $event['extra']['value'];
+            return;
+        }
         if (isset($event['extra'][self::TYPE_TEST_RESULT])) {
             $this->testResult = $event['extra'][self::TYPE_TEST_RESULT];
         }
@@ -308,7 +315,7 @@ class Clairvoyant extends AbstractConfigurableElement implements WriterInterface
             $this->enabled = $this->apiConfiguration->getEnabled();
         }
 
-        if ($this->enabled && !empty($this->events)) {
+        if (!empty($this->events) && $this->enabled) {
             if (!$this->getProjectId()) {
                 throw new MissingProjectIdException('Missing the project ID.  You either need to disable Clairvoyant or get a project ID from http://magiumlib.com/');
             }
@@ -321,14 +328,15 @@ class Clairvoyant extends AbstractConfigurableElement implements WriterInterface
                 ]
             ]);
             $payload = [
-                'title'          => $this->testTitle,
-                'description'   => $this->testDescription,
-                'id'            => $this->testId,
-                'session_id'    => $this->sessionId,
-                'events'        => $this->events,
-                'version'       => '1',
-                'project_id'    => $this->projectId,
-                'invoked_test'  => $this->logger->getInvokedTest()
+                'title'             => $this->testTitle,
+                'description'       => $this->testDescription,
+                'id'                => $this->testId,
+                'session_id'        => $this->sessionId,
+                'events'            => $this->events,
+                'version'           => '1',
+                'project_id'        => $this->projectId,
+                'invoked_test'      => $this->logger->getInvokedTest(),
+                'characteristics'   => $this->characteristics
             ];
 
             if (self::$testRunId !== null) {
@@ -338,4 +346,5 @@ class Clairvoyant extends AbstractConfigurableElement implements WriterInterface
         }
         $this->events = [];
     }
+
 }
