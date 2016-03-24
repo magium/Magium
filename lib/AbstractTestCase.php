@@ -17,6 +17,7 @@ use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
 use Magium\Util\Configuration\ConfigurationReader;
 use Magium\Util\Configuration\EnvironmentConfigurationReader;
 use Magium\Util\Configuration\StandardConfigurationProvider;
+use Magium\Util\Log\Logger;
 use Magium\Util\Log\Clairvoyant;
 use Magium\Util\Phpunit\MasterListener;
 use Magium\Util\TestCase\RegistrationListener;
@@ -83,6 +84,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             $rc = new \ReflectionClass($class);
         }
         $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
+        $this->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_OPERATING_SYSTEM, $this->webdriver->getPlatform());
+        $this->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_BROWSER, $this->webdriver->getBrowser());
 
         $this->webdriver->setRemoteExecuteMethod($this->di->get('Magium\WebDriver\LoggingRemoteExecuteMethod'));
         $clairvoyant = $this->get('Magium\Util\Api\Clairvoyant\Clairvoyant');
@@ -546,7 +549,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         } else {
             throw new InvalidConfigurationException('The theme configuration implement Magium\Themes\ThemeConfigurationInterface');
         }
-
+        $this->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_THEME, $fullyQualifiedClassName);
     }
 
     public static function assertWebDriverElement($element)
