@@ -4,7 +4,6 @@ namespace Magium\Util\Log;
 
 use Exception;
 use Magium\Assertions\AbstractAssertion;
-use Magium\Assertions\AbstractSelectorAssertion;
 use Magium\Util\Phpunit\MasterListener;
 use Magium\Util\Phpunit\MasterListenerAware;
 use PHPUnit_Framework_AssertionFailedError;
@@ -41,7 +40,14 @@ class Logger extends \Zend\Log\Logger implements \PHPUnit_Framework_TestListener
 
     public function addCharacteristic($type, $value)
     {
-
+        $this->info(
+            sprintf('Set %s to $s', $type, $value),
+            [
+                'type'              => 'characteristic',
+                'characteristic'    => $type,
+                'value'             => $value
+            ]
+        );
     }
 
 
