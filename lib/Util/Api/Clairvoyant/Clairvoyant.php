@@ -134,6 +134,7 @@ class Clairvoyant extends AbstractConfigurableElement implements WriterInterface
             = $this->testName
             = $this->testTitle = null;
         $this->testResult = self::TEST_RESULT_PASSED;
+        $this->characteristics = [];
         $this->events = [];
 
         $factory = new Factory();

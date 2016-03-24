@@ -93,7 +93,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
         $clairvoyant = self::getMasterListener()->getListener('Magium\Util\Api\Clairvoyant\Clairvoyant');
         if ($clairvoyant instanceof Clairvoyant) {
-            $this->di->instanceManager()->addSharedInstance($clairvoyant);
+            $this->di->instanceManager()->addSharedInstance($clairvoyant, get_class($clairvoyant));
         } else {
             $clairvoyant = $this->get('Magium\Util\Api\Clairvoyant\Clairvoyant');
             self::getMasterListener()->addListener($clairvoyant);
