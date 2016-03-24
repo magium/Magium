@@ -516,6 +516,14 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         $this->elementAssertion($selector, $by, NotExists::ASSERTION);
     }
 
+    /**
+     * @return LoggingAssertionExecutor
+     */
+
+    public function getAssertionLogger()
+    {
+        return $this->getAssertion(LoggingAssertionExecutor::ASSERTION);
+    }
 
     public function switchThemeConfiguration($fullyQualifiedClassName)
     {
