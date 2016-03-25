@@ -27,7 +27,7 @@ class ApiPing extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $test = new TestSkeleton();
-        $test->configureDi();
+        $test->getInitializer()->configureDi($test);
         $api = $test->get('Magium\Util\Api\ApiConfiguration');
         /* @var $api ApiConfiguration */
         if (!$api instanceof ApiConfiguration) {
