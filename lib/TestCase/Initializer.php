@@ -140,7 +140,7 @@ class Initializer
     {
         if (!$this->testCaseConfigurationObject instanceof TestCaseConfiguration) {
             if ($testCase->getDi() instanceof Di) {
-                $testCaseConfiguration = $this->get($this->testCaseConfiguration);
+                $testCaseConfiguration = $testCase->get($this->testCaseConfiguration);
                 if ($testCaseConfiguration instanceof TestCaseConfiguration) {
                     $this->testCaseConfigurationObject = $testCaseConfiguration;
                 }
