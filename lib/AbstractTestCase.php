@@ -12,21 +12,10 @@ use Magium\Assertions\Element\NotExists;
 use Magium\Assertions\LoggingAssertionExecutor;
 use Magium\TestCase\Initializer;
 use Magium\Themes\BaseThemeInterface;
-use Magium\Themes\ThemeConfigurationInterface;
-use Magium\Util\Api\Request;
-use Magium\Util\Configuration\ClassConfigurationReader;
-use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
-use Magium\Util\Configuration\ConfigurationReader;
-use Magium\Util\Configuration\EnvironmentConfigurationReader;
-use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Log\Logger;
-use Magium\Util\Api\Clairvoyant\Clairvoyant;
 use Magium\Util\Phpunit\MasterListener;
-use Magium\Util\TestCase\RegistrationListener;
-use Magium\WebDriver\LoggingRemoteExecuteMethod;
 use Magium\WebDriver\WebDriver;
 use PHPUnit_Framework_TestResult;
-use Zend\Di\Config;
 use Zend\Di\Di;
 
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
@@ -188,11 +177,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->elementAssertion($selector, $by, NotClickable::ASSERTION);
 
-    }
-
-    public function setTestCaseConfigurationClass($class)
-    {
-        $this->testCaseConfiguration = $class;
     }
 
     public static function addBaseNamespace($namespace)
