@@ -59,10 +59,8 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         'button', 'span', 'a', 'li', 'label', 'option', 'h1', 'h2', 'h3', 'td'
     ];
 
-    protected $testCaseConfiguration = 'Magium\TestCaseConfiguration';
-
-    protected $testCaseConfigurationObject;
-
+    protected $initializer;
+    
     const BY_XPATH = 'byXpath';
     const BY_ID    = 'byId';
     const BY_CSS_SELECTOR = 'byCssSelector';
@@ -113,10 +111,18 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         $this->webdriver = $webdriver;
     }
 
-
-    public function __construct($name = null, array $data = [], $dataName = null, TestCaseConfiguration $configuration = null)
+    public function getInitializer()
     {
-        $this->testCaseConfigurationObject = $configuration;
+        return $this->initializer;
+    }
+
+
+    public function __construct($name = null, array $data = [], $dataName = null, Initializer $initializer = null)
+    {
+        if (!$initializer instanceof Initializer) {
+            $initializer = new Initializer();
+        }
+        $this->initializer = $initializer;
         self::getMasterListener();
         parent::__construct($name, $data, $dataName);
 
