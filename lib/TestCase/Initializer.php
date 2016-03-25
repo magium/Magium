@@ -22,16 +22,21 @@ use Zend\Di\Di;
 class Initializer
 {
 
+    protected $testCaseConfiguration = 'Magium\TestCaseConfiguration';
     protected $testCaseConfigurationObject;
-    protected $testCaseConfiguration;
+
 
     public function __construct(
-        $testCaseConfigurationType,
+        $testCaseConfigurationType = null,
         TestCaseConfiguration $object = null
     )
     {
-        $this->testCaseConfiguration = $testCaseConfigurationType;
-        $this->testCaseConfigurationObject = $object;
+        if ($testCaseConfigurationType !== null) {
+            $this->testCaseConfiguration = $testCaseConfigurationType;
+        }
+        if ($object instanceof TestCaseConfiguration) {
+            $this->testCaseConfigurationObject = $object;
+        }
     }
 
     public function initialize(AbstractTestCase $testCase)

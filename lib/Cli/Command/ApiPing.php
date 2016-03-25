@@ -30,6 +30,9 @@ class ApiPing extends Command
         $test->configureDi();
         $api = $test->get('Magium\Util\Api\ApiConfiguration');
         /* @var $api ApiConfiguration */
+        if (!$api instanceof ApiConfiguration) {
+            throw new InvalidConfigurationException('Did not receive an instance of ApiConfiguration; received ' . get_class($api));
+        }
         $api->setEnabled(true); // Gotta force this for this test
 
         $output->writeln('Sending un-authenticated payload...');
