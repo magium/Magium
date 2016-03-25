@@ -18,7 +18,7 @@ class BelowBesideTest extends AbstractTestCase
         /* @var $assertion IsBelow */
         $assertion->setAboveElement($topElement);
         $assertion->setBelowElement($bottomElement);
-        $assertion->assert();
+        $this->getAssertionLogger()->execute($assertion);
     }
 
     public function testIsBelowFailsWhenWrong()
@@ -31,7 +31,7 @@ class BelowBesideTest extends AbstractTestCase
         /* @var $assertion IsBelow */
         $assertion->setAboveElement($topElement);
         $assertion->setBelowElement($bottomElement);
-        $assertion->assert();
+        $this->getAssertionLogger()->execute($assertion);
     }
 
     public function testIsRight()
@@ -44,7 +44,7 @@ class BelowBesideTest extends AbstractTestCase
         /* @var $assertion IsRight */
         $assertion->setRightElement($rightElement);
         $assertion->setLeftElement($leftElement);
-        $assertion->assert();
+        $this->getAssertionLogger()->execute($assertion);
     }
 
     public function testIsRightFailsWhenWrong()
@@ -58,7 +58,7 @@ class BelowBesideTest extends AbstractTestCase
         /* @var $assertion IsRight */
         $assertion->setRightElement($rightElement);
         $assertion->setLeftElement($leftElement);
-        $assertion->assert();
+        $this->getAssertionLogger()->execute($assertion);
     }
 
     protected function writePage()

@@ -29,9 +29,11 @@ class InstructionNavigatorTest extends AbstractTestCase
     {
         $this->writeTest(<<<HTML
 <button onclick="writeElement()" id="click">Click</button>
+<div id="result" style="display: none; ">Result</div>
 <script type="text/javascript">
     function writeElement() {
-        document.write('<div id="result">Result</div>');
+        document.getElementById('result').style.display = 'block';
+        return false;
     }        
 </script> 
 HTML
@@ -41,7 +43,7 @@ HTML
            [InstructionNavigator::INSTRUCTION_MOUSE_CLICK, '//button[@id="click"]']
         ]);
         $this->sleep('100ms');
-        $this->assertElementExists('//div[@id="result"]', WebDriver::BY_XPATH);
+        $this->assertElementDisplayed('//div[@id="result"]', WebDriver::BY_XPATH);
     }
 
     public function testMove()

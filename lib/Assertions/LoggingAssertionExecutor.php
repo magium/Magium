@@ -33,7 +33,7 @@ class LoggingAssertionExecutor
             $assertion->assert();
             $this->logger->logAssertionSuccess( $assertion, $extra );
         } catch (\Exception $e) {
-            $this->logger->logAssertionFailure($assertion, $extra);
+            $this->logger->logAssertionFailure($e, $assertion, $extra);
             throw $e;
         }
     }

@@ -35,7 +35,15 @@ class TestCaseConfiguration extends AbstractConfigurableElement
             ];
     }
 
+    /**
+     * @return string
+     */
+    public function getCapabilities()
+    {
+        return $this->capabilities;
+    }
 
+    
 
     public function reprocessConfiguration(array $config)
     {

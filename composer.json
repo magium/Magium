@@ -19,13 +19,15 @@
   "require" : {
     "phpunit/phpunit" : "^4.1.0.0",
     "zendframework/zend-di" : "^2.5.1",
-    "facebook/webdriver" : "^1.0.2",
+    "facebook/webdriver" : "^1.1.1",
     "zendframework/zend-log": "^2.6.0",
     "zendframework/zend-i18n": "^2.5.1",
     "zendframework/zend-cache": "^2.5.3",
     "symfony/console": "~2.5",
     "zendframework/zend-config": "2.6.0",
-    "zendframework/zend-json": "2.6.1"
+    "zendframework/zend-json": "2.6.1",
+    "jeremykendall/query-auth": "^3.0",
+    "guzzle/guzzle": "^3.9"
   },
   "repositories" : [ {
     "type" : "composer",

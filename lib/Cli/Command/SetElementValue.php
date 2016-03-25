@@ -43,7 +43,6 @@ class SetElementValue extends Command implements ConfigurationPathInterface
         $class = $input->getArgument('class');
         $property = $input->getArgument('property');
         $value = $input->getArgument('value');
-        $output->writeln($value);
 
         if ($input->getOption('json')) {
             $value = json_decode($value);
@@ -64,10 +63,8 @@ class SetElementValue extends Command implements ConfigurationPathInterface
 
         $writer = new Json();
         $writer->toFile($this->path . '/magium.json', $config);
-        $output->writeln(sprintf('Wrote value for "%s:%s" to %s/magium.json', $class, $property, $this->path));
+        $output->writeln(sprintf('Wrote value %s for "%s:%s" to %s/magium.json', $value, $class, $property, $this->path));
     }
-
-
 
 }
 

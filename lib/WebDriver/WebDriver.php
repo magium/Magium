@@ -3,10 +3,13 @@
 namespace Magium\WebDriver;
 
 use Facebook\WebDriver\Exception\WebDriverException;
+use Facebook\WebDriver\Remote\DriverCommand;
 use Facebook\WebDriver\Remote\HttpCommandExecutor;
 use Facebook\WebDriver\Remote\RemoteExecuteMethod;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\WebDriverCommand;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverCommandExecutor;
 use Facebook\WebDriver\WebDriverElement;
 use Magium\Util\Log\Logger;
 use Magium\Util\Log\LoggerAware;
@@ -26,6 +29,35 @@ class WebDriver extends RemoteWebDriver implements LoggerAware
      */
 
     protected $logger;
+
+    protected $browser;
+    protected $platform;
+
+    /**
+     * @return mixed
+     */
+    public function getBrowser()
+    {
+        return $this->browser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlatform()
+    {
+        return $this->platform;
+    }
+
+    public function setCommandExecutor(WebDriverCommandExecutor $executor)
+    {
+        $command = new WebDriverCommand($this->getSessionID(), DriverCommand::GET_CAPABILITIES, []);
+        $result = $executor->execute($command);
+        $values = $result->getValue();
+        $this->browser = $values['browserName'];
+        $this->platform = $values['platform'];
+        return parent::setCommandExecutor($executor);
+    }
 
 
     public function logFind($by, $selector)
