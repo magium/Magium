@@ -60,7 +60,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     ];
 
     protected $initializer;
-    
+
     const BY_XPATH = 'byXpath';
     const BY_ID    = 'byId';
     const BY_CSS_SELECTOR = 'byCssSelector';
@@ -75,7 +75,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
          * before the Magium namespace, thus, taking preference over the base namespace
          */
         self::addBaseNamespace('Magium');
-        $init = new Initializer($this->testCaseConfiguration, $this->testCaseConfigurationObject);
+        $init = new Initializer();
         $init->initialize($this);
     }
 
