@@ -14,9 +14,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class AbstractApiEnablement extends Command
 {
 
-    abstract function getApiName();
-    abstract function getApiDescription();
-    abstract function getValue();
+    abstract public function getApiName();
+    abstract public function getApiDescription();
+    abstract public function getValue();
 
     protected function configure()
     {

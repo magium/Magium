@@ -13,17 +13,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ApiEnable extends AbstractApiEnablement
 {
-    function getApiName()
+    public function getApiName()
     {
         return 'enable';
     }
 
-    function getApiDescription()
+    public function getApiDescription()
     {
         return 'Enables API integration.  See http://www.magiumlib.com/ for more information.';
     }
 
-    function getValue()
+    public function getValue()
     {
         return 1;
     }

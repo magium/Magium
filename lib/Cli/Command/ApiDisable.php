@@ -13,17 +13,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ApiDisable extends AbstractApiEnablement
 {
-    function getApiName()
+    public function getApiName()
     {
         return 'disable';
     }
 
-    function getApiDescription()
+    public function getApiDescription()
     {
         return 'Disables API integration.  See http://www.magiumlib.com/ for more information.';
     }
 
-    function getValue()
+    public function getValue()
     {
         return 0;
     }

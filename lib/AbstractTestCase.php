@@ -10,8 +10,10 @@ use Magium\Assertions\Element\NotClickable;
 use Magium\Assertions\Element\NotDisplayed;
 use Magium\Assertions\Element\NotExists;
 use Magium\Assertions\LoggingAssertionExecutor;
+use Magium\TestCase\Initializer;
 use Magium\Themes\BaseThemeInterface;
 use Magium\Themes\ThemeConfigurationInterface;
+use Magium\Util\Api\Request;
 use Magium\Util\Configuration\ClassConfigurationReader;
 use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
 use Magium\Util\Configuration\ConfigurationReader;
@@ -21,6 +23,7 @@ use Magium\Util\Log\Logger;
 use Magium\Util\Api\Clairvoyant\Clairvoyant;
 use Magium\Util\Phpunit\MasterListener;
 use Magium\Util\TestCase\RegistrationListener;
+use Magium\WebDriver\LoggingRemoteExecuteMethod;
 use Magium\WebDriver\WebDriver;
 use PHPUnit_Framework_TestResult;
 use Zend\Di\Config;
@@ -74,43 +77,42 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
          * before the Magium namespace, thus, taking preference over the base namespace
          */
         self::addBaseNamespace('Magium');
-        $this->configureDi();
-        $this->di->instanceManager()->addSharedInstance(self::$masterListener, 'Magium\Util\Phpunit\MasterListener');
-
-        $rc = new \ReflectionClass($this);
-        while ($rc->getParentClass()) {
-            $class = $rc->getParentClass()->getName();
-            $this->di->instanceManager()->addSharedInstance($this, $class);
-            $rc = new \ReflectionClass($class);
-        }
-        $this->webdriver = $this->di->get('Magium\WebDriver\WebDriver');
-
-        $this->webdriver->setRemoteExecuteMethod($this->di->get('Magium\WebDriver\LoggingRemoteExecuteMethod'));
-
-        // This is going to be refactored in a completely backwards compatible way.  Currently, because the DiC is
-        // rebuilt for each request it doesn't maintain state between tests.  This is a good thing... except when
-        // something that understands it (the MasterListener) does restain state.
-
-        $clairvoyant = self::getMasterListener()->getListener('Magium\Util\Api\Clairvoyant\Clairvoyant');
-        if ($clairvoyant instanceof Clairvoyant) {
-            $this->di->instanceManager()->addSharedInstance($clairvoyant, get_class($clairvoyant));
-        } else {
-            $clairvoyant = $this->get('Magium\Util\Api\Clairvoyant\Clairvoyant');
-            self::getMasterListener()->addListener($clairvoyant);
-        }
-
-        /* @var $clairvoyant \Magium\Util\Api\Clairvoyant\Clairvoyant */
-        $clairvoyant->setApiRequest($this->get('Magium\Util\Api\Request'));
-        $clairvoyant->reset();
-        $clairvoyant->setSessionId($this->webdriver->getSessionID());
-        $clairvoyant->setCapability($this->testCaseConfigurationObject->getCapabilities());
-        $this->getLogger()->addWriter($clairvoyant);
-        $this->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_BROWSER, $this->webdriver->getBrowser());
-        $this->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_OPERATING_SYSTEM, $this->webdriver->getPlatform());
-
-
-        RegistrationListener::executeCallbacks($this);
+        $init = new Initializer($this->testCaseConfiguration, $this->testCaseConfigurationObject);
+        $init->initialize($this);
     }
+
+    /**
+     * @return Di
+     */
+    public function getDi()
+    {
+        return $this->di;
+    }
+
+    /**
+     * @param Di $di
+     */
+    public function setDi($di)
+    {
+        $this->di = $di;
+    }
+
+    /**
+     * @return WebDriver
+     */
+    public function getWebdriver()
+    {
+        return $this->webdriver;
+    }
+
+    /**
+     * @param WebDriver $webdriver
+     */
+    public function setWebdriver(WebDriver $webdriver)
+    {
+        $this->webdriver = $webdriver;
+    }
+
 
     public function __construct($name = null, array $data = [], $dataName = null, TestCaseConfiguration $configuration = null)
     {
@@ -118,87 +120,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         self::getMasterListener();
         parent::__construct($name, $data, $dataName);
 
-    }
-
-    protected function getDefaultConfiguration()
-    {
-        return [
-            'definition' => [
-                'class' => [
-                    'Magium\WebDriver\WebDriver' => [
-                        'instantiator' => 'Magium\WebDriver\WebDriverFactory::create'
-                    ],
-
-                    'Magium\WebDriver\WebDriverFactory' => [
-                        'create'       => $this->testCaseConfigurationObject->getWebDriverConfiguration()
-                    ]
-                ]
-            ],
-            'instance'  => [
-                'preference' => [
-                    'Zend\I18n\Translator\Translator' => ['Magium\Util\Translator\Translator']
-                ],
-                'Magium\Util\Translator\Translator' => [
-                    'parameters'    => [
-                        'locale'    => 'en_US'
-                    ]
-                ],
-                'Magium\Util\Log\Logger'   => [
-                    'parameters'    => [
-                        'options'   => [
-                            'writers' => [
-                                [
-                                    'name' => 'Zend\Log\Writer\Noop',
-                                    'options' => []
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ];
-    }
-
-    public function configureDi()
-    {
-        if (!$this->testCaseConfigurationObject instanceof TestCaseConfiguration) {
-            if ($this->di instanceof Di) {
-                $this->testCaseConfigurationObject = $this->get($this->testCaseConfiguration);
-            } else {
-                $this->testCaseConfigurationObject = new $this->testCaseConfiguration(
-                    new StandardConfigurationProvider(
-                        new ConfigurationReader(),
-                        new ClassConfigurationReader(),
-                        new EnvironmentConfigurationReader()
-                    )
-                    , new DefaultPropertyCollector()
-                );
-            }
-        }
-        /* @var $configuration TestCaseConfiguration */
-        $configArray = $this->getDefaultConfiguration();
-
-        $count = 0;
-
-        $path = realpath(__DIR__ . '/../');
-
-        while ($count++ < 5) {
-            $dir = "{$path}/configuration/";
-            if (is_dir($dir)) {
-                foreach (glob($dir . '*.php') as $file) {
-                    $configArray = array_merge_recursive($configArray, include $file);
-                }
-                break;
-            }
-            $path .= '/../';
-        }
-
-
-        $configArray = $this->testCaseConfigurationObject->reprocessConfiguration($configArray);
-        $configuration = new Config($configArray);
-
-        $this->di = new Di();
-        $configuration->configure($this->di);
     }
 
     public function setTestResultObject(PHPUnit_Framework_TestResult $result)
