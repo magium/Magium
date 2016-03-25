@@ -292,7 +292,7 @@ class Clairvoyant extends AbstractConfigurableElement implements WriterInterface
                 'type'      => self::TYPE_TEST_STATUS,
                 'value'    => self::TEST_STATUS_STARTED,
                 'class'     => get_class($test),
-                'name'      => $test->getName()
+                'name'      => $this->testName
             ]
         ]);
     }

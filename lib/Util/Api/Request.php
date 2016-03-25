@@ -19,6 +19,13 @@ class Request
         $this->apiConfiguration = $configuration;
     }
 
+    /**
+     * @param $method
+     * @param $url
+     * @param array|null $payload
+     * @return array|Response|null
+     */
+
     protected function doRequest($method, $url, array $payload = null)
     {
         if ($this->apiConfiguration->getEnabled()) {
@@ -46,16 +53,32 @@ class Request
         return null;
     }
 
+    /**
+     * @param Response $response
+     * @return mixed
+     */
+
     public function getPayload(Response $response)
     {
         $payload = json_decode($response->getBody(true), true);
         return $payload;
     }
 
+    /**
+     * @param $url
+     * @param array|null $data
+     * @return array|Response|null
+     */
+
     public function push($url, array $data = null)
     {
         return $this->doRequest('POST', $url, $data);
     }
+
+    /**
+     * @param $url
+     * @return array|Response|null
+     */
 
     public function fetch($url)
     {
