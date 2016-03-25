@@ -207,7 +207,7 @@ class Clairvoyant extends AbstractConfigurableElement implements WriterInterface
 
     public function shutdown()
     {
-        // Ignored.  Test data is pushed at the end of each test run.
+        $this->send(); // Final try, just in case (this should never actually send data)
     }
 
     public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
