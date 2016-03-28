@@ -94,6 +94,7 @@ class Menu extends AbstractExtractor
 
     public function extract()
     {
+        $this->baseXpath = $this->childXpath = null;
         if (!$this->path) {
             throw new MissingNavigationSchemeException('Missing the (translatable) navigation scheme in the format of "part1/part2."');
         }
