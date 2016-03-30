@@ -4,7 +4,7 @@ namespace Magium;
 
 use Magium\Util\Configuration\ConfigurableObjectInterface;
 use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
-use Magium\Util\Configuration\StandardConfigurationProvider;
+use Magium\Util\Configuration\ConfigurationProviderInterface;
 use Magium\Util\Translator\Translator;
 use Magium\Util\Translator\TranslatorAware;
 
@@ -13,7 +13,7 @@ abstract class AbstractConfigurableElement implements TranslatorAware, Configura
     protected $translator;
     protected $collector;
 
-    public function __construct(StandardConfigurationProvider $configurationProvider, DefaultPropertyCollector $collector)
+    public function __construct(ConfigurationProviderInterface $configurationProvider, DefaultPropertyCollector $collector)
     {
         $configurationProvider->configureObject($this);
         $this->collector = $collector;

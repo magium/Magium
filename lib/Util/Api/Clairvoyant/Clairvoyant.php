@@ -8,6 +8,7 @@ use Magium\AbstractTestCase;
 use Magium\Util\Api\ApiConfiguration;
 use Magium\Util\Api\Request;
 use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
+use Magium\Util\Configuration\ConfigurationProviderInterface;
 use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Log\Logger;
 use PHPUnit_Framework_AssertionFailedError;
@@ -61,7 +62,7 @@ class Clairvoyant extends AbstractConfigurableElement implements WriterInterface
     protected $characteristics = [];
 
     public function __construct(
-        StandardConfigurationProvider $configurationProvider,
+        ConfigurationProviderInterface $configurationProvider,
         DefaultPropertyCollector $collector,
         ApiConfiguration $apiConfiguration,
         Logger $logger)
