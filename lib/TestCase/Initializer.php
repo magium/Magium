@@ -188,5 +188,10 @@ class Initializer
         $di = new Di();
         $configuration->configure($di);
         $testCase->setDi($di);
+
+        $testCase->setTypePreference(
+            'Magium\Util\Configuration\ConfigurationProviderInterface',
+            'Magium\Util\Configuration\StandardConfigurationProvider'
+        );
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Magium\Util\Configuration;
 
-class BypassConfigurationProvider extends StandardConfigurationProvider
+class BypassConfigurationProvider implements ConfigurationProviderInterface
 {
     
     public function configureObject(ConfigurableObjectInterface $obj)

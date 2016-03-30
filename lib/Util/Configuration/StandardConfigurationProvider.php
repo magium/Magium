@@ -2,7 +2,7 @@
 
 namespace Magium\Util\Configuration;
 
-class StandardConfigurationProvider
+class StandardConfigurationProvider implements ConfigurationProviderInterface
 {
     protected $configurationFile;
 
