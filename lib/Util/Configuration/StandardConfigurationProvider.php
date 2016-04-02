@@ -22,7 +22,7 @@ class StandardConfigurationProvider implements ConfigurationProviderInterface
         $this->classConfigurationReader = $classConfigurationReader;
         $this->environmentConfigurationReader = $environmentConfigurationReader;
         $this->configurationDir = $configurationDir;
-        if (realpath($this->configurationDir) !== false) {
+        if ($this->configurationDir !== null && realpath($this->configurationDir) !== false) {
             $this->classConfigurationReader->setConfigurationDir($this->configurationDir);
         }
     }
