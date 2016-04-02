@@ -64,8 +64,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
          * before the Magium namespace, thus, taking preference over the base namespace
          */
         self::addBaseNamespace('Magium');
-        $init = new Initializer();
-        $init->initialize($this);
+        if (!$this->initializer instanceof Initializer) {
+            $this->initializer = new Initializer();
+        }
+        $this->initializer->initialize($this);
     }
 
     /**
