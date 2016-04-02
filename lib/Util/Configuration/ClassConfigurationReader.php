@@ -53,7 +53,7 @@ class ClassConfigurationReader
             }
         }
 
-        if (!$configurationDir) return;
+        if (!is_dir($configurationDir)) return;
 
         $configurationFile = get_class($config) . '.php';
         $configurationFile = $configurationDir . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $configurationFile);
