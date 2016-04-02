@@ -22,11 +22,13 @@ class StandardConfigurationProvider implements ConfigurationProviderInterface
         $this->classConfigurationReader = $classConfigurationReader;
         $this->environmentConfigurationReader = $environmentConfigurationReader;
         $this->configurationDir = $configurationDir;
+        if (realpath($this->configurationDir) !== false) {
+            $this->classConfigurationReader->setConfigurationDir($this->configurationDir);
+        }
     }
 
     public function configureObject(ConfigurableObjectInterface $obj)
     {
-        $this->classConfigurationReader->setConfigurationDir($this->configurationDir);
         $this->classConfigurationReader->configure($obj);
 
         $this->configurationReader->configure($obj);
