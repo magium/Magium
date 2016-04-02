@@ -78,14 +78,14 @@ class AbstractConfigurableElementTest extends AbstractTestCase
 
     public function testInclusion()
     {
-        $obj =  new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader(), __DIR__ . '/include-file.php'), new DefaultPropertyCollector());
+        $obj =  new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader(), __DIR__ . '/include'), new DefaultPropertyCollector());
         self::assertEquals(2, $obj->getValue());
         self::assertEquals(1, $obj->property);
     }
 
     public function testConfigurationProviderCanBeDisabled()
     {
-        $provider = new BypassConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader(), 'include-file.php');
+        $provider = new BypassConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader(), 'include');
         $obj =  new PropertyElement($provider, new DefaultPropertyCollector());
         self::assertNull($obj->getValue());
         self::assertEquals('original', $obj->property);

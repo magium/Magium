@@ -5,22 +5,22 @@ namespace Magium\Util\Configuration;
 class ClassConfigurationReader
 {
 
-    protected $configurationFile;
+    protected $configurationDir;
     protected $object;
 
     public function __construct(
-        $configurationFile = null
+        $configurationDir = null
     )
     {
-        $this->configurationFile = $configurationFile;
+        $this->configurationDir = $configurationDir;
     }
 
     /**
-     * @param null $configurationFile
+     * @param null $configurationDir
      */
-    public function setConfigurationFile($configurationFile)
+    public function setConfigurationDir($configurationDir)
     {
-        $this->configurationFile = $configurationFile;
+        $this->configurationDir = $configurationDir;
     }
 
 
@@ -38,27 +38,25 @@ class ClassConfigurationReader
     public function configure(ConfigurableObjectInterface $config)
     {
         $this->object = $config;
-        $configurationFile = $this->configurationFile;
-        if ($configurationFile === null) {
-            $configurationFile = get_class($config) . '.php';
-            $configurationFile = str_replace('\\', DIRECTORY_SEPARATOR, $configurationFile);
-
-            $count = 0;
+        $configurationDir = $this->configurationDir;
+        if ($configurationDir === null) {
             $path = realpath(__DIR__ . '/../');
-
+            $count = 0;
             while ($count++ < 10) {
                 $filename = "{$path}/configuration";
                 if (is_dir($filename)) {
-                    $filename .= '/' . $configurationFile;
-                    if (file_exists($filename)) {
-                        $configurationFile = realpath($filename);
-                        break;
-                    }
+                    $configurationDir = realpath($filename);
+                    break;
                 }
                 $path .= '/../';
                 $path = realpath($path); // More for debugging clarity.
             }
         }
+
+        if (!$configurationDir) return;
+
+        $configurationFile = get_class($config) . '.php';
+        $configurationFile = $configurationDir . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $configurationFile);
 
         if (file_exists($configurationFile)) {
             include $configurationFile;
