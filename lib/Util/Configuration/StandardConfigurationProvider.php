@@ -4,7 +4,7 @@ namespace Magium\Util\Configuration;
 
 class StandardConfigurationProvider implements ConfigurationProviderInterface
 {
-    protected $configurationFile;
+    protected $configurationDir;
 
     protected $classConfigurationReader;
 
@@ -16,17 +16,17 @@ class StandardConfigurationProvider implements ConfigurationProviderInterface
         ConfigurationReader $configurationReader,
         ClassConfigurationReader $classConfigurationReader,
         EnvironmentConfigurationReader $environmentConfigurationReader,
-        $configurationFile = null)
+        $configurationDir = null)
     {
         $this->configurationReader = $configurationReader;
         $this->classConfigurationReader = $classConfigurationReader;
         $this->environmentConfigurationReader = $environmentConfigurationReader;
-        $this->configurationFile = $configurationFile;
+        $this->configurationDir = $configurationDir;
     }
 
     public function configureObject(ConfigurableObjectInterface $obj)
     {
-        $this->classConfigurationReader->setConfigurationFile($this->configurationFile);
+        $this->classConfigurationReader->setConfigurationDir($this->configurationDir);
         $this->classConfigurationReader->configure($obj);
 
         $this->configurationReader->configure($obj);
