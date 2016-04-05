@@ -2,6 +2,7 @@
 
 namespace Magium\Assertions;
 
+use Magium\AbstractTestCase;
 use Magium\Assertions\Element\AbstractSelectorAssertion;
 use Magium\Util\Log\Logger;
 
@@ -11,13 +12,15 @@ class LoggingAssertionExecutor
     const ASSERTION = 'LoggingAssertionExecutor';
 
     protected $logger;
+    protected $testCase;
 
     public function __construct(
-        Logger $logger
-
+        Logger $logger,
+        AbstractTestCase $testCase
     )
     {
         $this->logger = $logger;
+        $this->testCase = $testCase;
     }
 
     public function execute(AbstractAssertion $assertion, array $extra = [])
@@ -34,7 +37,7 @@ class LoggingAssertionExecutor
             $this->logger->logAssertionSuccess( $assertion, $extra );
         } catch (\Exception $e) {
             $this->logger->logAssertionFailure($e, $assertion, $extra);
-            throw $e;
+            $this->testCase->fail($e->getMessage());
         }
     }
 

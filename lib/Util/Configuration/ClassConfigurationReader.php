@@ -45,12 +45,14 @@ class ClassConfigurationReader
             while ($count++ < 10) {
                 $filename = "{$path}/configuration";
                 $realpath = realpath($filename);
-                $parts = explode(DIRECTORY_SEPARATOR, $realpath);
-                $lastPart = array_pop($parts);
-                // The equality check is due to case-insensitive file systems *ahem* Windows
-                if ($lastPart == 'configuration' && is_dir($realpath)) {
-                    $configurationDir = $realpath;
-                    break;
+                if ($realpath !== false && is_dir($realpath)) {
+                    $parts = explode(DIRECTORY_SEPARATOR, $realpath);
+                    $lastPart = array_pop($parts);
+                    // The equality check is due to case-insensitive file systems *ahem* Windows
+                    if ($lastPart == 'configuration') {
+                        $configurationDir = $realpath;
+                        break;
+                    }
                 }
                 $path .= '/../';
                 $path = realpath($path); // More for debugging clarity.
