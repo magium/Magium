@@ -56,7 +56,7 @@ class MasterListener implements \PHPUnit_Framework_TestListener
 
     public function bindToResult(\PHPUnit_Framework_TestResult $result)
     {
-        if (!$this->result instanceof \PHPUnit_Framework_TestResult) {
+        if ($this->result !== $result) {
             $this->result = $result;
             $result->addListener($this);
         }
