@@ -53,6 +53,14 @@ class Initializer
         $webDriver = $testCase->getDi()->get('Magium\WebDriver\WebDriver');
         if ($webDriver instanceof WebDriver) {
             $testCase->setWebdriver($webDriver);
+            $testCase->setTypePreference(
+                'Facebook\WebDriver\WebDriver',
+                'Magium\WebDriver\WebDriver'
+            );
+            $testCase->setTypePreference(
+                'Facebook\WebDriver\RemoteWebDriver',
+                'Magium\WebDriver\WebDriver'
+            );
         } else {
             throw new InvalidConfigurationException('DIC has misconfigured WebDriver object');
         }
