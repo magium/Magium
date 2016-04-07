@@ -9,7 +9,10 @@ class EnvironmentConfigurationReader
     {
         $variablePrefix = 'MAGIUM_' . str_replace('\\', '_', strtoupper(get_class($config))) . '_';
 
-        foreach ($_ENV as $key => $value) {
+        // Fixes https://github.com/magium/Magium/issues/114
+        $props = array_merge($_SERVER, $_ENV);
+
+        foreach ($props as $key => $value) {
             if (strpos($key, $variablePrefix) === 0) {
                 $property = substr($key, strlen($variablePrefix));
                 $config->set($property, $value);
