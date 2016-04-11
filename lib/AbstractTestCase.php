@@ -150,9 +150,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         parent::tearDown();
         if ($this->webdriver instanceof WebDriver) {
             try {
-                do {
-                    $this->webdriver->close();
-                } while ($this->webdriver->getWindowHandle());
+                $this->webdriver->close();
             } catch (\Exception $e) {
                 // All closed
             }
