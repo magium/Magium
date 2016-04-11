@@ -149,16 +149,16 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
         parent::tearDown();
         if ($this->webdriver instanceof WebDriver) {
-            error_log('Stopping webdriver');
-            while ($this->webdriver->getWindowHandles()) {
-                $this->webdriver->close();
+            try {
+                do {
+                    $this->webdriver->close();
+                } while ($this->webdriver->getWindowHandle());
+            } catch (\Exception $e) {
+                // All closed
             }
 
             $this->webdriver->quit();
             $this->webdriver = null;
-            error_log('Webdriver stopped');
-        } else {
-            error_log('no webdriver to stop');
         }
     }
 
