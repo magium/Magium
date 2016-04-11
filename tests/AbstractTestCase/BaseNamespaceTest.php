@@ -21,8 +21,6 @@ namespace Tests\Magium\AbstractTestCase
             self::assertInstanceOf('ArbitraryNamespace\Navigators\TestNavigator', $this->getNavigator('TestNavigator'));
         }
 
-
-
     }
 }
 
