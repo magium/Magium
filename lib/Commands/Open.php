@@ -22,9 +22,21 @@ class Open
     
     public function open($url)
     {
-        $this->logger->info(sprintf('Opening URL %s', $url));
+        $this->logger->info(
+            sprintf('Opening URL %s', $url),
+            [
+                'activity'  => 'open',
+                'url'       => $url
+            ]
+        );
         $this->webdriver->get($url);
-        $this->logger->info(sprintf('URL %s has been opened', $url));
+        $this->logger->info(
+            sprintf('URL %s has been opened', $url),
+            [
+                'activity'  => 'open',
+                'url'       => $url
+            ]
+        );
         // This is done because firefox does not always scroll the admin menus into view.
         // TODO - find a better way to beat Firefox into submission.
         $this->webdriver->manage()->window()->maximize();
