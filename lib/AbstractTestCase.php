@@ -156,7 +156,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             }
 
             $this->webdriver->quit();
-            $this->sleep('1s');
             $this->webdriver = null;
         }
     }

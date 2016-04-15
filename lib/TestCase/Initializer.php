@@ -24,7 +24,7 @@ class Initializer
 
     protected $testCaseConfiguration = 'Magium\TestCaseConfiguration';
     protected $testCaseConfigurationObject;
-
+    protected $initialized;
 
     public function __construct(
         $testCaseConfigurationType = null,
@@ -39,8 +39,11 @@ class Initializer
         }
     }
 
-    public function initialize(AbstractTestCase $testCase)
+    public function initialize(AbstractTestCase $testCase, $force = false)
     {
+        if ($this->initialized === $testCase && !$force) {
+            return;
+        }
         $this->configureDi($testCase);
         $testCase->getDi()->instanceManager()->addSharedInstance(AbstractTestCase::getMasterListener(), 'Magium\Util\Phpunit\MasterListener');
 
@@ -91,6 +94,7 @@ class Initializer
         $testCase->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_OPERATING_SYSTEM, $testCase->getWebdriver()->getPlatform());
 
         RegistrationListener::executeCallbacks($testCase);
+        $this->initialized = $testCase;
     }
 
 
