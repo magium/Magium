@@ -30,6 +30,13 @@ class MasterListener implements \PHPUnit_Framework_TestListener
         }
     }
 
+    public function clear()
+    {
+        $this->replay = [];
+        $this->listeners = [];
+        $this->result = null;
+    }
+
     public function addListener(\PHPUnit_Framework_TestListener $listener)
     {
         foreach ($this->listeners as $existingListener) {
