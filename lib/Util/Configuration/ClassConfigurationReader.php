@@ -46,12 +46,15 @@ class ClassConfigurationReader
                 $filename = "{$path}/configuration";
                 $realpath = realpath($filename);
                 if ($realpath !== false && is_dir($realpath)) {
-                    $parts = explode(DIRECTORY_SEPARATOR, $realpath);
-                    $lastPart = array_pop($parts);
-                    // The equality check is due to case-insensitive file systems *ahem* Windows
-                    if ($lastPart == 'configuration') {
-                        $configurationDir = $realpath;
-                        break;
+                    // The equality check is due to case-insensitive file systems *ahem* Windows and OS X HFS+
+                    $directories = glob(realpath($filename.'/../').'/*', GLOB_ONLYDIR);
+                    foreach ($directories as $directory) {
+                        $parts = explode(DIRECTORY_SEPARATOR, $directory);
+                        $lastPart = array_pop($parts);
+                        if ($lastPart == 'configuration') {
+                            $configurationDir = $realpath;
+                            break;
+                        }
                     }
                 }
                 $path .= '/../';
