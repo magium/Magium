@@ -40,7 +40,7 @@ class ClassConfigurationReader
         $this->object = $config;
         $configurationDir = $this->configurationDir;
         if ($configurationDir === null) {
-            $path = realpath(__DIR__ . '/../');
+            $path = realpath(__DIR__ . '/../../../../..'); // Get out of the Magium directories
             $count = 0;
             while ($count++ < 10) {
                 $filename = "{$path}/configuration";
