@@ -51,6 +51,18 @@ class AssetIsCachedTest extends AbstractTestCase
         $assertion->setAssetUrl('/skin/frontend/rwd/default/images/media/logo.png');
         $assertion->assert();
     }
+    public function testCacheDetectedWithActualSite()
+    {
+
+        $this->commandOpen('http://magento.magiumlib.com/');
+
+        $this->webdriver->byCssSelector('a.logo')->click();
+
+        $assertion = $this->getAssertion(AssetIsCached::ASSERTION);
+        /* @var $assertion AssetIsCached */
+        $assertion->setAssetUrl('/skin/frontend/rwd/default/images/media/logo.png');
+        $assertion->assert();
+    }
 
     public function testCacheNotDetectedWithNoHost()
     {
