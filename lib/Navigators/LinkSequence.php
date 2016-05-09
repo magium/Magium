@@ -41,7 +41,14 @@ class LinkSequence
 
     public function navigateTo($path, $clickToSelect = false)
     {
-        $parts = explode('/', $path);
+        // Split on "/" but allow "/" in names by escaping it with "\"
+        $parts = preg_split('|(?<!\\\)/|', $path);
+        array_walk(
+            $parts,
+            function(&$item) {
+                $item = str_replace('\\/', '/', $item);
+            }
+        );
         if (count($parts) == 0) {
             throw new InvalidInstructionException('The path must have at least one link to click on');
         }
