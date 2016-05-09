@@ -40,7 +40,15 @@ class ClassConfigurationReader
         $this->object = $config;
         $configurationDir = $this->configurationDir;
         if ($configurationDir === null) {
-            $path = realpath(__DIR__ . '/../../../../..'); // Get out of the Magium directories
+            $testParts = explode(DIRECTORY_SEPARATOR, realpath(__DIR__.'/../../..'));
+            $isVendor = array_pop($testParts) == 'vendor';
+
+            if ($isVendor) {
+                $path = realpath(__DIR__ . '/../../../../..'); // Get out of the Magium directories
+            } else {
+                $path = realpath(__DIR__ . '/../../..');
+            }
+
             $count = 0;
             while ($count++ < 10) {
                 $filename = "{$path}/configuration";
@@ -49,11 +57,12 @@ class ClassConfigurationReader
                     // The equality check is due to case-insensitive file systems *ahem* Windows and OS X HFS+
                     $directories = glob(realpath($filename.'/../').'/*', GLOB_ONLYDIR);
                     foreach ($directories as $directory) {
+                        $directory = realpath($directory);
                         $parts = explode(DIRECTORY_SEPARATOR, $directory);
                         $lastPart = array_pop($parts);
                         if ($lastPart == 'configuration') {
                             $configurationDir = $realpath;
-                            break;
+                            break 2;
                         }
                     }
                 }
