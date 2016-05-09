@@ -12,6 +12,9 @@ class LogEmpty extends AbstractAssertion
     public function assert()
     {
         $log = $this->webDriver->manage()->getLog('browser');
+        foreach ($log as $l) {
+            $this->logger->err('Message found: ' . serialize($l));
+        }
         $this->testCase->assertCount(0, $log);
     }
 
