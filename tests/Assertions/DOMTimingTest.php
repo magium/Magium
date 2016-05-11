@@ -10,12 +10,12 @@ use Magium\Assertions\Browser\TTFBLoadedLessThan;
 class DOMTiming extends AbstractTestCase
 {
 
-    public function testDOMContentLoadedLessThanInLessThanFiveSecondsPasses()
+    public function testDOMContentLoadedLessThanInLessThanTenSecondsPasses()
     {
         $this->commandOpen('http://www.magiumlib.com/');
         $assertion = $this->getAssertion(DOMContentLoadedLessThan::ASSERTION);
         /* @var $assertion DOMContentLoadedLessThan */
-        $assertion->setMaxElapsedMilliseconds(5000);
+        $assertion->setMaxElapsedMilliseconds(10000);
         $assertion->assert();
     }
 
@@ -29,12 +29,12 @@ class DOMTiming extends AbstractTestCase
         $assertion->assert();
     }
 
-    public function testPageLoadedInLessThanFiveSecondsPasses()
+    public function testPageLoadedInLessThanTenSecondsPasses()
     {
         $this->commandOpen('http://www.magiumlib.com/');
         $assertion = $this->getAssertion(DOMPageLoadedLessThan::ASSERTION);
         /* @var $assertion DOMPageLoadedLessThan */
-        $assertion->setMaxElapsedMilliseconds(5000);
+        $assertion->setMaxElapsedMilliseconds(10000);
         $assertion->assert();
     }
 
@@ -48,12 +48,12 @@ class DOMTiming extends AbstractTestCase
         $assertion->assert();
     }
 
-    public function testTTFBInLessThanFiveSecondsPasses()
+    public function testTTFBInLessThanTenSecondsPasses()
     {
         $this->commandOpen('http://www.magiumlib.com/');
         $assertion = $this->getAssertion(TTFBLoadedLessThan::ASSERTION);
         /* @var $assertion TTFBLoadedLessThan */
-        $assertion->setMaxElapsedMilliseconds(5000);
+        $assertion->setMaxElapsedMilliseconds(10000);
         $assertion->assert();
     }
 
