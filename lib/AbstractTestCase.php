@@ -201,7 +201,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
             $class = "{$prefix}\\{$class}";
         }
         foreach (self::$baseNamespaces as $namespace) {
-            if (strpos($namespace, $class) === 0) {
+            if (strpos($class, $namespace) === 0) {
                 // We have a fully qualified class name
                 return $class;
             }
