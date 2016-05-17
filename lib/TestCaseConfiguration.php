@@ -43,8 +43,6 @@ class TestCaseConfiguration extends AbstractConfigurableElement
         return $this->capabilities;
     }
 
-    
-
     public function reprocessConfiguration(array $config)
     {
         return $config;
