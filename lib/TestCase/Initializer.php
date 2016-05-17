@@ -201,9 +201,16 @@ class Initializer
         $configuration->configure($di);
         $testCase->setDi($di);
 
+        $this->setConfigurationProvider($testCase);
+    }
+
+    public function setConfigurationProvider(AbstractTestCase $testCase)
+    {
         $testCase->setTypePreference(
             'Magium\Util\Configuration\ConfigurationProviderInterface',
             'Magium\Util\Configuration\StandardConfigurationProvider'
         );
+
     }
+
 }
