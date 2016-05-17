@@ -35,8 +35,10 @@ class EspanolChromeInitializer extends Initializer
         if ($capabilitities instanceof DesiredCapabilities) {
             /*
              * Following is browser-specific functionality.  Non-browser-generic commands can be set here.  This example
-             * changes the language for the browser to Spanish
+             * changes the language for the browser to Spanish.
              *
+             * The code for the HTML page is
+             * <html><body><?php echo $_SERVER['HTTP_ACCEPT_LANGUAGE']; ?></body></html>
              */
             $options = new ChromeOptions();
             $options->addArguments(['--lang=es']);
