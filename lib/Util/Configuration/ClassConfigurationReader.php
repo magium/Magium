@@ -31,7 +31,7 @@ class ClassConfigurationReader
 
     public function __call($method, $args)
     {
-        call_user_func_array([$this->object, $method], $args);
+        return call_user_func_array([$this->object, $method], $args);
     }
 
 
