@@ -10,7 +10,7 @@ class BrowserLogTest extends AbstractTestCase
 
     public function testLogIsEmpty()
     {
-        $file = $filename = tempnam(sys_get_temp_dir(), 'cached').'.html';
+        $file = tempnam(sys_get_temp_dir(), 'cached').'.html';
         file_put_contents($file, <<<HTML
 <html><body><p>This is a wonderful test!</p></body></html>
 HTML
@@ -25,9 +25,9 @@ HTML
 
     public function testLogIsNotEmpty()
     {
-        $file = $filename = tempnam(sys_get_temp_dir(), 'cached').'.html';
+        $file = tempnam(sys_get_temp_dir(), 'cached').'.html';
         file_put_contents($file, <<<HTML
-<html><body><p>This is a wonderful test!</p><img src="boogers"></body></html>
+<htm l><body><p>This is a wonderful test!</p><img src="boogers"></body></html>
 HTML
         );
         $this->commandOpen('file://' . $file);
