@@ -85,7 +85,9 @@ class SetFormValue
     protected function setSelect(WebDriverElement $element, $value)
     {
         $select = new WebDriverSelect($element);
-        $select->deselectAll();
+        if ($select->isMultiple()) {
+            $select->deselectAll();
+        }
         if (!is_array($value)) {
             $value = [$value];
         }
