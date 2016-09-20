@@ -94,6 +94,9 @@ class InstructionNavigator
                     $element = $this->webdriver->byXpath($xpath);
                     $this->webdriver->wait()->until(ExpectedCondition::visibilityOf($element));
                     break;
+                case self::INSTRUCTION_PAUSE:
+                    $this->testCase->sleep($xpath);
+                    break;
                 case self::INSTRUCTION_WAIT_FOR_HIDDEN:
                     $element = $this->webdriver->byXpath($xpath);
                     $this->webdriver->wait()->until(
