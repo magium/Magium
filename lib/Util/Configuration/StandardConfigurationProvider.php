@@ -2,6 +2,8 @@
 
 namespace Magium\Util\Configuration;
 
+use Zend\Di\Di;
+
 class StandardConfigurationProvider implements ConfigurationProviderInterface
 {
     protected $configurationDir;
@@ -25,6 +27,14 @@ class StandardConfigurationProvider implements ConfigurationProviderInterface
         if ($this->configurationDir !== null && realpath($this->configurationDir) !== false) {
             $this->classConfigurationReader->setConfigurationDir($this->configurationDir);
         }
+    }
+
+    public function configureDi(Di $di)
+    {
+        $di->instanceManager()->addSharedInstance($this->configurationReader,               get_class($this->configurationReader));
+        $di->instanceManager()->addSharedInstance($this->classConfigurationReader,          get_class($this->classConfigurationReader));
+        $di->instanceManager()->addSharedInstance($this->environmentConfigurationReader,    get_class($this->environmentConfigurationReader));
+        $di->instanceManager()->addSharedInstance($this,                                    get_class($this));
     }
 
     public function configureObject(ConfigurableObjectInterface $obj)

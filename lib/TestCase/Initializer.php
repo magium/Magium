@@ -9,6 +9,7 @@ use Magium\Util\Api\Clairvoyant\Clairvoyant;
 use Magium\Util\Api\Request;
 use Magium\Util\Configuration\ClassConfigurationReader;
 use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
+use Magium\Util\Configuration\ConfigurationProviderInterface;
 use Magium\Util\Configuration\ConfigurationReader;
 use Magium\Util\Configuration\EnvironmentConfigurationReader;
 use Magium\Util\Configuration\StandardConfigurationProvider;
@@ -25,10 +26,12 @@ class Initializer
     protected $testCaseConfiguration = 'Magium\TestCaseConfiguration';
     protected $testCaseConfigurationObject;
     protected $initialized;
+    protected $configurationProvider;
 
     public function __construct(
         $testCaseConfigurationType = null,
-        TestCaseConfiguration $object = null
+        TestCaseConfiguration $object = null,
+        ConfigurationProviderInterface $configurationProvider = null
     )
     {
         if ($testCaseConfigurationType !== null) {
@@ -37,6 +40,16 @@ class Initializer
         if ($object instanceof TestCaseConfiguration) {
             $this->testCaseConfigurationObject = $object;
         }
+
+        $this->configurationProvider = $configurationProvider;
+        if (!$this->configurationProvider instanceof ConfigurationProviderInterface) {
+            $this->configurationProvider = new StandardConfigurationProvider(
+                new ConfigurationReader(),
+                new ClassConfigurationReader(),
+                new EnvironmentConfigurationReader()
+            );
+        }
+
     }
 
     public function initialize(AbstractTestCase $testCase, $force = false)
@@ -155,6 +168,7 @@ class Initializer
 
     public function configureDi(AbstractTestCase $testCase)
     {
+
         if (!$this->testCaseConfigurationObject instanceof TestCaseConfiguration) {
             if ($testCase->getDi() instanceof Di) {
                 $testCaseConfiguration = $testCase->get($this->testCaseConfiguration);
@@ -163,11 +177,7 @@ class Initializer
                 }
             } else {
                 $this->testCaseConfigurationObject = new $this->testCaseConfiguration(
-                    new StandardConfigurationProvider(
-                        new ConfigurationReader(),
-                        new ClassConfigurationReader(),
-                        new EnvironmentConfigurationReader()
-                    )
+                    $this->configurationProvider
                     , new DefaultPropertyCollector()
                 );
             }
@@ -210,6 +220,7 @@ class Initializer
             'Magium\Util\Configuration\ConfigurationProviderInterface',
             'Magium\Util\Configuration\StandardConfigurationProvider'
         );
+        $this->configurationProvider->configureDi($testCase->getDi());
 
     }
 
