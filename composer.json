@@ -25,7 +25,7 @@
     "zendframework/zend-cache": "^2.5.3",
     "symfony/console": "~2.5",
     "zendframework/zend-config": "2.6.0",
-    "zendframework/zend-json": "2.6.1",
+    "zendframework/zend-json": "^2.6.1",
     "jeremykendall/query-auth": "^3.0",
     "guzzle/guzzle": "^3.9"
   },
