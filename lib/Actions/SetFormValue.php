@@ -9,7 +9,7 @@ use Magium\NotFoundException;
 use Magium\WebDriver\FastSelectElement;
 use Magium\WebDriver\WebDriver;
 
-class SetFormValue
+class SetFormValue implements ActionInterface
 {
     const ACTION = "SetFormValue";
 

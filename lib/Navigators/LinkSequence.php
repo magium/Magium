@@ -7,11 +7,10 @@ use Facebook\WebDriver\WebDriverElement;
 use Magium\AbstractTestCase;
 use Magium\InvalidInstructionException;
 use Magium\Util\Log\Logger;
-use Magium\Util\Log\LoggerAware;
 use Magium\Util\Translator\Translator;
 use Magium\WebDriver\WebDriver;
 
-class LinkSequence
+class LinkSequence implements NavigatorInterface
 {
     const NAVIGATOR = 'LinkSequence';
 
