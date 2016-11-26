@@ -6,7 +6,7 @@ use Magium\Util\Log\Logger;
 use Magium\WebDriver\WebDriver;
 
 
-class Open
+class Open implements CommandInterface
 {
     protected $webdriver;
     protected $logger;
