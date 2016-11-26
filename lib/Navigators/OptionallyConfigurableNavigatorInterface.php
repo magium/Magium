@@ -2,7 +2,7 @@
 
 namespace Magium\Navigators;
 
-interface ConfigurableNavigatorInterface extends NavigatorInterface
+interface OptionallyConfigurableNavigatorInterface extends NavigatorInterface
 {
 
     public function navigateTo($instructions = null);
