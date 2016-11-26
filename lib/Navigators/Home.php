@@ -6,7 +6,7 @@ use Magium\Actions\WaitForPageLoaded;
 use Magium\Themes\BaseThemeInterface;
 use Magium\WebDriver\WebDriver;
 
-class Home
+class Home implements StaticNavigatorInterface
 {
 
     const NAVIGATOR = 'Home';

@@ -2,16 +2,13 @@
 
 namespace Magium\Navigators;
 
-use Facebook\WebDriver\Exception\ElementNotVisibleException;
-use Facebook\WebDriver\WebDriverBy;
 use Magium\AbstractTestCase;
 use Magium\Actions\WaitForPageLoaded;
 use Magium\InvalidConfigurationException;
-use Magium\Themes\ThemeConfigurationInterface;
 use Magium\WebDriver\ExpectedCondition;
 use Magium\WebDriver\WebDriver;
 
-class InstructionNavigator
+class InstructionNavigator implements NavigatorInterface
 {
     const NAVIGATOR = 'InstructionNavigator';
 
