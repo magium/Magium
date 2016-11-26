@@ -18,6 +18,17 @@ SCRIPT
         $this->assertElementClickable('clickme');
     }
 
+    public function testElementDisplayed()
+    {
+        $this->writePage(
+            <<<SCRIPT
+<div><button id="clickme">Text</button></div>
+SCRIPT
+
+        );
+        $this->assertElementDisplayed('clickme');
+    }
+
     public function testElementDisplayedAndNotClickable()
     {
         $this->writePage(
@@ -39,7 +50,7 @@ SCRIPT
 SCRIPT
 
         );
-        $this->assertElementClickable('clickme');
+        $this->assertElementNotDisplayed('clickme');
     }
 
 
