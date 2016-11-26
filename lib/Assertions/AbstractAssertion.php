@@ -10,7 +10,7 @@ use Magium\Util\Log\LoggerAware;
 use Magium\WebDriver\WebDriver;
 use Magium\WebDriver\WebDriverAware;
 
-abstract class AbstractAssertion implements LoggerAware, TestCaseAware, WebDriverAware
+abstract class AbstractAssertion implements LoggerAware, TestCaseAware, WebDriverAware, AssertionInterface
 {
     /**
      * @var Logger
@@ -58,6 +58,4 @@ abstract class AbstractAssertion implements LoggerAware, TestCaseAware, WebDrive
         return $this->testCase;
     }
 
-
-    abstract public function assert();
 }
