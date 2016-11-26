@@ -2,6 +2,8 @@
 
 namespace Magium\Navigators;
 
+use Facebook\WebDriver\Exception\ElementNotVisibleException;
+use Facebook\WebDriver\WebDriverBy;
 use Magium\AbstractTestCase;
 use Magium\Actions\WaitForPageLoaded;
 use Magium\InvalidConfigurationException;

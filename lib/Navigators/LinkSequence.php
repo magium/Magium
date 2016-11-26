@@ -2,6 +2,8 @@
 
 namespace Magium\Navigators;
 
+use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverElement;
 use Magium\AbstractTestCase;
 use Magium\InvalidInstructionException;
 use Magium\Util\Log\Logger;
