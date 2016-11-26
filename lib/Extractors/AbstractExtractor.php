@@ -6,7 +6,7 @@ use Magium\AbstractTestCase;
 use Magium\Themes\ThemeConfigurationInterface;
 use Magium\WebDriver\WebDriver;
 
-abstract class AbstractExtractor
+abstract class AbstractExtractor implements ExtractorInterface
 {
 
     protected $values = [];
@@ -45,5 +45,4 @@ abstract class AbstractExtractor
         return null;
     }
 
-    abstract public function extract();
 }
