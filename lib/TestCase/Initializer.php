@@ -171,6 +171,7 @@ class Initializer
 
         if (!$this->testCaseConfigurationObject instanceof TestCaseConfiguration) {
             if ($testCase->getDi() instanceof Di) {
+
                 $testCaseConfiguration = $testCase->get($this->testCaseConfiguration);
                 if ($testCaseConfiguration instanceof TestCaseConfiguration) {
                     $this->testCaseConfigurationObject = $testCaseConfiguration;
@@ -210,6 +211,7 @@ class Initializer
         $di = new Di();
         $configuration->configure($di);
         $testCase->setDi($di);
+        $di->instanceManager()->addSharedInstance($di, Di::class);
 
         $this->setConfigurationProvider($testCase);
     }

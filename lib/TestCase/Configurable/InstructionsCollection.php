@@ -2,7 +2,7 @@
 
 namespace Magium\TestCase\Configurable;
 
-use Interop\Container\ContainerInterface;
+use Zend\Di\Di;
 
 class InstructionsCollection
 {
@@ -12,7 +12,7 @@ class InstructionsCollection
     protected $interpolator;
 
     public function __construct(
-        ContainerInterface $container,
+        Di $container,
         Interpolator $interpolator
     )
     {
