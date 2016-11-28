@@ -5,6 +5,7 @@ namespace Magium;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Magium\Assertions\Element\Clickable;
+use Magium\Assertions\Element\Displayed;
 use Magium\Assertions\Element\Exists;
 use Magium\Assertions\Element\NotClickable;
 use Magium\Assertions\Element\NotDisplayed;
@@ -269,7 +270,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string $name
-     * @return \Magium\Magento\Identities\AbstractEntity
+     * @return \Magium\Identities\NameInterface
      */
 
     public function getIdentity($name = 'Customer')
@@ -282,7 +283,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     /**
      *
      * @param string $navigator
-     * @return \Magium\Magento\Navigators\BaseMenuNavigator
+     * @return \Magium\Navigators\NavigatorInterface
      */
 
     public function getNavigator($navigator = 'BaseMenu')
@@ -429,20 +430,12 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public function assertElementDisplayed($selector, $by = 'byId')
     {
-        $this->elementAssertion($selector, $by, NotDisplayed::ASSERTION);
+        $this->elementAssertion($selector, $by, Displayed::ASSERTION);
     }
 
     public function assertElementNotDisplayed($selector, $by = 'byId')
     {
-        try {
-            $this->assertElementExists($selector, $by);
-            self::assertFalse(
-                $this->webdriver->$by($selector)->isDisplayed(),
-                sprintf('The element: %s, is displayed and it should not have been', $selector)
-            );
-        } catch (\Exception $e) {
-            $this->fail(sprintf('Element "%s" cannot be found using selector "%s"', $selector, $by));
-        }
+        $this->elementAssertion($selector, $by, NotDisplayed::ASSERTION);
     }
 
     public function assertElementNotExists($selector, $by = 'byId')

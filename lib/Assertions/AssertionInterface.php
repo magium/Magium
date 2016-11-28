@@ -2,7 +2,7 @@
 
 namespace Magium\Assertions;
 
-interface AssertionInterface
+interface AssertionInterface extends AssertInterface
 {
 
     public function assert();
