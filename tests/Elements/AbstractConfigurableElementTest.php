@@ -83,6 +83,18 @@ class AbstractConfigurableElementTest extends AbstractTestCase
         self::assertEquals(1, $obj->property);
     }
 
+    public function testInclusionRecursion()
+    {
+        /*
+         * This test is different from the previous one because the RecursivePropertyElement extends PropertyElement
+         * and so this is testing the recursive functionality in the abstract configurable class.  So the test result
+         * *should* be the same, but the value is retrieved by descending through the class hierarchy.
+         */
+        $obj =  new RecursivePropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader(), __DIR__ . '/include'), new DefaultPropertyCollector());
+        self::assertEquals(2, $obj->getValue());
+        self::assertEquals(1, $obj->property);
+    }
+
     public function testConfigurationProviderCanBeDisabled()
     {
         $provider = new BypassConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader(), 'include');
@@ -137,3 +149,6 @@ class PropertyElement extends AbstractConfigurableElement
         return $this->value;
     }
 }
+
+
+class RecursivePropertyElement extends PropertyElement {}
