@@ -52,20 +52,18 @@ class Initializer
 
     }
 
-    public function initialize(AbstractTestCase $testCase, $force = false)
+    protected function injectTestCaseHierarchy(AbstractTestCase $testCase)
     {
-        if ($this->initialized === $testCase && !$force) {
-            return;
-        }
-        $this->configureDi($testCase);
-        $testCase->getDi()->instanceManager()->addSharedInstance(AbstractTestCase::getMasterListener(), 'Magium\Util\Phpunit\MasterListener');
-
         $rc = new \ReflectionClass($testCase);
         while ($rc->getParentClass()) {
             $class = $rc->getParentClass()->getName();
             $testCase->getDi()->instanceManager()->addSharedInstance($testCase, $class);
             $rc = new \ReflectionClass($class);
         }
+    }
+
+    protected function configureWebDriver(AbstractTestCase $testCase)
+    {
         $webDriver = $testCase->getDi()->get('Magium\WebDriver\WebDriver');
         if ($webDriver instanceof WebDriver) {
             $testCase->setWebdriver($webDriver);
@@ -80,17 +78,23 @@ class Initializer
         } else {
             throw new InvalidConfigurationException('DIC has misconfigured WebDriver object');
         }
+    }
 
+    protected function initLoggingExecutor(AbstractTestCase $testCase)
+    {
         $remote = $testCase->getDi()->get('Magium\WebDriver\LoggingRemoteExecuteMethod');
         if ($remote instanceof LoggingRemoteExecuteMethod) {
             $testCase->getWebdriver()->setRemoteExecuteMethod($remote);
         } else {
             throw new InvalidConfigurationException('DIC has invalid logger configured');
         }
+    }
 
+    protected function configureClairvoyant(AbstractTestCase $testCase)
+    {
         // This is going to be refactored in a completely backwards compatible way.  Currently, because the DiC is
         // rebuilt for each request it doesn't maintain state between tests.  This is a good thing... except when
-        // something that understands it (the MasterListener) does restain state.
+        // something that understands it (the MasterListener) does retain state.
 
         $clairvoyant = $this->initClairvoyant($testCase);
 
@@ -103,10 +107,37 @@ class Initializer
         $clairvoyant->setSessionId($testCase->getWebdriver()->getSessionID());
         $clairvoyant->setCapability($this->testCaseConfigurationObject->getCapabilities());
         $testCase->getLogger()->addWriter($clairvoyant);
+    }
+
+    protected function executeCallbacks(AbstractTestCase $testCase)
+    {
+        RegistrationListener::executeCallbacks($testCase);
+    }
+
+    protected function setCharacteristics(AbstractTestCase $testCase)
+    {
         $testCase->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_BROWSER, $testCase->getWebdriver()->getBrowser());
         $testCase->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_OPERATING_SYSTEM, $testCase->getWebdriver()->getPlatform());
+    }
 
-        RegistrationListener::executeCallbacks($testCase);
+    protected function attachMasterListener(AbstractTestCase $testCase)
+    {
+        $testCase->getDi()->instanceManager()->addSharedInstance(AbstractTestCase::getMasterListener(), 'Magium\Util\Phpunit\MasterListener');
+    }
+
+    public function initialize(AbstractTestCase $testCase, $force = false)
+    {
+        if ($this->initialized === $testCase && !$force) {
+            return;
+        }
+        $this->configureDi($testCase);
+        $this->attachMasterListener($testCase);
+        $this->injectTestCaseHierarchy($testCase);
+        $this->configureWebDriver($testCase);
+        $this->initLoggingExecutor($testCase);
+        $this->configureClairvoyant($testCase);
+        $this->setCharacteristics($testCase);
+        $this->executeCallbacks($testCase);
         $this->initialized = $testCase;
     }
 
