@@ -2,7 +2,7 @@
 
 namespace Magium\Util\Configuration;
 
-class ConfigurationReader
+class ConfigurationReader extends AbstractConfigurationReader
 {
 
     protected $baseDir;
@@ -40,10 +40,13 @@ class ConfigurationReader
         }
 
         if ($this->config) {
-            $className = strtolower(get_class($config));
-            if (isset($this->config['magium'][$className])) {
-                foreach ($this->config['magium'][$className] as $property => $value) {
-                    $config->set($property, $value);
+            $classes = $this->introspectClass($config);
+            foreach ($classes as $class) {
+                $className = strtolower($class);
+                if (isset($this->config['magium'][$className])) {
+                    foreach ($this->config['magium'][$className] as $property => $value) {
+                        $config->set($property, $value);
+                    }
                 }
             }
         }

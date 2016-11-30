@@ -2,7 +2,7 @@
 
 namespace Magium\Util\Configuration;
 
-class ClassConfigurationReader
+class ClassConfigurationReader extends AbstractConfigurationReader
 {
 
     protected $configurationDir;
@@ -73,13 +73,16 @@ class ClassConfigurationReader
 
         if (!is_dir($configurationDir)) return;
 
-        $configurationFile = get_class($config) . '.php';
-        $configurationFile = $configurationDir . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $configurationFile);
+        $classes = $this->introspectClass($config);
 
-        if (file_exists($configurationFile)) {
-            include $configurationFile;
+        foreach ($classes as $class) {
+            $configurationFile = $class . '.php';
+            $configurationFile = $configurationDir . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $configurationFile);
+
+            if (file_exists($configurationFile)) {
+                include $configurationFile;
+            }
         }
-
     }
 
 }

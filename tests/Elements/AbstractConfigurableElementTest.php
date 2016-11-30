@@ -56,6 +56,14 @@ class AbstractConfigurableElementTest extends AbstractTestCase
         self::assertEquals('changed', $obj->getProperty());
     }
 
+    public function testPropertyPassedViaEnvironmentVariableRecursive()
+    {
+        $_ENV['MAGIUM_TESTS_MAGIUM_ELEMENTS_PROPERTYELEMENT_property'] = 'changed';
+        $obj =  new RecursivePropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader()), new DefaultPropertyCollector());
+        $obj->setTranslator(new Translator());
+        self::assertEquals('changed', $obj->getProperty());
+    }
+
     public function testTranslationSmokeTest()
     {
         $obj =  new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader()), new DefaultPropertyCollector());
@@ -79,6 +87,18 @@ class AbstractConfigurableElementTest extends AbstractTestCase
     public function testInclusion()
     {
         $obj =  new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader(), __DIR__ . '/include'), new DefaultPropertyCollector());
+        self::assertEquals(2, $obj->getValue());
+        self::assertEquals(1, $obj->property);
+    }
+
+    public function testInclusionRecursion()
+    {
+        /*
+         * This test is different from the previous one because the RecursivePropertyElement extends PropertyElement
+         * and so this is testing the recursive functionality in the abstract configurable class.  So the test result
+         * *should* be the same, but the value is retrieved by descending through the class hierarchy.
+         */
+        $obj =  new RecursivePropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader(), __DIR__ . '/include'), new DefaultPropertyCollector());
         self::assertEquals(2, $obj->getValue());
         self::assertEquals(1, $obj->property);
     }
@@ -113,6 +133,28 @@ class AbstractConfigurableElementTest extends AbstractTestCase
 
     }
 
+    public function testJsonConfigurationRecursive()
+    {
+        $reader = new ConfigurationReader($this->baseDir);
+        $application = $this->getConfiguredApplication();
+        $command = $application->find('magium:init');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $command = $application->find('element:set');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            'command'   => $command->getName(),
+            'class'     => 'Tests\Magium\Elements\PropertyElement',
+            'property'  => 'property',
+            'value'     => 'boogee'
+        ]);
+
+        $obj = new RecursivePropertyElement(new StandardConfigurationProvider($reader, new ClassConfigurationReader(), new EnvironmentConfigurationReader()), new DefaultPropertyCollector());
+        self::assertEquals('boogee', $obj->getProperty());
+
+    }
+
 
 }
 
@@ -137,3 +179,6 @@ class PropertyElement extends AbstractConfigurableElement
         return $this->value;
     }
 }
+
+
+class RecursivePropertyElement extends PropertyElement {}
