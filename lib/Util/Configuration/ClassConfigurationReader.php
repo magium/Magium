@@ -73,13 +73,25 @@ class ClassConfigurationReader
 
         if (!is_dir($configurationDir)) return;
 
-        $configurationFile = get_class($config) . '.php';
-        $configurationFile = $configurationDir . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $configurationFile);
-
-        if (file_exists($configurationFile)) {
-            include $configurationFile;
+        $reflectionClass = new \ReflectionClass($config);
+        $classes = [
+            $reflectionClass->getName()
+        ];
+        while (($class = $reflectionClass->getParentClass()) !== false) {
+            $classes[] = $class->getName();
+            $reflectionClass = $class;
         }
 
+        $classes = array_reverse($classes);
+
+        foreach ($classes as $class) {
+            $configurationFile = $class . '.php';
+            $configurationFile = $configurationDir . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $configurationFile);
+
+            if (file_exists($configurationFile)) {
+                include $configurationFile;
+            }
+        }
     }
 
 }
