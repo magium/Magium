@@ -6,7 +6,6 @@ namespace Magium\Actions;
 use Facebook\WebDriver\WebDriverElement;
 use Facebook\WebDriver\WebDriverSelect;
 use Magium\NotFoundException;
-use Magium\WebDriver\FastSelectElement;
 use Magium\WebDriver\WebDriver;
 
 class SetFormValue implements ActionInterface

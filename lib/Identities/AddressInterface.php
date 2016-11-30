@@ -2,7 +2,7 @@
 
 namespace Magium\Identities;
 
-interface AddressInterface
+interface AddressInterface extends IdentityInterface
 {
     public function getFirstName();
     public function getLastName();
