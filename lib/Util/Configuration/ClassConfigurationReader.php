@@ -2,7 +2,7 @@
 
 namespace Magium\Util\Configuration;
 
-class ClassConfigurationReader
+class ClassConfigurationReader extends AbstractConfigurationReader
 {
 
     protected $configurationDir;
@@ -73,16 +73,7 @@ class ClassConfigurationReader
 
         if (!is_dir($configurationDir)) return;
 
-        $reflectionClass = new \ReflectionClass($config);
-        $classes = [
-            $reflectionClass->getName()
-        ];
-        while (($class = $reflectionClass->getParentClass()) !== false) {
-            $classes[] = $class->getName();
-            $reflectionClass = $class;
-        }
-
-        $classes = array_reverse($classes);
+        $classes = $this->introspectClass($config);
 
         foreach ($classes as $class) {
             $configurationFile = $class . '.php';
