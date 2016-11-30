@@ -9,7 +9,7 @@ namespace Magium\Themes;
  * @package Magium\Themes
  */
 
-interface ThemeConfigurationInterface
+interface ThemeConfigurationInterface extends ThemeInterface
 {
 
     public function getGuaranteedPageLoadedElementDisplayedXpath();

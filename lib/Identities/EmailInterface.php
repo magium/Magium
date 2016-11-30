@@ -2,7 +2,7 @@
 
 namespace Magium\Identities;
 
-interface EmailInterface
+interface EmailInterface extends IdentityInterface
 {
 
     public function getEmailAddress();
