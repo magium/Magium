@@ -28,14 +28,14 @@ class InterpolatorTest extends AbstractTestCase
     {
         $this->setExpectedException(InvalidInstructionException::class);
         $interpolator = $this->getInterpolator();
-        $interpolator->interpolate('set {{executeMe->noParams()->boogers()}}');
+        $interpolator->interpolate('set {{$executeMe->noParams()->boogers()}}');
     }
 
     public function testResultInterpolatedWithString()
     {
 
         $interpolator = $this->getInterpolator();
-        $result = $interpolator->interpolate('set {{executeMe}}');
+        $result = $interpolator->interpolate('set {{$executeMe}}');
         $test = (string)$this->get('executeMe');
         $test = sprintf('set %s', (string)$test);
         self::assertEquals($test, $result);
@@ -44,7 +44,7 @@ class InterpolatorTest extends AbstractTestCase
     public function testResultInterpolatedWithOneMethodCall()
     {
         $interpolator = $this->getInterpolator();
-        $result = $interpolator->interpolate('set {{executeMe->toString()}}');
+        $result = $interpolator->interpolate('set {{$executeMe->toString()}}');
         $test = (string)$this->get('executeMe');
         $test = sprintf('set %s', (string)$test);
         self::assertEquals($test, $result);
@@ -56,7 +56,7 @@ class InterpolatorTest extends AbstractTestCase
         $interpolator = $this->getInterpolator();
         $this->get('executeMe')->withParam = 5;
 
-        $result = $interpolator->interpolate('set {{executeMe->withParam}}');
+        $result = $interpolator->interpolate('set {{$executeMe->withParam}}');
 
         // withParam returns the value that is passed to it
         self::assertEquals('set 5', $result);
@@ -65,7 +65,7 @@ class InterpolatorTest extends AbstractTestCase
     public function testResultInterpolatedWithOneMethodCallAndOneParam()
     {
         $interpolator = $this->getInterpolator();
-        $result = $interpolator->interpolate('set {{executeMe->withParam( 5 )}}');
+        $result = $interpolator->interpolate('set {{$executeMe->withParam( 5 )}}');
 
         // withParam returns the value that is passed to it
         self::assertEquals('set 5', $result);
@@ -75,7 +75,7 @@ class InterpolatorTest extends AbstractTestCase
     public function testResultInterpolatedWithOneMethodCallAndTwoParams()
     {
         $interpolator = $this->getInterpolator();
-        $result = $interpolator->interpolate('set {{executeMe->multiply(2, 3)}}');
+        $result = $interpolator->interpolate('set {{$executeMe->multiply(2, 3)}}');
 
         $test = sprintf('set 6');
         self::assertEquals($test, $result);
@@ -85,7 +85,7 @@ class InterpolatorTest extends AbstractTestCase
     {
         $interpolator = $this->getInterpolator();
 
-        $result = $interpolator->interpolate('set {{executeMe->getMe()->toString()}}');
+        $result = $interpolator->interpolate('set {{$executeMe->getMe()->toString()}}');
         $test = (string)$this->get('executeMe');
         $test = sprintf('set %s', (string)$test);
         self::assertEquals($test, $result);
@@ -95,7 +95,7 @@ class InterpolatorTest extends AbstractTestCase
     public function testResultInterpolatedWithRecursionAndParameters()
     {
         $interpolator = $this->getInterpolator();
-        $result = $interpolator->interpolate('set {{executeMe->getMe()->multiply(2, 3)}}');
+        $result = $interpolator->interpolate('set {{$executeMe->getMe()->multiply(2, 3)}}');
 
         $test = sprintf('set 6');
         self::assertEquals($test, $result);
