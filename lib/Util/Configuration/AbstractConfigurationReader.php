@@ -16,6 +16,10 @@ abstract class AbstractConfigurationReader
             $reflectionClass = $class;
         }
 
+        foreach ($reflectionClass->getInterfaceNames() as $name){
+            $classes[] = $name;
+        }
+
         $classes = array_reverse($classes);
         return $classes;
     }
