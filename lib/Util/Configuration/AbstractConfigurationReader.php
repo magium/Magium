@@ -5,34 +5,45 @@ namespace Magium\Util\Configuration;
 abstract class AbstractConfigurationReader
 {
 
+    protected $classes = [];
+
     protected function introspectClass(ConfigurableObjectInterface $object)
     {
         $originalReflectionClass = $reflectionClass = new \ReflectionClass($object);
-        $classes = [
-            $reflectionClass->getName()
-        ];
+        $this->addClass($reflectionClass->getName());
         while (($class = $reflectionClass->getParentClass()) !== false) {
-            $classes[] = $class->getName();
+            $this->addClass($class->getName());
             foreach ($class->getInterfaceNames() as $interface) {
+                $this->addClass($interface);
                 $reflectionInterface = new \ReflectionClass($interface);
                 $interfaces = $reflectionInterface->getInterfaceNames();
-                $classes = array_merge($interfaces, $classes);
+                foreach ($interfaces as $interface) {
+                    $this->addClass($interface);
+                }
             }
             $reflectionClass = $class;
         }
 
         foreach ($originalReflectionClass->getInterfaceNames() as $name){
+            $this->addClass($name);
             $interfaces[] = $name;
             $reflectionInterface = new \ReflectionClass($name);
             $theseInterfaces = $reflectionInterface->getInterfaceNames();
             $theseInterfaces = array_reverse($theseInterfaces);
-
-            $interfaces = array_merge($theseInterfaces, $interfaces);
-            $classes = array_merge($classes, $interfaces);
+            foreach ($theseInterfaces as $interface) {
+                $this->addClass($interface);
+            }
         }
-        $classes = array_unique($classes);
-        $classes = array_reverse($classes);
-        return $classes;
+
+        $this->classes = array_reverse($this->classes);
+        return $this->classes;
+    }
+
+    protected function addClass($name)
+    {
+        if (!in_array($name, $this->classes)) {
+            $this->classes[] = $name;
+        }
     }
 
     protected function recursivelyIntrospectInterface($interfaceName)
