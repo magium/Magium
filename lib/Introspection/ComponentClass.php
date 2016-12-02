@@ -15,7 +15,7 @@ class ComponentClass
         $this->class = $class;
         $this->baseType = $baseType;
         $this->functionalType = $functionalType;
-        $this->heirarchy = $hierarchy;
+        $this->hierarchy = $hierarchy;
     }
 
     /**
