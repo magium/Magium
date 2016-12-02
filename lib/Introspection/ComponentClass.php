@@ -8,14 +8,14 @@ class ComponentClass
     protected $class;
     protected $baseType;
     protected $functionalType;
-    protected $heirarchy;
+    protected $hierarchy;
 
-    public function __construct($class, $baseType, $functionalType, array $heirarchy)
+    public function __construct($class, $baseType, $functionalType, array $hierarchy)
     {
         $this->class = $class;
         $this->baseType = $baseType;
         $this->functionalType = $functionalType;
-        $this->heirarchy = $heirarchy;
+        $this->heirarchy = $hierarchy;
     }
 
     /**
@@ -45,9 +45,9 @@ class ComponentClass
     /**
      * @return array
      */
-    public function getHeirarchy()
+    public function getHierarchy()
     {
-        return $this->heirarchy;
+        return $this->hierarchy;
     }
 
 
