@@ -7,19 +7,27 @@ abstract class AbstractConfigurationReader
 
     protected function introspectClass(ConfigurableObjectInterface $object)
     {
-        $reflectionClass = new \ReflectionClass($object);
+        $originalReflectionClass = $reflectionClass = new \ReflectionClass($object);
         $classes = [
             $reflectionClass->getName()
         ];
         while (($class = $reflectionClass->getParentClass()) !== false) {
             $classes[] = $class->getName();
+            foreach ($class->getInterfaceNames() as $interface) {
+                $reflectionInterface = new \ReflectionClass($interface);
+                $interfaces = $reflectionInterface->getInterfaceNames();
+                $classes = array_merge($interfaces, $classes);
+            }
             $reflectionClass = $class;
         }
 
-        foreach ($reflectionClass->getInterfaceNames() as $name){
+        foreach ($originalReflectionClass->getInterfaceNames() as $name){
             $interfaces[] = $name;
-            $theseInterfaces = $this->recursivelyIntrospectInterface($name);
-            $interfaces = array_merge($interfaces, $theseInterfaces);
+            $reflectionInterface = new \ReflectionClass($name);
+            $theseInterfaces = $reflectionInterface->getInterfaceNames();
+            $theseInterfaces = array_reverse($theseInterfaces);
+
+            $interfaces = array_merge($theseInterfaces, $interfaces);
             $classes = array_merge($classes, $interfaces);
         }
         $classes = array_unique($classes);
