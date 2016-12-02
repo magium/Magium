@@ -45,7 +45,7 @@ class ComponentClass
     /**
      * @return array
      */
-    public function getHeirarchy(): array
+    public function getHeirarchy()
     {
         return $this->heirarchy;
     }
