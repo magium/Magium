@@ -24,8 +24,8 @@ class Interpolator
     {
         $this->logger->info('Interpolating string: ' . $string);
         $matches = null;
-        // Finding {{product->setEntityId(123)->load()}} type methods
-        if (preg_match('/\{\{([^{]+)\}\}/', $string, $matches)) {
+        // Finding {{$product->setEntityId(123)->load()}} type methods
+        if (preg_match('/\{\{(?:\$)([^{]+)\}\}/', $string, $matches)) {
             array_shift($matches);
             foreach ($matches as $match) {
                 $result = null;
@@ -66,7 +66,7 @@ class Interpolator
                 }
                 $result = (string)$result;
                 $this->logger->info(sprintf('Replacing %s with %s', $match, $result));
-                $search = sprintf('{{%s}}', $match);
+                $search = sprintf('{{$%s}}', $match);
                 $string = str_replace($search, $result, $string);
             }
         } else {
