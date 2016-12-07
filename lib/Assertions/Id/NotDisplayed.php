@@ -8,6 +8,8 @@ use Magium\WebDriver\WebDriver;
 class NotDisplayed extends \Magium\Assertions\Element\NotDisplayed  implements SelectorAssertionInterface
 {
 
+    const ASSERTION = 'Id/NotDisplayed';
+
     public function assertSelector($selector)
     {
         $this->setSelector($selector);
