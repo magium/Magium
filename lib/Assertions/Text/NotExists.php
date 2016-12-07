@@ -1,6 +1,6 @@
 <?php
 
-namespace Magium\Assertions\Id;
+namespace Magium\Assertions\Text;
 
 use Magium\Assertions\SelectorAssertionInterface;
 use Magium\WebDriver\WebDriver;
@@ -8,12 +8,15 @@ use Magium\WebDriver\WebDriver;
 class NotExists extends \Magium\Assertions\Element\NotExists implements SelectorAssertionInterface
 {
 
-    const ASSERTION = 'Id/NotExists';
+    const ASSERTION = 'Text\NotExists';
+
+    use TextTrait;
 
     public function assertSelector($selector)
     {
+        $selector = $this->createXpath($selector);
         $this->setSelector($selector);
-        $this->setBy(WebDriver::BY_ID);
+        $this->setBy(WebDriver::BY_XPATH);
         $this->assert();
     }
 

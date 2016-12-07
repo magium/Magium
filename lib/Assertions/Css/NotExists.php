@@ -8,6 +8,8 @@ use Magium\WebDriver\WebDriver;
 class NotExists extends \Magium\Assertions\Element\NotExists implements SelectorAssertionInterface
 {
 
+    const ASSERTION = 'Css/NotExists';
+
     public function assertSelector($selector)
     {
         $this->setSelector($selector);

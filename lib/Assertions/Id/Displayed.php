@@ -7,6 +7,7 @@ use Magium\WebDriver\WebDriver;
 
 class Displayed extends \Magium\Assertions\Element\Displayed  implements SelectorAssertionInterface
 {
+    const ASSERTION = 'Id/Displayed';
 
     public function assertSelector($selector)
     {
