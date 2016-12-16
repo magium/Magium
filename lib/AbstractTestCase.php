@@ -214,7 +214,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                 if (class_exists($fqClass)) {
                     return $fqClass;
                 }
-            } catch (\Throwable $e) {
+            } catch (\Exception $e) {
                 /*
                  * Nothing to see here
                  * http://www.reactiongifs.us/wp-content/uploads/2015/04/nothing_to_see_here_naked_gun.gif
