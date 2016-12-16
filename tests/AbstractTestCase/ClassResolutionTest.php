@@ -13,6 +13,21 @@ namespace Tests\Magium\AbstractTestCase {
             $this->switchThemeConfiguration('Magium\BaseTheme');
             self::assertInstanceOf('Magium\Navigators\Home', $this->getNavigator(Home::NAVIGATOR));
         }
+
+        public function testAutoloaderWithExceptionThrownIsCaught()
+        {
+            $thrown = false;
+            spl_autoload_register(function() use (&$thrown) {
+                $thrown = true;
+                throw new \Exception('This should be thrown but caught');
+            });
+
+            self::resolveClass('boogers_or_something_else_that_does_not_exist');
+
+            // The next line of code will not be reached if an exception is thrown, but not caught.
+            self::assertTrue($thrown);
+
+        }
     }
 }
 
