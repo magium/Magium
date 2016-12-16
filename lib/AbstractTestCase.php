@@ -210,8 +210,18 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
         foreach (self::$baseNamespaces as $namespace) {
             $fqClass = $namespace . '\\' . $class;
-            if (class_exists($fqClass)) {
-                return $fqClass;
+            try {
+                if (class_exists($fqClass)) {
+                    return $fqClass;
+                }
+            } catch (\Throwable $e) {
+                /*
+                 * Nothing to see here
+                 * http://www.reactiongifs.us/wp-content/uploads/2015/04/nothing_to_see_here_naked_gun.gif
+                 *
+                 * This is necessary because, in Magento, when developer mode is turned on, Magento will throw an
+                 * exception if the autoloader can't find a file.
+                 */
             }
         }
         return $origClass;
