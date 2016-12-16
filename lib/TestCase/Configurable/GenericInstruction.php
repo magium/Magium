@@ -14,7 +14,7 @@ class GenericInstruction implements InstructionInterface
      * @param $method
      * @param $params
      */
-    public function __construct($className, $method, $params = null)
+    public function __construct($className, $method, array $params = null)
     {
         $this->className = $className;
         $this->method = $method;
