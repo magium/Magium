@@ -64,7 +64,7 @@ HTML
         $interpolator = $this->get(Interpolator::class);
 
         $instruction = new GenericInstruction(Exists::class, 'assertSelector', [
-            $interpolator->interpolate('//div[@id="{{executeMe->withParam}}"]')
+            $interpolator->interpolate('//div[@id="{{$executeMe->withParam}}"]')
         ]);
 
         $collection = $this->getCollection();
@@ -81,7 +81,7 @@ HTML
         $interpolator = $this->get(Interpolator::class);
 
         $instruction = new GenericInstruction(NotExists::class, 'assertSelector', [
-            $interpolator->interpolate('//div[@id="{{executeMe->withParam}}"]')
+            $interpolator->interpolate('//div[@id="{{$executeMe->withParam}}"]')
         ]);
 
         $collection = $this->getCollection();
