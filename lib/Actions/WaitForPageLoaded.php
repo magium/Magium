@@ -7,7 +7,7 @@ use Magium\Themes\ThemeConfigurationInterface;
 use Magium\WebDriver\ExpectedCondition;
 use Magium\WebDriver\WebDriver;
 
-class WaitForPageLoaded implements ActionInterface
+class WaitForPageLoaded implements StaticActionInterface
 {
     const ACTION = 'WaitForPageLoaded';
 
