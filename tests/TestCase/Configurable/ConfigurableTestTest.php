@@ -2,6 +2,7 @@
 
 namespace Tests\Magium\TestCase\Configurable;
 
+use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Magium\AbstractTestCase;
 use Magium\Assertions\Xpath\Exists;
 use Magium\Assertions\Xpath\NotExists;
@@ -11,6 +12,7 @@ use Magium\TestCase\Configurable\InstructionInterface;
 use Magium\TestCase\Configurable\InstructionsCollection;
 use Magium\TestCase\Configurable\Interpolator;
 use Magium\TestCase\Configurable\InvalidInstructionException;
+use Zend\Log\Writer\WriterInterface;
 
 class ConfigurableTestTest extends AbstractTestCase
 {
@@ -72,6 +74,7 @@ HTML
         $collection->execute();
 
     }
+
     public function testCollectionInterpolationFails()
     {
         $this->setExpectedException(\PHPUnit_Framework_AssertionFailedError::class);
@@ -88,6 +91,53 @@ HTML
         $collection->addInstruction($instruction);
         $collection->execute();
 
+    }
+
+    public function testExceptionIsBubbled()
+    {
+        $this->setExpectedException(WebDriverCurlException::class);
+        $this->setUpInterpolated();
+        $this->commandOpen('file://' . $this->fileName);
+
+        $interpolator = $this->get(Interpolator::class);
+
+        $instruction = new GenericInstruction(Exists::class, 'assertSelector', [
+            $interpolator->interpolate('//div[@id="boogers"]')
+        ]);
+
+        $collection = $this->getCollection();
+        $collection->addInstruction($instruction);
+        $collection->execute();
+    }
+
+    public function testErrorIsLogged()
+    {
+        $this->setUpInterpolated();
+        $this->commandOpen('file://' . $this->fileName);
+        $logEvent = null;
+        $writer = $this->getMock(WriterInterface::class);
+        $writer->method('write')->with(
+            $this->callback(function() use (&$logEvent) {
+                $logEvent = func_get_args();
+                return true;
+            })
+        );
+        $this->getLogger()->addWriter($writer);
+
+        $instruction = new GenericInstruction(Exists::class, 'assertSelector', [
+            '//div[@id="boogers"]'
+        ]);
+
+        $collection = $this->getCollection();
+        $collection->addInstruction($instruction);
+        try {
+            $collection->execute();
+        } catch (\Exception $e) {
+        }
+        self::assertCount(1, $logEvent);
+        self::assertArrayHasKey('message', $logEvent[0]);
+        self::assertArrayHasKey('extra', $logEvent[0]);
+        self::assertEquals('ERR', $logEvent[0]['priorityName']);
     }
 
     public function testCollectionThrowsExceptionWithInvalidAddObject()
