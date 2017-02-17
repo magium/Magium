@@ -17,7 +17,7 @@
     }
   ],
   "require" : {
-    "phpunit/phpunit" : "^4.1.0.0",
+    "phpunit/phpunit": "~5.7",
     "zendframework/zend-di" : "^2.5.1",
     "facebook/webdriver" : "^1.1.1",
     "zendframework/zend-log": "^2.6.0",

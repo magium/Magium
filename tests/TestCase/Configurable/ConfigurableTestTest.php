@@ -2,6 +2,7 @@
 
 namespace Tests\Magium\TestCase\Configurable;
 
+use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Magium\AbstractTestCase;
 use Magium\Assertions\Xpath\Exists;
@@ -26,7 +27,7 @@ class ConfigurableTestTest extends AbstractTestCase
 
     public function testCollectionAddsInstruction()
     {
-        $instructionMock = $this->getMock(InstructionInterface::class);
+        $instructionMock = $this->createMock(InstructionInterface::class);
         $this->getCollection()->addInstruction($instructionMock);
     }
 
@@ -95,7 +96,7 @@ HTML
 
     public function testExceptionIsBubbled()
     {
-        $this->setExpectedException(WebDriverCurlException::class);
+        $this->expectException(NoSuchElementException::class);
         $this->setUpInterpolated();
         $this->commandOpen('file://' . $this->fileName);
 
@@ -115,7 +116,7 @@ HTML
         $this->setUpInterpolated();
         $this->commandOpen('file://' . $this->fileName);
         $logEvent = null;
-        $writer = $this->getMock(WriterInterface::class);
+        $writer = $this->createMock(WriterInterface::class);
         $writer->method('write')->with(
             $this->callback(function() use (&$logEvent) {
                 $logEvent = func_get_args();
