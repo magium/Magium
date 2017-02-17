@@ -27,7 +27,7 @@ class IntrospectionTest extends AbstractTestCase
         self::assertEquals(Displayed::class, $item->getClass());
         self::assertEquals(AssertInterface::class, $item->getBaseType());
         self::assertEquals(SelectorAssertionInterface::class, $item->getFunctionalType());
-        self::assertGreaterThan(0, $item->getHeirarchy());
+        self::assertGreaterThan(0, $item->getHierarchy());
     }
 
 }

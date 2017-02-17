@@ -185,7 +185,7 @@ HTML
     protected function writePage($text)
     {
         $this->di->instanceManager()->addSharedInstance(
-            $this->getMock('Magium\Themes\ThemeConfigurationInterface'),
+            $this->createMock('Magium\Themes\ThemeConfigurationInterface'),
             'Magium\Themes\ThemeConfigurationInterface'
         );
 

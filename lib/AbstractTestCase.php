@@ -16,10 +16,11 @@ use Magium\Themes\BaseThemeInterface;
 use Magium\Util\Log\Logger;
 use Magium\Util\Phpunit\MasterListener;
 use Magium\WebDriver\WebDriver;
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_TestResult;
 use Zend\Di\Di;
 
-abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
+abstract class AbstractTestCase extends TestCase
 {
 
     protected static $baseNamespaces = [];

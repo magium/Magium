@@ -169,7 +169,7 @@ class AbstractConfigurableElementTest extends AbstractTestCase
         $configurableObject = new TestConfigurableObject(
             $this->getMockBuilder(WebDriver::class)->disableOriginalConstructor()->getMock(),
             $this,
-            $this->getMock(ThemeConfigurationInterface::class)
+            $this->createMock(ThemeConfigurationInterface::class)
         );
 
         $result = $configurationReader->configure($configurableObject);

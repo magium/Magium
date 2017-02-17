@@ -3,8 +3,9 @@
 namespace Tests\Magium\Extractors;
 
 use Magium\Extractors\DateTime;
+use PHPUnit\Framework\TestCase;
 
-class DateTimeTest extends \PHPUnit_Framework_TestCase
+class DateTimeTest extends TestCase
 {
 
     public function testBasicDate()
@@ -194,7 +195,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         return new DateTime(
             $webDriver->getMock(),
             $testCase->getMock(),
-            $this->getMock('Magium\Themes\ThemeConfigurationInterface')
+            $this->createMock('Magium\Themes\ThemeConfigurationInterface')
         );
     }
 

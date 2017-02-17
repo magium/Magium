@@ -46,7 +46,7 @@ SCRIPT
     {
         $this->writePage(
             <<<SCRIPT
-<div style="height: 1px; overflow: hidden; "><button id="clickme">Text</button></div>
+<div style="height: 0px; overflow: hidden; "><button id="clickme">Text</button></div>
 SCRIPT
 
         );

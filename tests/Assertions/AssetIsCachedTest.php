@@ -18,7 +18,7 @@ class AssetIsCachedTest extends AbstractTestCase
         $assertion->setAssetUrl('http://magento.magiumlib.com/skin/frontend/rwd/default/images/media/logo.png');
 
         // The page will have only been loaded once
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError', 'Asset was not cached: http://magento.magiumlib.com/skin/frontend/rwd/default/images/media/logo.png');
+        $this->expectException(\PHPUnit_Framework_AssertionFailedError::class, 'Asset was not cached: http://magento.magiumlib.com/skin/frontend/rwd/default/images/media/logo.png');
         $assertion->assert();
     }
 
@@ -76,7 +76,7 @@ class AssetIsCachedTest extends AbstractTestCase
         $assertion->setAssetUrl('/skin/frontend/rwd/default/images/media/logo.png');
 
         // The page will have only been loaded once
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError', 'Asset was not cached: http://magento.magiumlib.com/skin/frontend/rwd/default/images/media/logo.png');
+        $this->expectException(\PHPUnit_Framework_AssertionFailedError::class, 'Asset was not cached: http://magento.magiumlib.com/skin/frontend/rwd/default/images/media/logo.png');
 
         $assertion->assert();
     }
