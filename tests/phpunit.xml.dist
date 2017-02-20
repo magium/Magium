@@ -1,4 +1,11 @@
-<phpunit bootstrap="../vendor/autoload.php">
+<phpunit bootstrap="../vendor/autoload.php"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="../vendor/phpunit/phpunit/phpunit.xsd">
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../lib/</directory>
+        </whitelist>
+    </filter>
     <testsuites>
         <testsuite name="All Tests">
             <file>AbstractTestCase/phpunit.priority.xml</file>
