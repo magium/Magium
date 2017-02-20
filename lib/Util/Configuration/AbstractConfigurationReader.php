@@ -9,6 +9,7 @@ abstract class AbstractConfigurationReader
 
     protected function introspectClass(ConfigurableObjectInterface $object)
     {
+        $this->classes = [];
         $originalReflectionClass = $reflectionClass = new \ReflectionClass($object);
         $this->addClass($reflectionClass->getName());
         while (($class = $reflectionClass->getParentClass()) !== false) {
