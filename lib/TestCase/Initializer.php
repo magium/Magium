@@ -2,6 +2,7 @@
 
 namespace Magium\TestCase;
 
+use Interop\Container\ContainerInterface;
 use Magium\AbstractTestCase;
 use Magium\InvalidConfigurationException;
 use Magium\TestCaseConfiguration;
@@ -19,6 +20,8 @@ use Magium\WebDriver\LoggingRemoteExecuteMethod;
 use Magium\WebDriver\WebDriver;
 use Zend\Di\Config;
 use Zend\Di\Di;
+use Zend\I18n\Translator\Translator;
+use Zend\Log\Writer\Noop;
 
 class Initializer
 {
@@ -27,6 +30,7 @@ class Initializer
     protected $testCaseConfigurationObject;
     protected $initialized;
     protected $configurationProvider;
+    protected static $initDi;
 
     public function __construct(
         $testCaseConfigurationType = null,
@@ -43,13 +47,34 @@ class Initializer
 
         $this->configurationProvider = $configurationProvider;
         if (!$this->configurationProvider instanceof ConfigurationProviderInterface) {
-            $this->configurationProvider = new StandardConfigurationProvider(
-                new ConfigurationReader(),
-                new ClassConfigurationReader(),
-                new EnvironmentConfigurationReader()
-            );
+            $preference = self::getInitializationDependencyInjectionContainer()->instanceManager()->getTypePreferences(ConfigurationProviderInterface::class);
+            if (is_array($preference) && count($preference)) {
+                $preference = array_shift($preference);
+            } else {
+                $preference = StandardConfigurationProvider::class;
+            }
+            $this->configurationProvider = self::getInitializationDependencyInjectionContainer()->get($preference);
         }
+    }
 
+    public static function setInitializationDependencyInjectionContainer(ContainerInterface $container)
+    {
+        self::$initDi = $container;
+    }
+
+    /**
+     * This method returns a DI container that will ONLY be used to initialize this class
+     *
+     * @return Di
+     */
+
+    public static function getInitializationDependencyInjectionContainer()
+    {
+        if (!self::$initDi instanceof Di) {
+            self::$initDi = new Di();
+            self::$initDi->instanceManager()->addTypePreference(ConfigurationProviderInterface::class, StandardConfigurationProvider::class);
+        }
+        return self::$initDi;
     }
 
     protected function injectTestCaseHierarchy(AbstractTestCase $testCase)
@@ -174,7 +199,7 @@ class Initializer
             ],
             'instance'  => [
                 'preference' => [
-                    'Zend\I18n\Translator\Translator' => ['Magium\Util\Translator\Translator']
+                    Translator::class => [\Magium\Util\Translator\Translator::class]
                 ],
                 'Magium\Util\Translator\Translator' => [
                     'parameters'    => [
@@ -186,7 +211,7 @@ class Initializer
                         'options'   => [
                             'writers' => [
                                 [
-                                    'name' => 'Zend\Log\Writer\Noop',
+                                    'name' => Noop::class,
                                     'options' => []
                                 ]
                             ]
@@ -249,9 +274,15 @@ class Initializer
 
     public function setConfigurationProvider(AbstractTestCase $testCase)
     {
+        $configuredProvider = self::getInitializationDependencyInjectionContainer()->instanceManager()->getTypePreferences(ConfigurationProviderInterface::class);
+        if (is_array($configuredProvider) && count($configuredProvider)) {
+            $configuredProvider = array_shift($configuredProvider);
+        } else {
+            $configuredProvider = StandardConfigurationProvider::class;
+        }
         $testCase->setTypePreference(
-            'Magium\Util\Configuration\ConfigurationProviderInterface',
-            'Magium\Util\Configuration\StandardConfigurationProvider'
+            ConfigurationProviderInterface::class,
+            $configuredProvider
         );
         $this->configurationProvider->configureDi($testCase->getDi());
 
