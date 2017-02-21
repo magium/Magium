@@ -15,8 +15,8 @@ abstract class AbstractConfigurableElement implements TranslatorAware, Configura
 
     public function __construct(ConfigurationProviderInterface $configurationProvider, DefaultPropertyCollector $collector)
     {
-        $configurationProvider->configureObject($this);
         $this->collector = $collector;
+        $configurationProvider->configureObject($this);
     }
 
     public function __set($name, $value)
