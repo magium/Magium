@@ -27,6 +27,7 @@
     "zendframework/zend-config": "2.6.0",
     "zendframework/zend-json": "^2.6.1",
     "jeremykendall/query-auth": "^3.0",
+    "ircmaxell/random-lib": "v1.0.0",
     "guzzle/guzzle": "^3.9"
   },
   "repositories" : [ {
