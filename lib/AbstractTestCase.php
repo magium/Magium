@@ -115,13 +115,8 @@ abstract class AbstractTestCase extends TestCase
 
     public function __construct($name = null, array $data = [], $dataName = null, Initializer $initializer = null)
     {
-        if (!$initializer instanceof Initializer) {
-            $initializer = Initializer::getInitializationDependencyInjectionContainer()->get(Initializer::class);
-        }
-        $this->initializer = $initializer;
         self::getMasterListener();
         parent::__construct($name, $data, $dataName);
-
     }
 
     public function setTestResultObject(PHPUnit_Framework_TestResult $result)
