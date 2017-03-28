@@ -67,7 +67,7 @@ abstract class AbstractTestCase extends TestCase
          */
         self::addBaseNamespace('Magium');
         if (!$this->initializer instanceof Initializer) {
-            $this->initializer = new Initializer();
+            $this->initializer = Initializer::getInitializationDependencyInjectionContainer()->get(Initializer::class);
         }
         $this->initializer->initialize($this);
     }
@@ -93,6 +93,9 @@ abstract class AbstractTestCase extends TestCase
      */
     public function getWebdriver()
     {
+        if (!$this->webdriver instanceof WebDriver) {
+            $this->webdriver = $this->get(WebDriver::class);
+        }
         return $this->webdriver;
     }
 
@@ -113,7 +116,7 @@ abstract class AbstractTestCase extends TestCase
     public function __construct($name = null, array $data = [], $dataName = null, Initializer $initializer = null)
     {
         if (!$initializer instanceof Initializer) {
-            $initializer = new Initializer();
+            $initializer = Initializer::getInitializationDependencyInjectionContainer()->get(Initializer::class);
         }
         $this->initializer = $initializer;
         self::getMasterListener();
