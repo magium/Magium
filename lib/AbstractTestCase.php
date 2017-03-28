@@ -12,6 +12,7 @@ use Magium\Assertions\Element\NotDisplayed;
 use Magium\Assertions\Element\NotExists;
 use Magium\Assertions\LoggingAssertionExecutor;
 use Magium\TestCase\Initializer;
+use Magium\TestCase\InitializerContainer;
 use Magium\Themes\BaseThemeInterface;
 use Magium\Util\Log\Logger;
 use Magium\Util\Phpunit\MasterListener;
@@ -61,13 +62,20 @@ abstract class AbstractTestCase extends TestCase
 
     protected function setUp()
     {
-        /*
+        /**
          * Putting this in the setup and not in the property means that an extending class can inject itself easily
          * before the Magium namespace, thus, taking preference over the base namespace
          */
+
         self::addBaseNamespace('Magium');
-        if (!$this->initializer instanceof Initializer) {
-            $this->initializer = Initializer::getInitializationDependencyInjectionContainer()->get(Initializer::class);
+
+        /**
+         * This weird little bit of code (the InitializerContainer) is done like this so we can provide a type
+         * preference for the Initializer.  This is because Magium is a DI-based setup rigged inside a non-DI-based
+         * setup
+         */
+        if (!$this->initializer instanceof InitializerContainer) {
+            $this->initializer = Initializer::getInitializationDependencyInjectionContainer()->get(InitializerContainer::class);
         }
         $this->initializer->initialize($this);
     }
