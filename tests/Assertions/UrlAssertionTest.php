@@ -5,6 +5,7 @@ namespace Tests\Magium\Assertions;
 use Magium\AbstractTestCase;
 use Magium\Assertions\Url\Contains;
 use Magium\Assertions\Url\Equals;
+use Magium\Assertions\Url\IsUrl;
 use Magium\Assertions\Url\NotContains;
 use Magium\Assertions\Url\NotEquals;
 
@@ -35,4 +36,14 @@ class UrlAssertionTest extends AbstractTestCase
         $this->getAssertion(NotContains::ASSERTION)->assertSelector('eschrade');
     }
 
+    public function testIsUrl()
+    {
+        $this->getAssertion(IsUrl::ASSERTION)->assertSelector('http://www.magiumlib.com/');
+    }
+
+    public function testIsUrlFails()
+    {
+        $this->expectException(\PHPUnit_Framework_ExpectationFailedException::class);
+        $this->getAssertion(IsUrl::ASSERTION)->assertSelector('a string');
+    }
 }
