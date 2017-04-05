@@ -70,7 +70,6 @@ class InstructionNavigator implements NavigatorInterface
             switch ($instruction) {
                 case self::INSTRUCTION_MOUSE_CLICK:
                     $element = $this->webdriver->byXpath($xpath);
-                    $this->webdriver->action()->moveToElement($element);
                     if (!$element->isDisplayed()) {
                         throw new ElementNotVisibleException('The element is not visible: ' . $xpath);
                     }
