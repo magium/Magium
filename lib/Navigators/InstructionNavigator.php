@@ -71,7 +71,7 @@ class InstructionNavigator implements NavigatorInterface
                 case self::INSTRUCTION_MOUSE_CLICK:
                     $element = $this->webdriver->byXpath($xpath);
                     if (!$element->isDisplayed()) {
-                        throw new ElementNotVisibleException('The element is not visible: ' . $xpath);
+                        throw new ElementNotVisibleException('The element is not visible: '.$xpath);
                     }
                     $element->click();
                     break;
@@ -85,7 +85,7 @@ class InstructionNavigator implements NavigatorInterface
                 case self::INSTRUCTION_WAIT_FOR_NOT_EXISTS:
                     $this->webdriver->wait()->until(
                         ExpectedCondition::not(
-                            ExpectedCondition::elementExists( $xpath, WebDriver::BY_XPATH)
+                            ExpectedCondition::elementExists($xpath, WebDriver::BY_XPATH)
                         )
                     );
                     break;
@@ -107,7 +107,7 @@ class InstructionNavigator implements NavigatorInterface
                     );
                     break;
                 default:
-                    throw new InvalidConfigurationException('Unknown login instruction: ' .$instruction );
+                    throw new InvalidConfigurationException('Unknown login instruction: '.$instruction);
             }
         }
 
