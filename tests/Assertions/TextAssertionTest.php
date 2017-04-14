@@ -52,7 +52,7 @@ class TextAssertionTest extends AbstractTestCase
 </body>
 </html>
 HTML;
-        $this->_filename = tempnam(sys_get_temp_dir(), 'test');
+        $this->_filename = tempnam(sys_get_temp_dir(), 'test') . 'html';
         file_put_contents($this->_filename, $content);
         $this->commandOpen('file://' . $this->_filename);
     }

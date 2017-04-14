@@ -45,7 +45,7 @@ class ConfigurableTestTest extends AbstractTestCase
 
     protected function setUpInterpolated()
     {
-        $this->fileName = tempnam(sys_get_temp_dir(), uniqid());
+        $this->fileName = tempnam(sys_get_temp_dir(), uniqid()) . 'html';
         $uniqueValue = uniqid();
         $this->getDi()->instanceManager()->addAlias('executeMe', ExecuteMe::class);
         $this->get('executeMe')->withParam($uniqueValue);

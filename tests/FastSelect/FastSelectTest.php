@@ -59,7 +59,7 @@ class FastSelectTest extends AbstractTestCase
 </body>
 </html>
 SCRIPT;
-        $this->filename = tempnam(sys_get_temp_dir(), 'test');
+        $this->filename = tempnam(sys_get_temp_dir(), 'test') . 'html';
         $fh = fopen($this->filename, 'w+');
         fwrite($fh, $script);
         fclose($fh);

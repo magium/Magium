@@ -92,7 +92,7 @@ SCRIPT
 
     protected function write($content, $open = true)
     {
-        $this->filename = tempnam(sys_get_temp_dir(), 'test');
+        $this->filename = tempnam(sys_get_temp_dir(), 'test') . 'html';
         $fh = fopen($this->filename, 'w+');
         fwrite($fh, $content);
         fclose($fh);

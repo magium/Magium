@@ -102,7 +102,7 @@ HTML
     protected function writeFile($text)
     {
         $html = sprintf('<html><body><form>%s</form></body>', $text);
-        $this->filename = tempnam(sys_get_temp_dir(), 'form');
+        $this->filename = tempnam(sys_get_temp_dir(), 'test') . 'html';
         file_put_contents($this->filename, $html);
     }
 
