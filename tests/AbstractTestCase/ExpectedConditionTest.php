@@ -25,7 +25,7 @@ setTimeout(
 </body>
 </html>
 SCRIPT;
-        $filename = tempnam(sys_get_temp_dir(), 'test');
+        $filename = tempnam(sys_get_temp_dir(), 'test') . 'html';
         $fh = fopen($filename, 'w+');
         fwrite($fh, $script);
         fclose($fh);
@@ -55,7 +55,7 @@ setTimeout(
 </body>
 </html>
 SCRIPT;
-        $filename = tempnam(sys_get_temp_dir(), 'test');
+        $filename = tempnam(sys_get_temp_dir(), 'test') . 'html';
         $fh = fopen($filename, 'w+');
         fwrite($fh, $script);
         fclose($fh);
