@@ -203,6 +203,7 @@ class Clairvoyant extends AbstractConfigurableElement implements WriterInterface
             $this->testResult = $event['extra'][self::TYPE_TEST_RESULT];
         }
         $event['microtime'] = microtime(true);
+        $event['unix_timestamp'] = time();
         $this->events[] = $event;
     }
 
