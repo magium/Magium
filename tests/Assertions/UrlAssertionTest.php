@@ -15,7 +15,7 @@ class UrlAssertionTest extends AbstractTestCase
     public function testEquals()
     {
         $this->commandOpen('http://www.magiumlib.com/');
-        $this->getAssertion(Equals::ASSERTION)->assertSelector('http://www.magiumlib.com/');
+        $this->getAssertion(Equals::ASSERTION)->assertSelector('https://www.magiumlib.com/');
     }
 
     public function testNotEquals()
@@ -38,7 +38,7 @@ class UrlAssertionTest extends AbstractTestCase
 
     public function testIsUrl()
     {
-        $this->getAssertion(IsUrl::ASSERTION)->assertSelector('http://www.magiumlib.com/');
+        $this->getAssertion(IsUrl::ASSERTION)->assertSelector('https://www.magiumlib.com/');
     }
 
     public function testIsUrlFails()
