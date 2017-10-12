@@ -39,7 +39,11 @@ class Open implements CommandInterface
         );
         // This is done because firefox does not always scroll the admin menus into view.
         // TODO - find a better way to beat Firefox into submission.
-        $this->webdriver->manage()->window()->maximize();
+        try {
+            $this->webdriver->manage()->window()->maximize();
+        } catch (\Exception $e) {
+            // ¯\_(ツ)_/¯
+        }
     }
     
 }
