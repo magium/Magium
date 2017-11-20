@@ -22,19 +22,25 @@ class Open implements CommandInterface
     
     public function open($url)
     {
+
+        $startTime = microtime(true);
         $this->logger->info(
             sprintf('Opening URL %s', $url),
             [
-                'activity'  => 'open',
-                'url'       => $url
+                'activity' => 'open',
+                'url' => $url,
+                'start_time' => $startTime
             ]
         );
         $this->webdriver->get($url);
+        $endTime = microtime(true);
         $this->logger->info(
             sprintf('URL %s has been opened', $url),
             [
-                'activity'  => 'open',
-                'url'       => $url
+                'activity' => 'open',
+                'url' => $url,
+                'end_time' => $endTime,
+                'elapsed' => ($endTime - $startTime)
             ]
         );
         // This is done because firefox does not always scroll the admin menus into view.
