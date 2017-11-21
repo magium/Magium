@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestListener;
 
 
-class Logger extends \Zend\Log\Logger implements TestListener, MasterListenerAware, LoggerInterface
+class LoggerPHPUnit5 extends \Zend\Log\Logger implements TestListener, MasterListenerAware, LoggerInterface
 {
 
     protected $status = self::STATUS_PASSED;
@@ -27,7 +27,6 @@ class Logger extends \Zend\Log\Logger implements TestListener, MasterListenerAwa
     {
         $listener->addListener($this);
     }
-
 
     public function addCharacteristic($type, $value)
     {
@@ -114,7 +113,7 @@ class Logger extends \Zend\Log\Logger implements TestListener, MasterListenerAwa
 
     public function addRiskyTest(\PHPUnit_Framework_Test $test, Exception $e, $time)
     {
-        // TODO: Implement addRiskyTest() method.
+        // ignore
     }
 
     public function addSkippedTest(\PHPUnit_Framework_Test $test, Exception $e, $time)
@@ -125,7 +124,7 @@ class Logger extends \Zend\Log\Logger implements TestListener, MasterListenerAwa
 
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
     {
-        // TODO: Implement startTestSuite() method.
+        // ignore
     }
 
     public function endTestSuite(\PHPUnit_Framework_TestSuite $suite)

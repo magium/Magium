@@ -17,7 +17,7 @@ use Magium\Navigators\NavigatorInterface;
 use Magium\Navigators\OptionallyConfigurableNavigatorInterface;
 use Magium\Navigators\StaticNavigatorInterface;
 use Magium\Themes\ThemeInterface;
-use Magium\Util\Log\Logger;
+use Zend\Log\LoggerInterface;
 
 class Introspector
 {
@@ -51,7 +51,7 @@ class Introspector
     protected $logger;
 
     public function __construct(
-        Logger $logger
+        LoggerInterface $logger
     )
     {
         $this->logger = $logger;

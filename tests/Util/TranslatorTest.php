@@ -3,9 +3,10 @@
 namespace Tests\Magium\Util;
 
 use Magium\Util\Translator\Translator;
+use PHPUnit\Framework\TestCase;
 use Zend\I18n\Translator\Loader\PhpMemoryArray;
 
-class TranslatorTest extends \PHPUnit_Framework_TestCase
+class TranslatorTest extends TestCase
 {
     public function testTranslateAbstractConfigurableElementWithString()
     {

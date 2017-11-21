@@ -5,14 +5,13 @@ namespace Magium\WebDriver;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\Remote\DriverCommand;
 use Facebook\WebDriver\Remote\HttpCommandExecutor;
-use Facebook\WebDriver\Remote\RemoteExecuteMethod;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\WebDriverCommand;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverCommandExecutor;
 use Facebook\WebDriver\WebDriverElement;
-use Magium\Util\Log\Logger;
 use Magium\Util\Log\LoggerAware;
+use Magium\Util\Log\LoggerInterface;
 
 
 class WebDriver extends RemoteWebDriver implements LoggerAware
@@ -25,7 +24,7 @@ class WebDriver extends RemoteWebDriver implements LoggerAware
     const BY_CSS_SELECTOR = 'byCssSelector';
 
     /**
-     * @var Logger
+     * @var \Magium\Util\Log\LoggerInterface
      */
 
     protected $logger;
@@ -62,7 +61,7 @@ class WebDriver extends RemoteWebDriver implements LoggerAware
 
     public function logFind($by, $selector)
     {
-        if ($this->logger instanceof Logger) {
+        if ($this->logger instanceof \Magium\Util\Log\LoggerInterface) {
             $this->logger->debug(
                 sprintf(
                     'By: %s %s',
@@ -81,7 +80,7 @@ class WebDriver extends RemoteWebDriver implements LoggerAware
 
     public function logElement(WebDriverElement $element)
     {
-        if ($this->logger instanceof Logger) {
+        if ($this->logger instanceof LoggerInterface) {
             $this->logger->debug(
                 sprintf(
                     'Returned element: %s ID: %s',
@@ -91,7 +90,7 @@ class WebDriver extends RemoteWebDriver implements LoggerAware
                 [
                     'type'      => 'webdriver-activity',
                     'activity'  => 'element-return',
-                    'type'      => get_class($element),
+                    'class'      => get_class($element),
                     'id'        => $element->getID()
                 ]
             );
@@ -103,7 +102,7 @@ class WebDriver extends RemoteWebDriver implements LoggerAware
         $this->executeMethod = $method;
     }
 
-    public function setLogger(Logger $logger)
+    public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

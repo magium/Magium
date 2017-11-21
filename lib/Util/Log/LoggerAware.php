@@ -4,5 +4,5 @@ namespace Magium\Util\Log;
 
 interface LoggerAware
 {
-    public function setLogger(Logger $logger);
+    public function setLogger(LoggerInterface $logger);
 }

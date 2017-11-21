@@ -2,7 +2,7 @@
 
 namespace Magium\Commands;
 
-use Magium\Util\Log\Logger;
+use Magium\Util\Log\LoggerInterface;
 use Magium\WebDriver\WebDriver;
 
 
@@ -13,7 +13,7 @@ class Open implements CommandInterface
     
     public function __construct(
         WebDriver $webdriver,
-        Logger    $log
+        LoggerInterface    $log
     )
     {
         $this->webdriver = $webdriver;

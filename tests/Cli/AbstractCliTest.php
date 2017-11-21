@@ -3,9 +3,10 @@
 namespace Tests\Magium\Cli;
 
 use Magium\Cli\CommandLoader;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 
-abstract class AbstractCliTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractCliTest extends TestCase
 {
 
     protected $baseDir;

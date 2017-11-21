@@ -2,6 +2,7 @@
 
 namespace Magium\TestCase;
 
+use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Interop\Container\ContainerInterface;
 use Magium\AbstractTestCase;
 use Magium\InvalidConfigurationException;
@@ -10,12 +11,15 @@ use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
 use Magium\Util\Configuration\ConfigurationProviderInterface;
 use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Log\Logger;
+use Magium\Util\Log\LoggerPHPUnit5;
+use Magium\Util\Phpunit\MasterListenerInterface;
 use Magium\Util\TestCase\RegistrationListener;
 use Magium\WebDriver\LoggingRemoteExecuteMethod;
 use Magium\WebDriver\WebDriver;
 use Zend\Di\Config;
 use Zend\Di\Di;
 use Zend\I18n\Translator\Translator;
+use Zend\Log\LoggerInterface;
 use Zend\Log\Writer\Noop;
 
 class Initializer
@@ -88,12 +92,12 @@ class Initializer
         if ($webDriver instanceof WebDriver) {
             $testCase->setWebdriver($webDriver);
             $testCase->setTypePreference(
-                'Facebook\WebDriver\WebDriver',
-                'Magium\WebDriver\WebDriver'
+                \Facebook\WebDriver\WebDriver::class,
+                \Magium\WebDriver\WebDriver::class
             );
             $testCase->setTypePreference(
-                'Facebook\WebDriver\RemoteWebDriver',
-                'Magium\WebDriver\WebDriver'
+                RemoteWebDriver::class,
+                \Magium\WebDriver\WebDriver::class
             );
         } else {
             throw new InvalidConfigurationException('DIC has misconfigured WebDriver object');
@@ -102,7 +106,7 @@ class Initializer
 
     protected function initLoggingExecutor(AbstractTestCase $testCase)
     {
-        $remote = $testCase->getDi()->get('Magium\WebDriver\LoggingRemoteExecuteMethod');
+        $remote = $testCase->getDi()->get(LoggingRemoteExecuteMethod::class);
         if ($remote instanceof LoggingRemoteExecuteMethod) {
             $testCase->getWebdriver()->setRemoteExecuteMethod($remote);
         } else {
@@ -123,7 +127,8 @@ class Initializer
 
     protected function attachMasterListener(AbstractTestCase $testCase)
     {
-        $testCase->getDi()->instanceManager()->addSharedInstance(AbstractTestCase::getMasterListener(), 'Magium\Util\Phpunit\MasterListener');
+        $masterListener = AbstractTestCase::getMasterListener();
+        $testCase->getDi()->instanceManager()->addSharedInstance($masterListener, MasterListenerInterface::class);
     }
 
     public function initialize(AbstractTestCase $testCase, $force = false)
@@ -136,13 +141,16 @@ class Initializer
         $this->injectTestCaseHierarchy($testCase);
         $this->configureWebDriver($testCase);
         $this->initLoggingExecutor($testCase);
-        $this->setCharacteristics($testCase);
         $this->executeCallbacks($testCase);
+        $this->setCharacteristics($testCase);
         $this->initialized = $testCase;
     }
 
     protected function getDefaultConfiguration()
     {
+        // Choose the correct logger/listener for the version of PHPUnit being used
+        $loggerClass = class_exists('PHPUnit_Framework_TestCase')?LoggerPHPUnit5::class:Logger::class;
+
         return [
             'definition' => [
                 'class' => [
@@ -157,14 +165,16 @@ class Initializer
             ],
             'instance'  => [
                 'preference' => [
-                    Translator::class => [\Magium\Util\Translator\Translator::class]
+                    Translator::class => [\Magium\Util\Translator\Translator::class],
+                    LoggerInterface::class => [$loggerClass],
+                    \Magium\Util\Log\LoggerInterface::class => [$loggerClass],
                 ],
                 'Magium\Util\Translator\Translator' => [
                     'parameters'    => [
                         'locale'    => 'en_US'
                     ]
                 ],
-                'Magium\Util\Log\Logger'   => [
+                $loggerClass   => [
                     'parameters'    => [
                         'options'   => [
                             'writers' => [

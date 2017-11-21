@@ -1,14 +1,13 @@
 <?php
 
-namespace Magium\Util\Phpunit;
+namespace Magium\Util\Phpunit5;
 
 use Exception;
-use PHPUnit\Framework\AssertionFailedError;
-use PHPUnit\Framework\Test;
+use Magium\Util\Phpunit\MasterListenerInterface;
 use PHPUnit\Framework\TestListener;
-use PHPUnit\Framework\TestResult;
-use PHPUnit\Framework\TestSuite;
-use PHPUnit\Framework\Warning;
+use PHPUnit_Framework_AssertionFailedError;
+use PHPUnit_Framework_Test;
+use PHPUnit_Framework_TestSuite;
 
 class MasterListener implements TestListener, MasterListenerInterface
 {
@@ -19,7 +18,7 @@ class MasterListener implements TestListener, MasterListenerInterface
 
     /**
      * @param $class
-     * @return TestListener
+     * @return \PHPUnit_Framework_TestListener
      */
 
     public function getListener($class)
@@ -38,10 +37,10 @@ class MasterListener implements TestListener, MasterListenerInterface
         $this->result = null;
     }
 
-    public function addListener($listener)
+    public function addListener( $listener)
     {
         // This pretty piece of code is to maintain compatibility between PHPUnit 5 and 6.
-        if ($listener instanceof TestListener) {
+        if ($listener instanceof \PHPUnit_Framework_TestListener) {
             foreach ($this->listeners as $existingListener) {
                 if (get_class($listener) == get_class($existingListener)) {
                     return;
@@ -54,9 +53,9 @@ class MasterListener implements TestListener, MasterListenerInterface
         }
     }
 
-    public function play($method, $args, TestListener $instance = null)
+    public function play($method, $args, \PHPUnit_Framework_TestListener $instance = null)
     {
-        if ($instance instanceof TestListener) {
+        if ($instance instanceof \PHPUnit_Framework_TestListener) {
             call_user_func_array([$instance, $method], $args);
         } else {
             foreach ($this->listeners as $listener) {
@@ -65,7 +64,7 @@ class MasterListener implements TestListener, MasterListenerInterface
         }
     }
 
-    public function bindToResult(TestResult $result)
+    public function bindToResult(\PHPUnit_Framework_TestResult $result)
     {
         if ($this->result !== $result) {
             $this->result = $result;
@@ -73,7 +72,7 @@ class MasterListener implements TestListener, MasterListenerInterface
         }
     }
 
-    public function addError(Test $test, Exception $e, $time)
+    public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
         $this->replay[] = [
             'method' => __FUNCTION__,
@@ -82,7 +81,7 @@ class MasterListener implements TestListener, MasterListenerInterface
         $this->play(__FUNCTION__, func_get_args());
     }
 
-    public function addWarning(Test $test, Warning $e, $time)
+    public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
     {
         $this->replay[] = [
             'method' => __FUNCTION__,
@@ -91,7 +90,7 @@ class MasterListener implements TestListener, MasterListenerInterface
         $this->play(__FUNCTION__, func_get_args());
     }
 
-    public function addFailure(Test $test, AssertionFailedError $e, $time)
+    public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
         $this->replay[] = [
             'method' => __FUNCTION__,
@@ -100,7 +99,7 @@ class MasterListener implements TestListener, MasterListenerInterface
         $this->play(__FUNCTION__, func_get_args());
     }
 
-    public function addIncompleteTest(Test $test, Exception $e, $time)
+    public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
         $this->replay[] = [
             'method' => __FUNCTION__,
@@ -109,7 +108,7 @@ class MasterListener implements TestListener, MasterListenerInterface
         $this->play(__FUNCTION__, func_get_args());
     }
 
-    public function addRiskyTest(Test $test, Exception $e, $time)
+    public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
         $this->replay[] = [
             'method' => __FUNCTION__,
@@ -118,7 +117,7 @@ class MasterListener implements TestListener, MasterListenerInterface
         $this->play(__FUNCTION__, func_get_args());
     }
 
-    public function addSkippedTest(Test $test, Exception $e, $time)
+    public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
         $this->replay[] = [
             'method' => __FUNCTION__,
@@ -127,7 +126,7 @@ class MasterListener implements TestListener, MasterListenerInterface
         $this->play(__FUNCTION__, func_get_args());
     }
 
-    public function startTestSuite(TestSuite $suite)
+    public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
         $this->replay[] = [
             'method' => __FUNCTION__,
@@ -136,7 +135,7 @@ class MasterListener implements TestListener, MasterListenerInterface
         $this->play(__FUNCTION__, func_get_args());
     }
 
-    public function endTestSuite(TestSuite $suite)
+    public function startTest(PHPUnit_Framework_Test $test)
     {
         $this->replay[] = [
             'method' => __FUNCTION__,
@@ -145,16 +144,7 @@ class MasterListener implements TestListener, MasterListenerInterface
         $this->play(__FUNCTION__, func_get_args());
     }
 
-    public function startTest(Test $test)
-    {
-        $this->replay[] = [
-            'method' => __FUNCTION__,
-            'args'  => func_get_args()
-        ];
-        $this->play(__FUNCTION__, func_get_args());
-    }
-
-    public function endTest(Test $test, $time)
+    public function endTest(PHPUnit_Framework_Test $test, $time)
     {
         $this->replay[] = [
             'method' => __FUNCTION__,

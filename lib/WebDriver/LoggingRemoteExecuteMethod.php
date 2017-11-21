@@ -3,13 +3,13 @@
 namespace Magium\WebDriver;
 
 use Facebook\WebDriver\Remote\RemoteExecuteMethod;
-use Magium\Util\Log\Logger;
+use Magium\Util\Log\LoggerInterface;
 
 class LoggingRemoteExecuteMethod extends RemoteExecuteMethod
 {
     protected $logger;
 
-    public function __construct(WebDriver $driver, Logger $logger)
+    public function __construct(WebDriver $driver, LoggerInterface $logger)
     {
         parent::__construct($driver);
         $this->logger = $logger;

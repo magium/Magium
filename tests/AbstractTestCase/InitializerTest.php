@@ -2,11 +2,10 @@
 
 namespace Tests\Magium\AbstractTestCase;
 
-use Magium\AbstractTestCase;
 use Magium\TestCase\Initializer;
-use Magium\Util\Api\Clairvoyant\Clairvoyant;
+use PHPUnit\Framework\TestCase;
 
-class InitializerTest extends \PHPUnit_Framework_TestCase
+class InitializerTest extends TestCase
 {
 
     public function testInitialize()
@@ -20,10 +19,9 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
 
     public function testInitializeIsOnlyRunOnceWhenCalledTwice()
     {
-        $clairvoyant = $this->getMockBuilder('Magium\Util\Api\Clairvoyant\Clairvoyant')->disableOriginalConstructor()->getMock();
-        $builder = $this->getMockBuilder('Magium\TestCase\Initializer');
-        $initializer = $builder->setMethods(['initClairvoyant'])->getMock();
-        $initializer->expects(self::once())->method('initClairvoyant')->willReturn($clairvoyant);
+        $builder = $this->getMockBuilder(Initializer::class);
+        $initializer = $builder->setMethods(['attachMasterListener'])->getMock();
+        $initializer->expects(self::once())->method('attachMasterListener');
 
         $test = new JustMe(null, [], null, $initializer);
         $initializer->initialize($test);
@@ -32,10 +30,9 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
 
     public function testInitializeIsRunTwiceWhenForced()
     {
-        $clairvoyant = $this->getMockBuilder('Magium\Util\Api\Clairvoyant\Clairvoyant')->disableOriginalConstructor()->getMock();
-        $builder = $this->getMockBuilder('Magium\TestCase\Initializer');
-        $initializer = $builder->setMethods(['initClairvoyant'])->getMock();
-        $initializer->expects(self::exactly(2))->method('initClairvoyant')->willReturn($clairvoyant);
+        $builder = $this->getMockBuilder(Initializer::class);
+        $initializer = $builder->setMethods(['attachMasterListener'])->getMock();
+        $initializer->expects(self::exactly(2))->method('attachMasterListener');
 
         $test = new JustMe(null, [], null, $initializer);
         $initializer->initialize($test);

@@ -5,15 +5,16 @@ namespace Magium\Assertions;
 use Magium\AbstractTestCase;
 use Magium\InvalidTestTypeException;
 use Magium\TestCaseAware;
-use Magium\Util\Log\Logger;
 use Magium\Util\Log\LoggerAware;
+use Magium\Util\Log\LoggerInterface;
 use Magium\WebDriver\WebDriver;
 use Magium\WebDriver\WebDriverAware;
+use PHPUnit\Framework\TestCase;
 
 abstract class AbstractAssertion implements LoggerAware, TestCaseAware, WebDriverAware, AssertionInterface
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
 
     protected $logger;
@@ -35,12 +36,12 @@ abstract class AbstractAssertion implements LoggerAware, TestCaseAware, WebDrive
         $this->webDriver = $webdriver;
     }
 
-    public function setLogger(Logger $logger)
+    public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
-    public function setTestCase(\PHPUnit_Framework_TestCase $testCase)
+    public function setTestCase(TestCase $testCase)
     {
         $this->testCase = $testCase;
     }

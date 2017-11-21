@@ -11,14 +11,15 @@ use Magium\Assertions\Element\NotClickable;
 use Magium\Assertions\Element\NotDisplayed;
 use Magium\Assertions\Element\NotExists;
 use Magium\Assertions\LoggingAssertionExecutor;
+use Magium\Commands\Open;
 use Magium\TestCase\Initializer;
 use Magium\TestCase\InitializerContainer;
 use Magium\Themes\BaseThemeInterface;
-use Magium\Util\Log\Logger;
+use Magium\Util\Log\LoggerInterface;
 use Magium\Util\Phpunit\MasterListener;
+use Magium\Util\Phpunit\MasterListenerInterface;
 use Magium\WebDriver\WebDriver;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_TestResult;
 use Zend\Di\Di;
 
 abstract class AbstractTestCase extends TestCase
@@ -127,7 +128,7 @@ abstract class AbstractTestCase extends TestCase
         parent::__construct($name, $data, $dataName);
     }
 
-    public function setTestResultObject(PHPUnit_Framework_TestResult $result)
+    public function setResultObject(\PHPUnit_Framework_TestResult $result)
     {
         // This odd little function is here because the first place where you can reliably add a listener without
         // having to make a phpunit.xml or program argument change
@@ -142,8 +143,12 @@ abstract class AbstractTestCase extends TestCase
 
     public static function getMasterListener()
     {
-        if (!self::$masterListener instanceof MasterListener) {
-            self::$masterListener = new MasterListener();
+        if (!self::$masterListener instanceof MasterListenerInterface) {
+            if (interface_exists('PHPUnit_Framework_Test')) {
+                self::$masterListener = new \Magium\Util\Phpunit5\MasterListener();
+            } else {
+                self::$masterListener = new MasterListener();
+            }
         }
         return self::$masterListener;
     }
@@ -356,17 +361,17 @@ abstract class AbstractTestCase extends TestCase
 
     public function commandOpen($url)
     {
-        $this->get('Magium\Commands\Open')->open($url);
+        $this->get(Open::class)->open($url);
     }
 
 
     /**
-     * @return \Magium\Util\Log\Logger
+     * @return LoggerInterface
      */
 
     public function getLogger()
     {
-        return $this->get('Magium\Util\Log\Logger');
+        return $this->get(LoggerInterface::class);
     }
 
     public function get($class)
@@ -490,7 +495,7 @@ abstract class AbstractTestCase extends TestCase
         } else {
             throw new InvalidConfigurationException('The theme configuration implement Magium\Themes\ThemeConfigurationInterface');
         }
-        $this->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_THEME, $fullyQualifiedClassName);
+        $this->getLogger()->addCharacteristic(LoggerInterface::CHARACTERISTIC_THEME, $fullyQualifiedClassName);
     }
 
     public static function assertWebDriverElement($element)

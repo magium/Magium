@@ -3,7 +3,9 @@
 namespace Magium;
 
 
+use PHPUnit\Framework\TestCase;
+
 interface TestCaseAware
 {
-    public function setTestCase(\PHPUnit_Framework_TestCase $testCase);
+    public function setTestCase(TestCase $testCase);
 }

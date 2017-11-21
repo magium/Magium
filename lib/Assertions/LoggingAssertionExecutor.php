@@ -4,7 +4,7 @@ namespace Magium\Assertions;
 
 use Magium\AbstractTestCase;
 use Magium\Assertions\Element\AbstractSelectorAssertion;
-use Magium\Util\Log\Logger;
+use Zend\Log\LoggerInterface;
 
 class LoggingAssertionExecutor
 {
@@ -15,7 +15,7 @@ class LoggingAssertionExecutor
     protected $testCase;
 
     public function __construct(
-        Logger $logger,
+        LoggerInterface $logger,
         AbstractTestCase $testCase
     )
     {

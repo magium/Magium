@@ -6,7 +6,7 @@ use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
 use Magium\AbstractTestCase;
 use Magium\InvalidInstructionException;
-use Magium\Util\Log\Logger;
+use Magium\Util\Log\LoggerInterface;
 use Magium\Util\Translator\Translator;
 use Magium\WebDriver\WebDriver;
 
@@ -29,7 +29,7 @@ class LinkSequence implements NavigatorInterface
         AbstractTestCase $testCase,
         WebDriver $webDriver,
         Translator $translator,
-        Logger $logger
+        LoggerInterface $logger
     )
     {
         $this->testCase = $testCase;

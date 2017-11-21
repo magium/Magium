@@ -16,7 +16,7 @@ class IntrospectionTest extends AbstractTestCase
     {
         $introspection = $this->get(Introspector::class);
         /* @var $introspection Introspector */
-        $magiumPath = realpath(__DIR__ . '/../../lib');
+        $magiumPath = realpath(__DIR__ . '/../../lib/Assertions');
         $result = $introspection->introspect($magiumPath);
 
         self::assertGreaterThan(0, count($result));

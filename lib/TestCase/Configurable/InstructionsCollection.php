@@ -2,9 +2,7 @@
 
 namespace Magium\TestCase\Configurable;
 
-use Magium\Assertions\AssertInterface;
-use Magium\Assertions\Element\AbstractSelectorAssertion;
-use Magium\Util\Log\Logger;
+use Magium\Util\Log\LoggerInterface;
 use Zend\Di\Di;
 
 class InstructionsCollection
@@ -18,7 +16,7 @@ class InstructionsCollection
     public function __construct(
         Di $container,
         Interpolator $interpolator,
-        Logger $logger
+        LoggerInterface $logger
     )
     {
         $this->container = $container;

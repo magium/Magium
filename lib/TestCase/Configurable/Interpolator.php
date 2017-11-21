@@ -2,7 +2,7 @@
 
 namespace Magium\TestCase\Configurable;
 
-use Magium\Util\Log\Logger;
+use Magium\Util\Log\LoggerInterface;
 use Zend\Di\Di;
 
 class Interpolator
@@ -13,7 +13,7 @@ class Interpolator
 
     public function __construct(
         Di $di,
-        Logger $logger
+        LoggerInterface $logger
     )
     {
         $this->container = $di;
