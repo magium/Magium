@@ -2,6 +2,7 @@
 
 namespace Magium\Assertions\Browser;
 
+use Magium\AbstractTestCase;
 use Magium\Assertions\AbstractAssertion;
 use Magium\Assertions\SelectorAssertionInterface;
 
@@ -14,12 +15,12 @@ class TitleStartsWith extends AbstractAssertion implements SelectorAssertionInte
     public function assert()
     {
         $title = $this->webDriver->getTitle();
-        \PHPUnit_Framework_TestCase::assertNotNull($title);
-        \PHPUnit_Framework_TestCase::assertNotNull($this->title);
+        AbstractTestCase::assertNotNull($title);
+        AbstractTestCase::assertNotNull($this->title);
         $title = trim($title);
         $pos = strpos($title, $this->title);
-        \PHPUnit_Framework_TestCase::assertNotFalse($pos);
-        \PHPUnit_Framework_TestCase::assertEquals(0, $pos);
+        AbstractTestCase::assertNotFalse($pos);
+        AbstractTestCase::assertEquals(0, $pos);
     }
 
 }

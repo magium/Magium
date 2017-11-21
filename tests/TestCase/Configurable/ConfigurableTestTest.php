@@ -13,6 +13,7 @@ use Magium\TestCase\Configurable\InstructionInterface;
 use Magium\TestCase\Configurable\InstructionsCollection;
 use Magium\TestCase\Configurable\Interpolator;
 use Magium\TestCase\Configurable\InvalidInstructionException;
+use PHPUnit\Framework\AssertionFailedError;
 use Zend\Log\Writer\WriterInterface;
 
 class ConfigurableTestTest extends AbstractTestCase
@@ -29,6 +30,7 @@ class ConfigurableTestTest extends AbstractTestCase
     {
         $instructionMock = $this->createMock(InstructionInterface::class);
         $this->getCollection()->addInstruction($instructionMock);
+        self::assertTrue(true); // Just looking for no errors
     }
 
     public function testCollectionExecutesNoParamInstruction()
@@ -78,7 +80,11 @@ HTML
 
     public function testCollectionInterpolationFails()
     {
-        $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
+        if (AbstractTestCase::isPHPUnit5()) {
+            $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
+        } else {
+            $this->expectException(AssertionFailedError::class);
+        }
         $this->setUpInterpolated();
         $this->commandOpen('file://' . $this->fileName);
 

@@ -5,6 +5,7 @@ namespace Tests\Magium\Assertions;
 use Magium\AbstractTestCase;
 use Magium\Assertions\Element\IsBelow;
 use Magium\Assertions\Element\IsRight;
+use PHPUnit\Framework\AssertionFailedError;
 
 class BelowBesideTest extends AbstractTestCase
 {
@@ -23,7 +24,12 @@ class BelowBesideTest extends AbstractTestCase
 
     public function testIsBelowFailsWhenWrong()
     {
-        $this->expectException('PHPUnit_Framework_AssertionFailedError');
+        // The page will have only been loaded once
+        if (AbstractTestCase::isPHPUnit5()) {
+            $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
+        } else {
+            $this->expectException(AssertionFailedError::class);
+        }
         $this->writePage();
         $topElement = $this->byId('bottom-left');
         $bottomElement = $this->byId('top-left');
@@ -49,7 +55,12 @@ class BelowBesideTest extends AbstractTestCase
 
     public function testIsRightFailsWhenWrong()
     {
-        $this->expectException('PHPUnit_Framework_AssertionFailedError');
+        // The page will have only been loaded once
+        if (AbstractTestCase::isPHPUnit5()) {
+            $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
+        } else {
+            $this->expectException(AssertionFailedError::class);
+        }
         $this->writePage();
         $leftElement = $this->byId('top-right');
         $rightElement = $this->byId('top-left');

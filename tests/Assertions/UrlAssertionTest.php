@@ -8,6 +8,7 @@ use Magium\Assertions\Url\Equals;
 use Magium\Assertions\Url\IsUrl;
 use Magium\Assertions\Url\NotContains;
 use Magium\Assertions\Url\NotEquals;
+use PHPUnit\Framework\ExpectationFailedException;
 
 class UrlAssertionTest extends AbstractTestCase
 {
@@ -43,7 +44,11 @@ class UrlAssertionTest extends AbstractTestCase
 
     public function testIsUrlFails()
     {
-        $this->expectException(\PHPUnit_Framework_ExpectationFailedException::class);
+        if (AbstractTestCase::isPHPUnit5()) {
+            $this->expectException(\PHPUnit_Framework_ExpectationFailedException::class);
+        } else {
+            $this->expectException(ExpectationFailedException::class);
+        }
         $this->getAssertion(IsUrl::ASSERTION)->assertSelector('a string');
     }
 }

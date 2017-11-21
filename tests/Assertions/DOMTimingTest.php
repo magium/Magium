@@ -6,6 +6,7 @@ use Magium\AbstractTestCase;
 use Magium\Assertions\Browser\DOMContentLoadedLessThan;
 use Magium\Assertions\Browser\DOMPageLoadedLessThan;
 use Magium\Assertions\Browser\TTFBLoadedLessThan;
+use PHPUnit\Framework\ExpectationFailedException;
 
 class DOMTiming extends AbstractTestCase
 {
@@ -26,6 +27,12 @@ class DOMTiming extends AbstractTestCase
         /* @var $assertion DOMContentLoadedLessThan */
         $assertion->setMaxElapsedMilliseconds(1);
         $this->expectException('PHPUnit_Framework_ExpectationFailedException');
+        // The page will have only been loaded once
+        if (AbstractTestCase::isPHPUnit5()) {
+            $this->expectException(\PHPUnit_Framework_ExpectationFailedException::class);
+        } else {
+            $this->expectException(ExpectationFailedException::class);
+        }
         $assertion->assert();
     }
 
@@ -44,7 +51,11 @@ class DOMTiming extends AbstractTestCase
         $assertion = $this->getAssertion(DOMPageLoadedLessThan::ASSERTION);
         /* @var $assertion DOMPageLoadedLessThan */
         $assertion->setMaxElapsedMilliseconds(1);
-        $this->expectException('PHPUnit_Framework_ExpectationFailedException');
+        if (AbstractTestCase::isPHPUnit5()) {
+            $this->expectException(\PHPUnit_Framework_ExpectationFailedException::class);
+        } else {
+            $this->expectException(ExpectationFailedException::class);
+        }
         $assertion->assert();
     }
 
@@ -63,7 +74,11 @@ class DOMTiming extends AbstractTestCase
         $assertion = $this->getAssertion(TTFBLoadedLessThan::ASSERTION);
         /* @var $assertion TTFBLoadedLessThan */
         $assertion->setMaxElapsedMilliseconds(1);
-        $this->expectException('PHPUnit_Framework_ExpectationFailedException');
+        if (AbstractTestCase::isPHPUnit5()) {
+            $this->expectException(\PHPUnit_Framework_ExpectationFailedException::class);
+        } else {
+            $this->expectException(ExpectationFailedException::class);
+        }
         $assertion->assert();
     }
 

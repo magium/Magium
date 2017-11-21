@@ -56,22 +56,6 @@ class AbstractConfigurableElementTest extends AbstractTestCase
         parent::tearDown();
     }
 
-    public function testPropertyPassedViaEnvironmentVariable()
-    {
-        $_ENV['MAGIUM_TESTS_MAGIUM_ELEMENTS_PROPERTYELEMENT_property'] = 'changed';
-        $obj = new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader()), new DefaultPropertyCollector());
-        $obj->setTranslator(new Translator());
-        self::assertEquals('changed', $obj->getProperty());
-    }
-
-    public function testPropertyPassedViaEnvironmentVariableRecursive()
-    {
-        $_ENV['MAGIUM_TESTS_MAGIUM_ELEMENTS_PROPERTYELEMENT_property'] = 'changed';
-        $obj = new RecursivePropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader()), new DefaultPropertyCollector());
-        $obj->setTranslator(new Translator());
-        self::assertEquals('changed', $obj->getProperty());
-    }
-
     public function testTranslationSmokeTest()
     {
         $obj = new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader()), new DefaultPropertyCollector());
@@ -179,6 +163,21 @@ class AbstractConfigurableElementTest extends AbstractTestCase
         self::assertTrue(in_array(AbstractExtractor::class, $result), 'Missing the AbstractExtractor extraction');
     }
 
+    public function testPropertyPassedViaEnvironmentVariable()
+    {
+        $_ENV['MAGIUM_TESTS_MAGIUM_ELEMENTS_PROPERTYELEMENT_property'] = 'changed';
+        $obj = new PropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader()), new DefaultPropertyCollector());
+        $obj->setTranslator(new Translator());
+        self::assertEquals('changed', $obj->getProperty());
+    }
+
+    public function testPropertyPassedViaEnvironmentVariableRecursive()
+    {
+        $_ENV['MAGIUM_TESTS_MAGIUM_ELEMENTS_PROPERTYELEMENT_property'] = 'changed';
+        $obj = new RecursivePropertyElement(new StandardConfigurationProvider(new ConfigurationReader(), new ClassConfigurationReader(), new EnvironmentConfigurationReader()), new DefaultPropertyCollector());
+        $obj->setTranslator(new Translator());
+        self::assertEquals('changed', $obj->getProperty());
+    }
 
 }
 

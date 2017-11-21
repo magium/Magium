@@ -4,6 +4,7 @@ namespace Tests\Magium\Assertions;
 
 use Magium\AbstractTestCase;
 use Magium\Assertions\Browser\LogEmpty;
+use PHPUnit\Framework\AssertionFailedError;
 
 class BrowserLogTest extends AbstractTestCase
 {
@@ -34,7 +35,12 @@ HTML
 
         $assertion = $this->getAssertion(LogEmpty::ASSERTION);
         /* @var $assertion LogEmpty */
-        $this->expectException('PHPUnit_Framework_AssertionFailedError');
+        // The page will have only been loaded once
+        if (AbstractTestCase::isPHPUnit5()) {
+            $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
+        } else {
+            $this->expectException(AssertionFailedError::class);
+        }
         $assertion->assert();
     }
 
