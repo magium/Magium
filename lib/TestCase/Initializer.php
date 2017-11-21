@@ -6,13 +6,8 @@ use Interop\Container\ContainerInterface;
 use Magium\AbstractTestCase;
 use Magium\InvalidConfigurationException;
 use Magium\TestCaseConfiguration;
-use Magium\Util\Api\Clairvoyant\Clairvoyant;
-use Magium\Util\Api\Request;
-use Magium\Util\Configuration\ClassConfigurationReader;
 use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
 use Magium\Util\Configuration\ConfigurationProviderInterface;
-use Magium\Util\Configuration\ConfigurationReader;
-use Magium\Util\Configuration\EnvironmentConfigurationReader;
 use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Log\Logger;
 use Magium\Util\TestCase\RegistrationListener;
@@ -115,25 +110,6 @@ class Initializer
         }
     }
 
-    protected function configureClairvoyant(AbstractTestCase $testCase)
-    {
-        // This is going to be refactored in a completely backwards compatible way.  Currently, because the DiC is
-        // rebuilt for each request it doesn't maintain state between tests.  This is a good thing... except when
-        // something that understands it (the MasterListener) does retain state.
-
-        $clairvoyant = $this->initClairvoyant($testCase);
-
-        /* @var $clairvoyant \Magium\Util\Api\Clairvoyant\Clairvoyant */
-        $request = $testCase->get('Magium\Util\Api\Request');
-        if ($request instanceof Request) {
-            $clairvoyant->setApiRequest($request);
-        }
-        $clairvoyant->reset();
-        $clairvoyant->setSessionId($testCase->getWebdriver()->getSessionID());
-        $clairvoyant->setCapability($this->testCaseConfigurationObject->getCapabilities());
-        $testCase->getLogger()->addWriter($clairvoyant);
-    }
-
     protected function executeCallbacks(AbstractTestCase $testCase)
     {
         RegistrationListener::executeCallbacks($testCase);
@@ -160,27 +136,9 @@ class Initializer
         $this->injectTestCaseHierarchy($testCase);
         $this->configureWebDriver($testCase);
         $this->initLoggingExecutor($testCase);
-        $this->configureClairvoyant($testCase);
         $this->setCharacteristics($testCase);
         $this->executeCallbacks($testCase);
         $this->initialized = $testCase;
-    }
-
-
-    protected function initClairvoyant(AbstractTestCase $testCase)
-    {
-        $clairvoyant = AbstractTestCase::getMasterListener()->getListener('Magium\Util\Api\Clairvoyant\Clairvoyant');
-        if ($clairvoyant instanceof Clairvoyant) {
-            $testCase->getDi()->instanceManager()->addSharedInstance($clairvoyant, get_class($clairvoyant));
-        } else {
-            $clairvoyant = $testCase->get('Magium\Util\Api\Clairvoyant\Clairvoyant');
-            if ($clairvoyant instanceof Clairvoyant) {
-                AbstractTestCase::getMasterListener()->addListener($clairvoyant);
-            } else {
-                throw new InvalidConfigurationException('Invalid Clairvoyant preference');
-            }
-        }
-        return $clairvoyant;
     }
 
     protected function getDefaultConfiguration()
