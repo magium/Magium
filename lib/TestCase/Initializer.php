@@ -11,6 +11,7 @@ use Magium\Util\Configuration\ConfigurationCollector\DefaultPropertyCollector;
 use Magium\Util\Configuration\ConfigurationProviderInterface;
 use Magium\Util\Configuration\StandardConfigurationProvider;
 use Magium\Util\Log\Logger;
+use Magium\Util\Log\LoggerInterface;
 use Magium\Util\Log\LoggerPHPUnit5;
 use Magium\Util\Phpunit\MasterListenerInterface;
 use Magium\Util\TestCase\RegistrationListener;
@@ -19,7 +20,6 @@ use Magium\WebDriver\WebDriver;
 use Zend\Di\Config;
 use Zend\Di\Di;
 use Zend\I18n\Translator\Translator;
-use Zend\Log\LoggerInterface;
 use Zend\Log\Writer\Noop;
 
 class Initializer
@@ -121,8 +121,8 @@ class Initializer
 
     protected function setCharacteristics(AbstractTestCase $testCase)
     {
-        $testCase->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_BROWSER, $testCase->getWebdriver()->getBrowser());
-        $testCase->getLogger()->addCharacteristic(Logger::CHARACTERISTIC_OPERATING_SYSTEM, $testCase->getWebdriver()->getPlatform());
+        $testCase->getLogger()->addCharacteristic(LoggerInterface::CHARACTERISTIC_BROWSER, $testCase->getWebdriver()->getBrowser());
+        $testCase->getLogger()->addCharacteristic(LoggerInterface::CHARACTERISTIC_OPERATING_SYSTEM, $testCase->getWebdriver()->getPlatform());
     }
 
     protected function attachMasterListener(AbstractTestCase $testCase)
@@ -166,8 +166,8 @@ class Initializer
             'instance'  => [
                 'preference' => [
                     Translator::class => [\Magium\Util\Translator\Translator::class],
+                    \Zend\Log\LoggerInterface::class => [$loggerClass],
                     LoggerInterface::class => [$loggerClass],
-                    \Magium\Util\Log\LoggerInterface::class => [$loggerClass],
                 ],
                 'Magium\Util\Translator\Translator' => [
                     'parameters'    => [

@@ -20,6 +20,9 @@ class NotClickable extends AbstractSelectorAssertion
             $this->getTestCase()->fail(sprintf('The element %s, located with %s, is clickable but should not be', $this->selector, $by));
         } catch (\Exception $e) {
             // A failure is what we are hoping for.  It indicates that the element is not clickable, just like what the class wants
+
+            // Protects against warnings that the test had no assertions.
+            AbstractTestCase::assertTrue(true);
         }
     }
 

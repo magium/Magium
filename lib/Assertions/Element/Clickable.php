@@ -17,6 +17,8 @@ class Clickable extends AbstractSelectorAssertion
         $by = $this->getTestCase()->filterWebDriverAction($this->by);
         try {
             $this->webDriver->wait(1)->until(ExpectedCondition::elementToBeClickable(WebDriverBy::$by($this->selector)));
+            // Protects against warnings that the test had no assertions.
+            AbstractTestCase::assertTrue(true);
         } catch (\Exception $e) {
             $this->getTestCase()->fail(sprintf('The element %s, located with %s, cannot be clicked', $this->selector, $by));
         }

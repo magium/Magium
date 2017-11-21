@@ -26,7 +26,7 @@ class InterpolatorTest extends AbstractTestCase
 
     public function testNullResultThrowsException()
     {
-        $this->setExpectedException(InvalidInstructionException::class);
+        $this->expectException(InvalidInstructionException::class);
         $interpolator = $this->getInterpolator();
         $interpolator->interpolate('set {{$executeMe->noParams()->boogers()}}');
     }

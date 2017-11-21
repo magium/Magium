@@ -16,7 +16,7 @@ class ListElementsTest extends AbstractCliTest
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $this->setExpectedException('Magium\NotFoundException');
+        $this->expectException('Magium\NotFoundException');
         $command = $application->find('element:list');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
@@ -32,7 +32,7 @@ class ListElementsTest extends AbstractCliTest
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $this->setExpectedException('Magium\NotFoundException');
+        $this->expectException('Magium\NotFoundException');
         $command = $application->find('element:list');
         $commandTester = new CommandTester($command);
         $commandTester->execute([

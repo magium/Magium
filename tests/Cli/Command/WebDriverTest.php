@@ -68,7 +68,7 @@ class WebDriverTest extends AbstractCliTest
         $application = $this->getConfiguredApplication();
         $command = $application->find('magium:webdriver');
         $commandTester = new CommandTester($command);
-        $this->setExpectedException('Magium\InvalidInstructionException');
+        $this->expectException('Magium\InvalidInstructionException');
         $commandTester->execute([]);
 
 

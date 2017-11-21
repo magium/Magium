@@ -34,7 +34,7 @@ HTML
 
         $assertion = $this->getAssertion(LogEmpty::ASSERTION);
         /* @var $assertion LogEmpty */
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        $this->expectException('PHPUnit_Framework_AssertionFailedError');
         $assertion->assert();
     }
 

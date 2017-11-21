@@ -3,6 +3,8 @@
 namespace Magium\Assertions\Element;
 
 
+use Magium\AbstractTestCase;
+
 class NotExists extends AbstractSelectorAssertion
 {
 
@@ -15,6 +17,7 @@ class NotExists extends AbstractSelectorAssertion
             $this->getTestCase()->assertWebDriverElement($this->webDriver->{$this->by}($this->selector));
         } catch (\Exception $e) {
             $exceptionThrown = true;
+            AbstractTestCase::assertTrue(true); // protection against " test did not perform any assertions"
         }
         if (!$exceptionThrown) {
             $this->getTestCase()->fail(sprintf('Element "%s" was found using selector "%s"', $this->selector, $this->by));

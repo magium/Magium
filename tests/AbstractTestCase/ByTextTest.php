@@ -63,7 +63,8 @@ class ByTextTest extends AbstractTestCase
     public function testOptionWithTranslator()
     {
         $this->writePage();
-        $this->byText('{{Some Text}}');
+        $element = $this->byText('{{Some Text}}');
+        self::assertNotNull($element);
     }
 
     protected $filename;

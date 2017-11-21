@@ -4,6 +4,7 @@ namespace Tests\Magium\AbstractTestCase
 {
 
     use Magium\AbstractTestCase;
+    use Zend\Di\Exception\ClassNotFoundException;
 
     class BaseNamespaceTest extends AbstractTestCase
     {
@@ -11,7 +12,12 @@ namespace Tests\Magium\AbstractTestCase
 
         public function testAddingBaseNamespaceFailsWithoutClassResolution()
         {
-            $this->setExpectedException('Zend\Di\Exception\ClassNotFoundException');
+            if (AbstractTestCase::isPHPUnit5()) {
+                //PHPUnit 5
+                $this->expectException('Zend\Di\Exception\ClassNotFoundException');
+            } else {
+                $this->expectException(ClassNotFoundException::class);
+            }
             self::assertInstanceOf('ArbitraryNamespace\Navigators\TestNavigator', $this->getNavigator('TestNavigator'));
         }
 

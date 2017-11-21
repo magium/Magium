@@ -23,7 +23,7 @@ class BelowBesideTest extends AbstractTestCase
 
     public function testIsBelowFailsWhenWrong()
     {
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        $this->expectException('PHPUnit_Framework_AssertionFailedError');
         $this->writePage();
         $topElement = $this->byId('bottom-left');
         $bottomElement = $this->byId('top-left');
@@ -49,7 +49,7 @@ class BelowBesideTest extends AbstractTestCase
 
     public function testIsRightFailsWhenWrong()
     {
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        $this->expectException('PHPUnit_Framework_AssertionFailedError');
         $this->writePage();
         $leftElement = $this->byId('top-right');
         $rightElement = $this->byId('top-left');

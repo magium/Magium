@@ -25,7 +25,7 @@ class DOMTiming extends AbstractTestCase
         $assertion = $this->getAssertion(DOMContentLoadedLessThan::ASSERTION);
         /* @var $assertion DOMContentLoadedLessThan */
         $assertion->setMaxElapsedMilliseconds(1);
-        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
+        $this->expectException('PHPUnit_Framework_ExpectationFailedException');
         $assertion->assert();
     }
 
@@ -44,7 +44,7 @@ class DOMTiming extends AbstractTestCase
         $assertion = $this->getAssertion(DOMPageLoadedLessThan::ASSERTION);
         /* @var $assertion DOMPageLoadedLessThan */
         $assertion->setMaxElapsedMilliseconds(1);
-        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
+        $this->expectException('PHPUnit_Framework_ExpectationFailedException');
         $assertion->assert();
     }
 
@@ -63,7 +63,7 @@ class DOMTiming extends AbstractTestCase
         $assertion = $this->getAssertion(TTFBLoadedLessThan::ASSERTION);
         /* @var $assertion TTFBLoadedLessThan */
         $assertion->setMaxElapsedMilliseconds(1);
-        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
+        $this->expectException('PHPUnit_Framework_ExpectationFailedException');
         $assertion->assert();
     }
 

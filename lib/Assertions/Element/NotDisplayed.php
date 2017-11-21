@@ -3,6 +3,8 @@
 namespace Magium\Assertions\Element;
 
 
+use Magium\AbstractTestCase;
+
 class NotDisplayed extends AbstractSelectorAssertion
 {
 
@@ -11,7 +13,7 @@ class NotDisplayed extends AbstractSelectorAssertion
     public function assert()
     {
         $this->getTestCase()->assertElementExists($this->selector, $this->by);
-        \PHPUnit_Framework_TestCase::assertFalse(
+        AbstractTestCase::assertFalse(
             $this->webDriver->{$this->by}($this->selector)->isDisplayed(),
             sprintf('The element: %s, is displayed and it should not have been', $this->selector)
         );

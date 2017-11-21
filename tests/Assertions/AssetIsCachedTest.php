@@ -4,6 +4,7 @@ namespace Tests\Magium\Assertions;
 
 use Magium\AbstractTestCase;
 use Magium\Assertions\Browser\AssetIsCached;
+use PHPUnit\Framework\AssertionFailedError;
 
 class AssetIsCachedTest extends AbstractTestCase
 {
@@ -18,7 +19,11 @@ class AssetIsCachedTest extends AbstractTestCase
         $assertion->setAssetUrl('http://magento.magiumlib.com/skin/frontend/rwd/default/images/media/logo.png');
 
         // The page will have only been loaded once
-        $this->expectException(\PHPUnit_Framework_AssertionFailedError::class, 'Asset was not cached: http://magento.magiumlib.com/skin/frontend/rwd/default/images/media/logo.png');
+        if (AbstractTestCase::isPHPUnit5()) {
+            $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
+        } else {
+            $this->expectException(AssertionFailedError::class);
+        }
         $assertion->assert();
     }
 
@@ -91,7 +96,7 @@ class AssetIsCachedTest extends AbstractTestCase
         $assertion->setAssetUrl('boogers');
 
         // The page will have only been loaded once
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        $this->expectException('PHPUnit_Framework_AssertionFailedError');
         $assertion->assert();
     }
 

@@ -3,6 +3,7 @@
 namespace Tests\Magium\AbstractTestCase;
 
 use Magium\AbstractTestCase;
+use PHPUnit\Framework\AssertionFailedError;
 
 class CoreAssertionTest extends AbstractTestCase
 {
@@ -21,7 +22,12 @@ class CoreAssertionTest extends AbstractTestCase
 
     public function testAssertElementNotExistsFailsWhenElementExists()
     {
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        if (AbstractTestCase::isPHPUnit5()) {
+            // PHPUnit 5
+            $this->expectException('PHPUnit_Framework_AssertionFailedError');
+        } else {
+            $this->expectException(AssertionFailedError::class);
+        }
         $this->writePage();
         $this->assertElementNotExists('select1');
     }
@@ -73,7 +79,11 @@ class CoreAssertionTest extends AbstractTestCase
 
     public function testPageHasTextWithNoTextThrowsException()
     {
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        if (AbstractTestCase::isPHPUnit5()) {
+            $this->expectException('PHPUnit_Framework_AssertionFailedError');
+        } else {
+            $this->expectException(AssertionFailedError::class);
+        }
         $this->writePage();
         $this->assertPageHasText('My little buttercup');
     }
@@ -87,7 +97,12 @@ class CoreAssertionTest extends AbstractTestCase
 
     public function testPageNotHasTextWithRightTextThrowsException()
     {
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+        // PHPUnit 5
+        if (AbstractTestCase::isPHPUnit5()) {
+            $this->expectException('PHPUnit_Framework_AssertionFailedError');
+        } else {
+            $this->expectException(AssertionFailedError::class);
+        }
         $this->writePage();
         $this->assertPageNotHasText('Text');
     }

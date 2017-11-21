@@ -4,6 +4,7 @@ namespace Magium;
 
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\WebDriverException;
+use Facebook\WebDriver\WebDriverElement;
 use Magium\Assertions\Element\Clickable;
 use Magium\Assertions\Element\Displayed;
 use Magium\Assertions\Element\Exists;
@@ -124,17 +125,20 @@ abstract class AbstractTestCase extends TestCase
 
     public function __construct($name = null, array $data = [], $dataName = null, Initializer $initializer = null)
     {
+        // Init at the earliest possible convenience.
         self::getMasterListener();
         parent::__construct($name, $data, $dataName);
     }
 
-    public function setResultObject(\PHPUnit_Framework_TestResult $result)
-    {
-        // This odd little function is here because the first place where you can reliably add a listener without
-        // having to make a phpunit.xml or program argument change
-
+    public function setUseErrorHandlerFromAnnotation() {
+        /*
+         * This odd little function is here because the first place where you can reliably add a listener without
+         * having to make a phpunit.xml or program argument change AND the result object is available AND there is
+         * no incompatibility with PHPUnit 5.
+         */
+        $result = $this->getTestResultObject();
         self::getMasterListener()->bindToResult($result);
-        parent::setTestResultObject($result);
+        return parent::setUseErrorHandlerFromAnnotation();
     }
 
     /**
@@ -384,6 +388,10 @@ abstract class AbstractTestCase extends TestCase
         return $this->di->get($class);
     }
 
+    public static function isPHPUnit5()
+    {
+        return class_exists('PHPUnit_Framework_TestSuite');
+    }
 
     public function assertElementExists($selector, $by = 'byId')
     {
@@ -506,7 +514,8 @@ abstract class AbstractTestCase extends TestCase
     public function assertElementHasText($node, $text)
     {
         try {
-            $this->byXpath(sprintf('//%s[contains(., "%s")]', $node, addslashes($text)));
+            $element = $this->byXpath(sprintf('//%s[contains(., "%s")]', $node, addslashes($text)));
+            self::assertWebDriverElement($element);
         } catch (\Exception $e) {
             $this->fail('The body did not contain the text: ' . $text);
         }
@@ -515,12 +524,12 @@ abstract class AbstractTestCase extends TestCase
     public function assertPageHasText($text)
     {
         try {
-            $this->webdriver->byXpath(sprintf('//body[contains(., "%s")]', $text));
+            $element = $this->webdriver->byXpath(sprintf('//body[contains(., "%s")]', $text));
             // If the element is not found then an exception will be thrown
+            self::assertWebDriverElement($element);
         } catch (\Exception $e) {
             $this->fail('The body did not contain the text: ' . $text);
         }
-
     }
 
     public function assertPageNotHasText($text)
@@ -530,6 +539,7 @@ abstract class AbstractTestCase extends TestCase
             $this->fail('The page contains the words: ' . $text);
         } catch (NoSuchElementException $e) {
             // Exception thrown is a success
+            self::assertInstanceOf(NoSuchElementException::class, $e);
         }
     }
 

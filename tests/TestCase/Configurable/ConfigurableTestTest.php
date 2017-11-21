@@ -78,7 +78,7 @@ HTML
 
     public function testCollectionInterpolationFails()
     {
-        $this->setExpectedException(\PHPUnit_Framework_AssertionFailedError::class);
+        $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
         $this->setUpInterpolated();
         $this->commandOpen('file://' . $this->fileName);
 
@@ -143,7 +143,7 @@ HTML
 
     public function testCollectionThrowsExceptionWithInvalidAddObject()
     {
-        $this->setExpectedException(\Error::class);
+        $this->expectException(\Error::class);
         $object = new \stdClass();
 
         $this->getCollection()->addInstruction($object);

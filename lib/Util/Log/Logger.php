@@ -6,8 +6,12 @@ use Exception;
 use Magium\Assertions\AbstractAssertion;
 use Magium\Util\Phpunit\MasterListenerAware;
 use Magium\Util\Phpunit\MasterListenerInterface;
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\Warning;
 
 
 class Logger extends \Zend\Log\Logger implements TestListener, MasterListenerAware, LoggerInterface
@@ -94,46 +98,51 @@ class Logger extends \Zend\Log\Logger implements TestListener, MasterListenerAwa
         return array_merge($defaultArray, $includeArray);
     }
 
-    public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    public function addWarning(Test $test, Warning $e, $time)
+    {
+        $this->warn($e->getMessage(), $this->createExtra(['trace' => $e->getTraceAsString()]));
+    }
+
+    public function addError(Test $test, \Exception $e, $time)
     {
         $this->setTestStatus(self::STATUS_FAILED);
         $this->notice($e->getMessage(), $this->createExtra(['trace' => $e->getTraceAsString()]));
     }
 
-    public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
+    public function addFailure(Test $test, AssertionFailedError $e, $time)
     {
         $this->setTestStatus(self::STATUS_FAILED);
         $this->notice($e->getMessage(), $this->createExtra(['trace' => $e->getTraceAsString()]));
     }
 
-    public function addIncompleteTest(\PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addIncompleteTest(Test $test, Exception $e, $time)
     {
         $this->setTestStatus(self::STATUS_INCOMPLETE);
         $this->notice($e->getMessage(), $this->createExtra());
     }
 
-    public function addRiskyTest(\PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addRiskyTest(Test $test, Exception $e, $time)
     {
         // TODO: Implement addRiskyTest() method.
     }
 
-    public function addSkippedTest(\PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addSkippedTest(Test $test, Exception $e, $time)
     {
         self::setTestStatus(self::STATUS_SKIPPED);
         $this->notice($e->getMessage(), $this->createExtra());
     }
 
-    public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
+    public function startTestSuite(TestSuite $suite)
     {
         // TODO: Implement startTestSuite() method.
     }
 
-    public function endTestSuite(\PHPUnit_Framework_TestSuite $suite)
+    public function endTestSuite(TestSuite $suite)
     {
         $this->testName = self::NAME_DEFAULT;
     }
 
-    public function startTest(\PHPUnit_Framework_Test $test)
+    public function startTest(Test $test)
     {
         if ($test instanceof TestCase) {
             if (!$this->testName) {
@@ -145,7 +154,7 @@ class Logger extends \Zend\Log\Logger implements TestListener, MasterListenerAwa
 
     }
 
-    public function endTest(\PHPUnit_Framework_Test $test, $time)
+    public function endTest(Test $test, $time)
     {
         $this->info(sprintf('Test completed with status: %s', $this->status), $this->createExtra());
         $this->testName = self::NAME_DEFAULT;
