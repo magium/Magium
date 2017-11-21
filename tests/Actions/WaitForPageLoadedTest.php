@@ -23,7 +23,7 @@ HTML
         $this->unlink();
         $action = new WaitForPageLoaded($this->webdriver, $this->getThemeMock());
         $action->execute();
-
+        self::assertTrue(true); // No failure
     }
 
     public function testDelayedWrite()

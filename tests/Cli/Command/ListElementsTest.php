@@ -55,6 +55,7 @@ class ListElementsTest extends AbstractCliTest
             'namespace'      => 'Tests\Magium\Cli\Command\ListElement',
             'directory'     => realpath(__DIR__ . '/ListElement')
         ]);
+        self::assertTrue(true); // No failure
     }
 
 }

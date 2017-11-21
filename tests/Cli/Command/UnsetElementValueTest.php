@@ -9,6 +9,7 @@ class UnsetElementValueTest extends SetElementValueTest
 
     public function testAddConfigurationElementValue()
     {
+        self::assertTrue(true); // No failure
         return; // Not tested here, but we use it in other tests
     }
 
