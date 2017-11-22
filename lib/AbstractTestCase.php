@@ -60,6 +60,35 @@ abstract class AbstractTestCase extends TestCase
     const BY_CSS_SELECTOR = 'byCssSelector';
     const BY_TEXT = 'byText';
 
+    private $sectionTimerStart;
+
+    public function startTimer()
+    {
+        $this->sectionTimerStart = microtime(true);
+    }
+
+    public function endTimer($name)
+    {
+        $endTime = microtime(true);
+        if (!$this->sectionTimerStart) {
+            throw new \Exception('sendTimer(name) requires startTimer() to be called previously');
+        }
+
+        $elapsedMs = (int)(($endTime - $this->sectionTimerStart) * 1000);
+        $elapsedExact = $endTime - $this->sectionTimerStart;
+
+        $message = sprintf('%s - elapsed %s', $name, $elapsedMs);
+        $this->getLogger()->info($message, [
+            'type' => 'timer',
+            'name' => $name,
+            'elapsed_ms' => $elapsedMs,
+            'elapsed' => $elapsedExact,
+            'start_time' => $this->sectionTimerStart,
+            'end_time' => $endTime
+        ]);
+        $this->sectionTimerStart = false;
+    }
+
     protected static $registrationCallbacks;
 
     protected function setUp()
