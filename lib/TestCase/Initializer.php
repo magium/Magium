@@ -121,8 +121,10 @@ class Initializer
 
     protected function setCharacteristics(AbstractTestCase $testCase)
     {
-        $testCase->getLogger()->addCharacteristic(LoggerInterface::CHARACTERISTIC_BROWSER, $testCase->getWebdriver()->getBrowser());
-        $testCase->getLogger()->addCharacteristic(LoggerInterface::CHARACTERISTIC_OPERATING_SYSTEM, $testCase->getWebdriver()->getPlatform());
+        $capabilities = $testCase->getWebdriver()->getCapabilities();
+        $testCase->getLogger()->addCharacteristic(LoggerInterface::CHARACTERISTIC_BROWSER, $capabilities->getBrowserName());
+        $testCase->getLogger()->addCharacteristic(LoggerInterface::CHARACTERISTIC_BROWSER_VERSION, $capabilities->getVersion());
+        $testCase->getLogger()->addCharacteristic(LoggerInterface::CHARACTERISTIC_OPERATING_SYSTEM, $capabilities->getPlatform());
     }
 
     protected function attachMasterListener(AbstractTestCase $testCase)

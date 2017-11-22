@@ -8,6 +8,7 @@ interface LoggerInterface extends \Zend\Log\LoggerInterface
 {
 
     const CHARACTERISTIC_BROWSER = 'browser';
+    const CHARACTERISTIC_BROWSER_VERSION = 'browser-version';
     const CHARACTERISTIC_OPERATING_SYSTEM = 'operating-system';
     const CHARACTERISTIC_THEME = 'theme';
 
