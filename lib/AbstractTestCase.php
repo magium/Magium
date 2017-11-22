@@ -79,7 +79,7 @@ abstract class AbstractTestCase extends TestCase
 
         $pass = $elapsedExact > $minimumElapsedTime;
 
-        $message = sprintf('%s - elapsed %s', $name, $elapsedMs);
+        $message = sprintf('%s - elapsed %sms', $name, $elapsedMs);
         $this->getLogger()->info($message, [
             'type' => 'timer',
             'name' => $name,
