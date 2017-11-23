@@ -67,7 +67,7 @@ abstract class AbstractTestCase extends TestCase
         $this->sectionTimerStart = microtime(true);
     }
 
-    public function endTimer($name, $minimumElapsedTime = 0)
+    public function endTimer($name, $minimumElapsedTime = null)
     {
         $endTime = microtime(true);
         if (!$this->sectionTimerStart) {
@@ -90,7 +90,11 @@ abstract class AbstractTestCase extends TestCase
             'pass' => $pass
         ]);
         $this->sectionTimerStart = false;
-        self::assertGreaterThan($minimumElapsedTime, $elapsedExact);
+        if ($minimumElapsedTime !== null) {
+            self::assertGreaterThan($minimumElapsedTime, $elapsedExact);
+        } else {
+            self::assertNotEquals(0, $elapsedExact); // Immediate return is an indication of something bad
+        }
     }
 
     protected static $registrationCallbacks;
