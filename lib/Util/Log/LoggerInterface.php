@@ -16,6 +16,7 @@ interface LoggerInterface extends \Zend\Log\LoggerInterface
     const STATUS_FAILED = 'failed';
     const STATUS_SKIPPED = 'skipped';
     const STATUS_INCOMPLETE = 'incomplete';
+    const STATUS_RISKY = 'risky';
 
     const NAME_DEFAULT = 'unknown';
 

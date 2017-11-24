@@ -27,6 +27,8 @@ class Logger extends \Zend\Log\Logger implements TestListener, MasterListenerAwa
 
     protected $selectorConfig = null;
 
+    protected static $testRunId;
+
     public function setMasterListener(MasterListenerInterface $listener)
     {
         $listener->addListener($this);
@@ -88,7 +90,8 @@ class Logger extends \Zend\Log\Logger implements TestListener, MasterListenerAwa
             'type'      => 'message',
             'status'    => $this->status,
             'name'     => $this->testName,
-            'testId'    => $this->testId
+            'test_id'    => $this->testId,
+            'test_run_id' => $this->getTestRunId()
         ];
 
         if ($this->selectorConfig) {
@@ -96,6 +99,24 @@ class Logger extends \Zend\Log\Logger implements TestListener, MasterListenerAwa
         }
 
         return array_merge($defaultArray, $includeArray);
+    }
+
+    public function getTestRunId()
+    {
+        if (!self::$testRunId) {
+            // See https://github.com/ircmaxell/RandomLib/issues/55
+            if (function_exists('random_bytes')) {
+                $unique = uniqid(substr(bin2hex(random_bytes(64)), 0, 64));
+
+            } else if (function_exists('openssl_random_pseudo_bytes')) {
+                $unique = uniqid(openssl_random_pseudo_bytes(64));
+            } else {
+                $unique = uniqid('', true);
+            }
+            self::$testRunId = $unique;
+        }
+
+        return self::$testRunId;
     }
 
     public function addWarning(Test $test, Warning $e, $time)
@@ -123,7 +144,8 @@ class Logger extends \Zend\Log\Logger implements TestListener, MasterListenerAwa
 
     public function addRiskyTest(Test $test, Exception $e, $time)
     {
-        // TODO: Implement addRiskyTest() method.
+        $this->setTestStatus(self::STATUS_RISKY);
+        $this->notice($e->getMessage(), $this->createExtra());
     }
 
     public function addSkippedTest(Test $test, Exception $e, $time)
