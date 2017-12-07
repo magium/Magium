@@ -87,6 +87,7 @@ abstract class AbstractTestCase extends TestCase
             'elapsed' => $elapsedExact,
             'start_time' => $this->sectionTimerStart,
             'end_time' => $endTime,
+            'unix_timestamp' => time(),
             'pass' => $pass
         ]);
         $this->sectionTimerStart = false;
